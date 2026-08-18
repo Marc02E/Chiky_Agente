@@ -45,7 +45,7 @@ curl http://127.0.0.1:8000/api/v1/health/live
 ## Running Tests
 
 ```bash
-# Full test suite (386 tests)
+# Full test suite (402 tests)
 python -m pytest tests/ -x -q
 
 # With coverage (94%+)

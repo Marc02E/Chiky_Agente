@@ -9,7 +9,10 @@ htmlcov/
 .env
 .mypy_cache/
 .ruff_cache/
+dist/
+build/
+*.egg-info/
 # Stale test/lint output artifacts
 *.txt
 # Root-level audit copies (authoritative docs are in docs/)
-AUDIT_PHASE_0_1.md
+PHASE-2-9-AUDIT.md

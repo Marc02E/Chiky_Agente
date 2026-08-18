@@ -1,6 +1,6 @@
-# personal_ai_secretary — RELEASE CANDIDATE
+# personal_ai_secretary — RELEASE 1.0
 
-This archive is a clean single-root development package prepared from the verified restoration backup.
+Governed personal AI secretary platform with multi-provider AI support, conversation memory, compliance governance, and full observability.
 
 ## Quick Start (Windows / PowerShell)
 
@@ -53,15 +53,15 @@ docker build -t personal-ai-secretary .
 docker run -p 8000:8000 personal-ai-secretary
 ```
 
-## FASE 21 Status
+## Release 1.0 Status
 
-**FASE 21 = CLOSED — RELEASE READY**
+**RELEASE 1.0 = READY**
 
 All release gates verified:
 - Reproducible Windows setup
-- Baseline verification (386 tests, 96.27% coverage, mypy 0, ruff 0, Alembic 0007)
+- Baseline verification (402 tests, 96.27% coverage, mypy 0, ruff 0, Alembic 0007)
 - Application startup and health
-- API functional verification
+- API functional verification (20 endpoint checks)
 - Real-world smoke tests
 - Security and secrets audit
 - Docker (statically verified; runtime requires Docker Desktop)
@@ -71,3 +71,8 @@ All release gates verified:
 - Session/request listing APIs
 - Cross-user isolation
 - Production guards (JWT, SQLite, NVIDIA key)
+- Wheel + sdist build validated
+- CI/CD workflow validated
+
+## Fases 2–21 = CLOSED
+## Release 1.0 = READY

@@ -1,7 +1,6 @@
-<<<<<<< HEAD
 # Personal AI Secretary
 
-A governed personal AI secretary platform with multi-provider support, conversation memory, compliance governance, and full observability.
+A governed personal AI secretary platform with multi-provider AI support, conversation memory, compliance governance, and full observability.
 
 ## Features
 
@@ -52,7 +51,10 @@ python -m uvicorn personal_ai_secretary.api.app:app --host 127.0.0.1 --port 8000
 
 ```bash
 curl http://127.0.0.1:8000/api/v1/health/live
+# -> {"status":"alive"}
+
 curl http://127.0.0.1:8000/api/v1/health/ready
+# -> {"status":"ready","provider":{...},"database":"ok"}
 ```
 
 ## API Endpoints
@@ -77,18 +79,36 @@ curl http://127.0.0.1:8000/api/v1/health/ready
 | GET | `/api/v1/metrics` | Prometheus metrics |
 | GET | `/docs` | Swagger UI |
 
+All endpoints require a valid Bearer token unless `JWT_REQUIRED=false`.
+
 ## Provider Modes
 
 ### Deterministic (default)
+
 Returns fixed responses for testing. No external services needed.
 
-### Ollama (local)
 ```bash
+python -m uvicorn personal_ai_secretary.api.app:app --host 127.0.0.1 --port 8000
+```
+
+### Ollama (local)
+
+Requires [Ollama](https://ollama.com) installed with a pulled model.
+
+```bash
+# Start Ollama and pull a model
+ollama serve
+ollama pull llama3.1:latest
+
+# Run with local provider
 AI_PROVIDER=local OLLAMA_MODEL=llama3.1:latest \
   uvicorn personal_ai_secretary.api.app:app --host 127.0.0.1 --port 8000
 ```
 
 ### NVIDIA (remote)
+
+Requires an `NVIDIA_API_KEY`. In production, the application refuses to start without it.
+
 ```bash
 AI_PROVIDER=remote NVIDIA_API_KEY=nvapi-xxx \
   uvicorn personal_ai_secretary.api.app:app --host 127.0.0.1 --port 8000
@@ -97,12 +117,16 @@ AI_PROVIDER=remote NVIDIA_API_KEY=nvapi-xxx \
 ## Docker
 
 ```bash
+# Build
 docker build -t personal-ai-secretary .
-docker run -p 8000:8000 personal-ai-secretary
-```
 
-For production:
-```bash
+# Run (development)
+docker run -p 8000:8000 \
+  -e JWT_REQUIRED=false \
+  -e AI_PROVIDER=deterministic \
+  personal-ai-secretary
+
+# Run (production)
 docker run -p 8000:8000 \
   -e APP_ENV=production \
   -e JWT_SECRET=your-strong-secret \
@@ -110,10 +134,12 @@ docker run -p 8000:8000 \
   personal-ai-secretary
 ```
 
+The container runs migrations automatically on startup and includes a healthcheck on `/api/v1/health/live`.
+
 ## Testing
 
 ```bash
-# Full test suite (386 tests)
+# Full test suite (402 tests)
 python -m pytest tests/ -q
 
 # With coverage (94%+ threshold)
@@ -135,13 +161,14 @@ See `.env.example` for all environment variables. Key settings:
 | `APP_ENV` | `development` | `development`, `test`, or `production` |
 | `AI_PROVIDER` | `deterministic` | `deterministic`, `local`, or `remote` |
 | `JWT_SECRET` | dev default | **Required in production** |
-| `JWT_REQUIRED` | `true` | Set `false` for local dev |
+| `JWT_REQUIRED` | `true` | Set `false` for local dev without auth |
 | `DATABASE_URL` | SQLite | PostgreSQL connection for production |
 | `PERSISTENT_STORES` | `false` | Enable PostgreSQL-backed stores |
 
 ## Production Guards
 
 When `APP_ENV=production`, the application refuses to start if:
+
 - `JWT_SECRET` is the default development value
 - `DATABASE_URL` points to SQLite
 - `AI_PROVIDER=remote` without `NVIDIA_API_KEY`
@@ -166,10 +193,21 @@ src/personal_ai_secretary/
 └── workflow/         # Governed workflow engine
 ```
 
+## Limitations
+
+- **Docker**: Requires Docker Desktop or Docker Engine. Smoke-tested in CI.
+- **PostgreSQL**: Required for production persistence. SQLite is used for development/testing.
+- **NVIDIA**: Requires a valid API key from [build.nvidia.com](https://build.nvidia.com).
+- **Frontend**: No web UI is provided. Use the Swagger UI at `/docs` or the REST API directly.
+
+## Security
+
+- Never commit `.env` files (excluded via `.gitignore`)
+- Never hardcode API keys or secrets in source code
+- Audit redaction automatically sanitizes sensitive fields
+- Production mode rejects default JWT secrets and SQLite databases
+- All secrets are read from environment variables only
+
 ## License
 
-Private repository.
-=======
-# Personal_AI_Secretary
-Production-oriented AI personal secretary built with Python and FastAPI, featuring governed multi-agent workflows, persistent memory, conversation history, compliance controls, observability, and multiple AI providers.
->>>>>>> e09b758d63463cb7f258b893b9ce647528773299
+No license file is provided. This is a private repository. Contact the author for usage rights.
