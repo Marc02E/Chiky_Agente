@@ -23,5 +23,6 @@ The implementation roadmap is executed sequentially. A phase is closed only afte
 | 18 | Productization + real-world usability | Reproducible setup, verification automation, local startup, operational docs, release hygiene | **CLOSED** |
 | 19 | Release engineering + maturity validation | CI coverage gate, factory edge-case test, documentation update, final real-world validation | **CLOSED** |
 | 20 | Product functionality + user value | Conversation history, context injection, session/request APIs, functional validation & hardening | **CLOSED** |
+| 21 | Release & deployment readiness | Reproducible install, production guards, migration integrity, live smoke, security audit, CI/CD audit, wheel build, functional validation | **CLOSED** |
 
 For each phase: SPEC → PLAN → TASKS → IMPLEMENT → TEST → EVALUATE → RELEASE.

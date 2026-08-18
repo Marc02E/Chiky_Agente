@@ -45,7 +45,7 @@ curl http://127.0.0.1:8000/api/v1/health/live
 ## Running Tests
 
 ```bash
-# Full test suite (358 tests)
+# Full test suite (386 tests)
 python -m pytest tests/ -x -q
 
 # With coverage (94%+)
@@ -117,6 +117,8 @@ All endpoints require Bearer token unless `JWT_REQUIRED=false`.
 | POST | `/api/v1/sessions/{id}/messages` | Send message |
 | GET | `/api/v1/sessions/{id}/messages` | Get session history |
 | GET | `/api/v1/sessions/{id}` | Get session metadata |
+| GET | `/api/v1/sessions` | List user sessions |
+| GET | `/api/v1/requests` | List user requests |
 | POST | `/api/v1/evidence` | Store evidence |
 | GET | `/api/v1/evidence` | Search evidence |
 | GET | `/api/v1/observability/audit` | Audit events |
