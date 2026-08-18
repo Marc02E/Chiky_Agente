@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.pytest_tmp/
+.coverage
+htmlcov/
+*.db
+.env
+.mypy_cache/
+.ruff_cache/
+# Stale test/lint output artifacts
+*.txt
+# Root-level audit copies (authoritative docs are in docs/)
+AUDIT_PHASE_0_1.md

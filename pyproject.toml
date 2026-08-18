@@ -1,0 +1,64 @@
+[project]
+name = "personal-ai-secretary"
+version = "0.1.0"
+description = "Governed personal AI secretary platform - Phase 1 foundation"
+requires-python = ">=3.13"
+dependencies = [
+  "fastapi>=0.128,<1",
+  "uvicorn[standard]>=0.40,<1",
+  "pydantic>=2.13,<3",
+  "pydantic-settings>=2.12,<3",
+  "sqlalchemy>=2.0,<3",
+  "alembic>=1.18,<2",
+  "aiosqlite>=0.22,<1",
+  # httpx is imported at runtime by providers/ollama.py and providers/remote.py.
+  "httpx>=0.28,<1",
+  "PyJWT>=2.10,<3",
+  # Async PostgreSQL driver for production persistence stores.
+  "asyncpg>=0.31,<1",
+  # Sync PostgreSQL driver used by Alembic online migrations.
+  "psycopg[binary]>=3.2,<4",
+  # OpenTelemetry in-process tracing (FASE 12A). The OTLP HTTP exporter is
+  # imported lazily at runtime and only used when OTEL_EXPORTER_ENDPOINT is set.
+  "opentelemetry-api>=1.39,<2",
+  "opentelemetry-sdk>=1.39,<2",
+  "opentelemetry-exporter-otlp-proto-http>=1.39,<2",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=9,<10",
+  "pytest-asyncio>=1.3,<2",
+  "pytest-cov>=7,<8",
+  "ruff>=0.12,<1",
+  "mypy>=1.17,<2",
+]
+
+[project.scripts]
+personal-ai-secretary = "personal_ai_secretary.api.app:run"
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/personal_ai_secretary"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q --basetemp=.pytest_tmp"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "ASYNC"]
+ignore = ["B008"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+mypy_path = "src"

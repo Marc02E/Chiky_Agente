@@ -1,0 +1,65 @@
+name: ci
+on:
+  push:
+  pull_request:
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e '.[dev]'
+      - run: pytest --cov=src --cov-report=term-missing --cov-fail-under=94
+      - run: mypy src
+      - run: ruff check .
+  integration:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: secretary
+          POSTGRES_PASSWORD: secretary
+          POSTGRES_DB: secretary
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U secretary -d secretary"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql+asyncpg://secretary:secretary@localhost:5432/secretary
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e '.[dev]'
+      - run: pytest --cov=src --cov-report=term-missing --cov-fail-under=94
+      - run: mypy src
+      - run: ruff check .
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build image
+        uses: docker/build-push-action@v5
+        with:
+          tags: personal-ai-secretary:latest
+          context: .
+          load: true
+      - name: Run container smoke test
+        run: |
+          docker run --rm -p 8000:8000 \
+            -e APP_ENV=test \
+            -e DATABASE_URL=sqlite+aiosqlite:///./personal_ai_secretary.db \
+            -e AI_PROVIDER=deterministic \
+            -e JWT_SECRET=test-secret-that-is-long-enough-32-bytes \
+            -e JWT_REQUIRED=false \
+            -e OTEL_ENABLED=false \
+            personal-ai-secretary:latest \
+            python -m personal_ai_secretary.api.app health/live
