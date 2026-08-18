@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Personal AI Secretary
 
 A governed personal AI secretary platform with multi-provider support, conversation memory, compliance governance, and full observability.
@@ -168,3 +169,7 @@ src/personal_ai_secretary/
 ## License
 
 Private repository.
+=======
+# Personal_AI_Secretary
+Production-oriented AI personal secretary built with Python and FastAPI, featuring governed multi-agent workflows, persistent memory, conversation history, compliance controls, observability, and multiple AI providers.
+>>>>>>> e09b758d63463cb7f258b893b9ce647528773299
