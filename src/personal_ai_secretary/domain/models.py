@@ -48,7 +48,11 @@ class SessionRecord(Base):
 
     session_id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
     user_id: Mapped[str] = mapped_column(String(200), index=True)
+    title: Mapped[str | None] = mapped_column(String(200), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(UTC)
+    )
+    updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(UTC)
     )
     request_count: Mapped[int] = mapped_column(Integer, default=0)

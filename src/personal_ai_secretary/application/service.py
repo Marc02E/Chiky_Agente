@@ -111,7 +111,10 @@ class RequestService:
             status="accepted",
         )
         self.session.add(record)
+        if (session_record.request_count or 0) == 0 and not session_record.title:
+            session_record.title = payload.input[:80]
         session_record.request_count = (session_record.request_count or 0) + 1
+        session_record.updated_at = datetime.now(UTC)
 
         try:
             await self.session.commit()
@@ -231,7 +234,10 @@ class RequestService:
         except Exception as exc:
             logger.exception("Governed workflow execution failed for request %s", request_id)
             record.status = "failed"
-            record.result = None
+            record.result = (
+                "I encountered an unexpected error while processing your request. "
+                "Please try again."
+            )
             if observation is not None:
                 observation.inc("requests_failed")
                 await observation.emit(
@@ -511,5 +517,4 @@ class RequestService:
             .limit(limit)
         )
         return list(result.all())
-
 

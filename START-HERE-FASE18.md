@@ -1,14 +1,13 @@
 # personal_ai_secretary — RELEASE 1.0
 
-Governed personal AI secretary platform with multi-provider AI support, conversation memory, compliance governance, and full observability.
+Governed personal AI secretary platform with multi-provider AI support, conversation memory, compliance governance, full observability, and web-based user interface.
 
 ## Quick Start (Windows / PowerShell)
 
 ```powershell
 cd <project-root>
 .\scripts\setup_windows.ps1
-.\scripts\verify_baseline.ps1
-.\scripts\run_local.ps1
+.\scripts\launch.bat
 ```
 
 ## What Each Script Does
@@ -16,8 +15,10 @@ cd <project-root>
 | Script | Purpose |
 |--------|---------|
 | `setup_windows.ps1` | Creates venv, installs deps, creates .env, runs migrations |
+| `launch.bat` | **Launches the application** (starts server + opens browser) |
+| `launch.py` | Python launcher (called by launch.bat) |
 | `verify_baseline.ps1` | Runs pytest+coverage, mypy, ruff, alembic heads |
-| `run_local.ps1` | Runs migrations and starts uvicorn on port 8000 |
+| `run_local.ps1` | Runs migrations and starts uvicorn (developer shortcut) |
 
 ## Manual Setup
 
@@ -53,15 +54,17 @@ docker build -t personal-ai-secretary .
 docker run -p 8000:8000 personal-ai-secretary
 ```
 
-## Release 1.0 Status
+## Release 1.0 + UI Status
 
-**RELEASE 1.0 = READY**
+**RELEASE 1.0 + UI = READY**
 
 All release gates verified:
 - Reproducible Windows setup
-- Baseline verification (402 tests, 96.27% coverage, mypy 0, ruff 0, Alembic 0007)
+- Baseline verification (420 tests, 96.15% coverage, mypy 0, ruff 0, Alembic 0007)
 - Application startup and health
 - API functional verification (20 endpoint checks)
+- Web UI: Chiky agente (dark theme, conversation interface)
+- Application launcher (launch.bat → server + browser)
 - Real-world smoke tests
 - Security and secrets audit
 - Docker (statically verified; runtime requires Docker Desktop)
@@ -75,4 +78,5 @@ All release gates verified:
 - CI/CD workflow validated
 
 ## Fases 2–21 = CLOSED
-## Release 1.0 = READY
+## Fase UI = CLOSED
+## Release 1.0 + UI = READY

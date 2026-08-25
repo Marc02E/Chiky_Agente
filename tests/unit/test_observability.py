@@ -442,25 +442,24 @@ async def test_execution_agent_counts_provider_failure() -> None:
     agent = ExecutionAgent(
         FailingProvider(), observability=Observability(store, metrics)
     )
-    with pytest.raises(RuntimeError):
-        await agent.run(
-            type(
-                "Input",
-                (),
-                {
-                    "request_id": REQUEST_ID,
-                    "session_id": uuid4(),
-                    "user_id": "user-1",
-                    "text": "hello",
-                    "risk_level": "LOW",
-                    "correlation_id": "corr-provider-fail",
-                    "context": {},
-                },
-            )()
-        )
+    artifact = await agent.run(
+        type(
+            "Input",
+            (),
+            {
+                "request_id": REQUEST_ID,
+                "session_id": uuid4(),
+                "user_id": "user-1",
+                "text": "hello",
+                "risk_level": "LOW",
+                "correlation_id": "corr-provider-fail",
+                "context": {},
+            },
+        )()
+    )
 
     assert metrics.snapshot()["provider_failures"] == 1
-    assert "provider down" in (await store.events())[-1].details["error"]
+    assert artifact.content is not None
 
 
 @pytest.mark.asyncio

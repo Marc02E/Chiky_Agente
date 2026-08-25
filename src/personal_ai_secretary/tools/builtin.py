@@ -1,3 +1,5 @@
+"""Built-in tools for Chiky agente."""
+
 import ast
 import operator
 from collections.abc import Callable
@@ -57,6 +59,7 @@ def default_tool_registry() -> ToolRegistry:
             False,
             _calculate,
             argument_schema={"expression": "string"},
+            compact_description="Evaluate math expressions",
         )
     )
     registry.register(
@@ -66,6 +69,38 @@ def default_tool_registry() -> ToolRegistry:
             False,
             _list_tools,
             argument_schema={},
+            compact_description="List available tools",
         )
     )
+
+    # Register datetime tools
+    from personal_ai_secretary.tools.datetime_tool import register_datetime_tools
+
+    register_datetime_tools(registry)
+
+    # Register path helper tools
+    from personal_ai_secretary.tools.path_helper import register_path_tools
+
+    register_path_tools(registry)
+
+    # Register filesystem tools
+    from personal_ai_secretary.tools.filesystem import register_filesystem_tools
+
+    register_filesystem_tools(registry)
+
+    # Register project creation tools
+    from personal_ai_secretary.tools.project import register_project_tools
+
+    register_project_tools(registry)
+
+    # Register development tools (K.2)
+    from personal_ai_secretary.tools.development import register_development_tools
+
+    register_development_tools(registry)
+
+    # Register command execution tools (K.6)
+    from personal_ai_secretary.tools.command import register_command_tools
+
+    register_command_tools(registry)
+
     return registry

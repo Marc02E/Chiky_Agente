@@ -90,6 +90,8 @@ async def test_create_creates_session_and_request(session: AsyncSession) -> None
     assert session_record is not None
     assert session_record.request_count == 1
     assert session_record.user_id == "user-1"
+    assert session_record.title == "hello"
+    assert session_record.updated_at is not None
 
 
 @pytest.mark.asyncio
@@ -109,6 +111,7 @@ async def test_create_reuses_existing_session(session: AsyncSession) -> None:
     record = await session.get(SessionRecord, session_id)
     assert record is not None
     assert record.request_count == 2
+    assert record.title == "one"
 
 
 @pytest.mark.asyncio
@@ -147,15 +150,15 @@ async def test_execute_completes_request(session: AsyncSession) -> None:
 
 
 @pytest.mark.asyncio
-async def test_execute_marks_failed_when_provider_fails(session: AsyncSession) -> None:
+async def test_execute_handles_provider_failure_gracefully(session: AsyncSession) -> None:
     service = RequestService(session, FakeProvider(fail=True))
     accepted = await service.create(RequestCreate(input="hello"), "user-1", "corr-1", None)
 
     result = await service.execute(accepted.request_id)
 
     assert result is not None
-    assert result.status == "failed"
-    assert result.result is None
+    assert result.status == "completed"
+    assert result.result is not None
 
 
 @pytest.mark.asyncio
@@ -367,7 +370,7 @@ async def test_execute_fails_when_tool_handler_raises(session: AsyncSession) -> 
 
     assert result is not None
     assert result.status == "failed"
-    assert result.result is None
+    assert result.result is not None
 
 
 @pytest.mark.asyncio
@@ -429,7 +432,7 @@ async def test_execute_emits_observability_for_completed(session: AsyncSession) 
 
 
 @pytest.mark.asyncio
-async def test_execute_emits_failed_event_and_metric(session: AsyncSession) -> None:
+async def test_execute_emits_completed_on_provider_failure(session: AsyncSession) -> None:
     from personal_ai_secretary.observability.audit import InMemoryAuditStore
     from personal_ai_secretary.observability.metrics import Metrics
     from personal_ai_secretary.observability.observer import Observability
@@ -446,12 +449,11 @@ async def test_execute_emits_failed_event_and_metric(session: AsyncSession) -> N
     result = await service.execute(accepted.request_id)
 
     assert result is not None
-    assert result.status == "failed"
-    assert metrics.snapshot()["requests_failed"] == 1
+    assert result.status == "completed"
+    assert result.result is not None
     terminal = (await audit.events("user-1"))[-1]
     assert terminal.event_type == "request"
-    assert terminal.outcome == "failed"
-    assert "provider failure" in terminal.details["error"]
+    assert terminal.outcome == "completed"
 
 
 @pytest.mark.asyncio

@@ -13,10 +13,20 @@ class RiskLevel(StrEnum):
     CRITICAL = "CRITICAL"
 
 
+class AttachedFile(BaseModel):
+    """A file attached to a message by the user."""
+
+    name: str = Field(min_length=1, max_length=255)
+    content: str = Field(max_length=5_000)
+    size: int = Field(ge=0)
+    mime_type: str = Field(default="text/plain", max_length=100)
+
+
 class RequestCreate(BaseModel):
     model_config = ConfigDict(extra="forbid")
     input: str = Field(min_length=1, max_length=20_000)
     session_id: UUID | None = None
+    attached_files: list["AttachedFile"] = Field(default_factory=list)
 
 
 class RequestAccepted(BaseModel):
@@ -76,6 +86,12 @@ class SendMessageResponse(BaseModel):
     user_message: ConversationMessage
     assistant_message: ConversationMessage | None = None
     correlation_id: str
+    # Populated when the agent requires explicit user approval before executing a tool.
+    # The UI should show a confirmation dialog and resend the original message with
+    # the X-Approval-Granted: true header if the user accepts.
+    approval_request: dict[str, Any] | None = None
+    # FASE V: Provider fallback information surfaced to the frontend.
+    fallback_info: dict[str, Any] | None = None
 
 
 class ConversationHistory(BaseModel):
@@ -141,11 +157,18 @@ class SessionListItem(BaseModel):
     session_id: UUID
     user_id: str
     created_at: datetime
+    updated_at: datetime | None = None
     request_count: int
+    title: str | None = None
 
 
 class SessionListResponse(BaseModel):
     sessions: list[SessionListItem]
+
+
+class SessionRenameRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    title: str = Field(min_length=1, max_length=200)
 
 
 class RequestListItem(BaseModel):

@@ -78,8 +78,9 @@ async def test_registry_validates_argument_types() -> None:
 
     with pytest.raises(ToolError, match="Missing argument"):
         await registry.execute("echo", {"value": "x"})
-    with pytest.raises(ToolError, match="Unknown argument"):
-        await registry.execute("echo", {"value": "x", "count": 1, "extra": True})
+    # S.4: unknown arguments are now stripped silently (normalized away)
+    result = await registry.execute("echo", {"value": "x", "count": 1, "extra": True})
+    assert result == {"echoed": {"value": "x", "count": 1}}
     with pytest.raises(ToolError, match="must be"):
         await registry.execute("echo", {"value": "x", "count": "1"})
     assert await registry.execute("echo", {"value": "x", "count": 1}) == {
@@ -119,11 +120,27 @@ async def test_registry_requires_approval_for_sensitive_tools() -> None:
 
 def test_default_registry_has_safe_tools() -> None:
     registry = default_tool_registry()
-    assert registry.names() == ["calculator", "list_tools"]
-    assert all(
-        not registry.get(name).requires_explicit_approval  # type: ignore[union-attr]
-        for name in registry.names()
-    )
+    # Default registry includes calculator, list_tools, datetime, filesystem, project,
+    # development tools, and K.6 command execution tool
+    expected_tools = sorted([
+        "calculator", "list_tools",
+        "datetime_now", "format_date",
+        "get_directory",
+        "create_file", "read_file", "write_file",
+        "list_directory", "create_directory", "file_exists",
+        "file_delete", "file_copy",
+        "create_project",
+        "analyze_project", "read_files", "modify_file", "search_files", "verify_files",
+        "generate_tests",
+        "execute_command",
+    ])
+    assert registry.names() == expected_tools
+    # Low-risk tools should not require approval
+    low_risk_tools = ["calculator", "list_tools", "datetime_now", "format_date",
+                      "get_directory", "read_file", "list_directory", "file_exists",
+                      "analyze_project", "read_files", "search_files", "verify_files"]
+    for name in low_risk_tools:
+        assert not registry.get(name).requires_explicit_approval  # type: ignore[union-attr]
 
 
 @pytest.mark.asyncio
@@ -151,7 +168,7 @@ async def test_calculator_rejects_unsupported_syntax() -> None:
 async def test_list_tools_reports_registry_names() -> None:
     registry = default_tool_registry()
     result = await registry.execute("list_tools", {})
-    assert result == {"tools": ["calculator", "list_tools"]}
+    assert result["tools"] == registry.names()
 
 
 @pytest.mark.asyncio

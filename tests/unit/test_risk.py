@@ -26,3 +26,21 @@ def test_classify_risk_detects_critical_actions() -> None:
 
 def test_classify_risk_is_case_insensitive() -> None:
     assert classify_risk("SEND EMAIL to the client") == RiskLevel.HIGH
+
+
+def test_classify_risk_high_with_dangerous_destination() -> None:
+    """Line 161: HIGH pattern + dangerous dest → HIGH (not CRITICAL)."""
+    assert classify_risk("delete C:\\Windows") == RiskLevel.HIGH
+    assert classify_risk("overwrite /etc/passwd") == RiskLevel.HIGH
+
+
+def test_classify_risk_code_intent_downgrades_high() -> None:
+    """Line 165: HIGH pattern + code-gen intent → skip to MEDIUM."""
+    assert classify_risk("add delete endpoint in Python") == RiskLevel.MEDIUM
+    assert classify_risk("create a function to send email") == RiskLevel.MEDIUM
+
+
+def test_classify_risk_code_intent_alone_is_medium() -> None:
+    """Line 176: code-gen intent, no HIGH/MEDIUM keywords → MEDIUM."""
+    assert classify_risk("make a function with fastapi") == RiskLevel.MEDIUM
+    assert classify_risk("build a CRUD application") == RiskLevel.MEDIUM

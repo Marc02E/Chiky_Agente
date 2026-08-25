@@ -30,8 +30,8 @@ LOG_LEVEL=INFO
 # 4. Initialize the database and run migrations (creates personal_ai_secretary.db)
 python -m alembic upgrade head
 
-# 5. Start the server
-python -m uvicorn personal_ai_secretary.api.app:app --host 127.0.0.1 --port 8000
+# 5. Launch the application (starts server + opens browser)
+python scripts/launch.py
 
 # 6. Verify health (second terminal)
 curl http://127.0.0.1:8000/api/v1/health/live
@@ -45,7 +45,7 @@ curl http://127.0.0.1:8000/api/v1/health/live
 ## Running Tests
 
 ```bash
-# Full test suite (402 tests)
+# Full test suite (612 tests)
 python -m pytest tests/ -x -q
 
 # With coverage (94%+)

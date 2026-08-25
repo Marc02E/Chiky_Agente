@@ -1,30 +1,20 @@
-# Personal AI Secretary
+# Personal AI Secretary — Chiky agente
 
-A governed personal AI secretary platform with multi-provider AI support, conversation memory, compliance governance, and full observability.
+A governed personal AI secretary platform with multi-provider AI support, conversation memory, compliance governance, full observability, and a web-based user interface.
 
-## Features
-
-- **Multi-provider AI**: Deterministic (test), Ollama (local), NVIDIA (remote)
-- **Governed workflow**: Planner → Research → Execution → Review → Compliance
-- **Conversation memory**: Multi-turn conversations with context injection
-- **Session management**: Create, list, and track sessions with history
-- **Compliance**: Automated policy enforcement (prohibited commands, credential leakage)
-- **Observability**: Audit trail, metrics, distributed tracing (OpenTelemetry)
-- **Security**: JWT authentication, user isolation, production guards
-- **Persistence**: SQLite (dev) or PostgreSQL (production)
-
-## Quick Start (Windows / PowerShell)
+## Quick Start (Windows)
 
 ```powershell
 # 1. Setup (creates venv, installs deps, creates .env, runs migrations)
 .\scripts\setup_windows.ps1
 
-# 2. Verify baseline (tests, coverage, mypy, ruff, alembic)
-.\scripts\verify_baseline.ps1
-
-# 3. Start server
-.\scripts\run_local.ps1
+# 2. Launch the application (starts server + opens browser)
+.\scripts\launch.bat
 ```
+
+The application opens in your browser at `http://127.0.0.1:8000`. Start chatting immediately.
+
+## Features
 
 ## Manual Setup
 
@@ -61,6 +51,7 @@ curl http://127.0.0.1:8000/api/v1/health/ready
 
 | Method | Path | Description |
 |--------|------|-------------|
+| GET | `/` | Web UI (Chiky agente) |
 | GET | `/api/v1/health/live` | Liveness check |
 | GET | `/api/v1/health/ready` | Readiness check (DB + provider) |
 | GET | `/api/v1/providers` | Active provider info |
@@ -72,12 +63,15 @@ curl http://127.0.0.1:8000/api/v1/health/ready
 | GET | `/api/v1/sessions/{id}/messages` | Get session history |
 | GET | `/api/v1/sessions/{id}` | Get session metadata |
 | GET | `/api/v1/sessions` | List user sessions |
+| GET | `/api/v1/ui/sessions` | List sessions with titles (for UI), supports `?search=` |
+| PATCH | `/api/v1/ui/sessions/{id}` | Rename a conversation |
+| DELETE | `/api/v1/ui/sessions/{id}` | Delete a conversation and its messages |
 | POST | `/api/v1/evidence` | Store evidence |
 | GET | `/api/v1/evidence` | Search evidence |
 | GET | `/api/v1/observability/audit` | Audit events |
 | GET | `/api/v1/observability/metrics` | Metrics snapshot |
 | GET | `/api/v1/metrics` | Prometheus metrics |
-| GET | `/docs` | Swagger UI |
+| GET | `/docs` | Swagger UI (developer) |
 
 All endpoints require a valid Bearer token unless `JWT_REQUIRED=false`.
 
@@ -139,7 +133,7 @@ The container runs migrations automatically on startup and includes a healthchec
 ## Testing
 
 ```bash
-# Full test suite (402 tests)
+# Full test suite (612 tests)
 python -m pytest tests/ -q
 
 # With coverage (94%+ threshold)
@@ -190,7 +184,15 @@ src/personal_ai_secretary/
 ├── rag/              # Evidence retrieval and governance
 ├── shared/           # Config, auth, telemetry
 ├── tools/            # Tool registry and built-in tools
+├── ui/               # Web interface (HTML/CSS/JS SPA)
 └── workflow/         # Governed workflow engine
+
+scripts/
+├── launch.py         # Application launcher (starts server + opens browser)
+├── launch.bat        # Windows double-click launcher
+├── run_local.ps1     # Start server directly (developer)
+├── setup_windows.ps1 # Initial setup (developer)
+└── verify_baseline.ps1 # Quality gate verification (developer)
 ```
 
 ## Limitations
@@ -198,7 +200,6 @@ src/personal_ai_secretary/
 - **Docker**: Requires Docker Desktop or Docker Engine. Smoke-tested in CI.
 - **PostgreSQL**: Required for production persistence. SQLite is used for development/testing.
 - **NVIDIA**: Requires a valid API key from [build.nvidia.com](https://build.nvidia.com).
-- **Frontend**: No web UI is provided. Use the Swagger UI at `/docs` or the REST API directly.
 
 ## Security
 

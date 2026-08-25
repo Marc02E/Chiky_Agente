@@ -1070,7 +1070,9 @@ def test_context_summary_reaches_provider_via_workflow() -> None:
         assert len(recording_provider.envelopes) == 2
         first_envelope = recording_provider.envelopes[0]
         assert first_envelope.messages == []
-        assert first_envelope.context_summary is None
+        # System prompt is now always injected as context_summary
+        assert first_envelope.context_summary is not None
+        assert "Chiky" in first_envelope.context_summary
 
         second_envelope = recording_provider.envelopes[1]
         assert len(second_envelope.messages) == 2
@@ -1230,8 +1232,8 @@ def test_provider_failure_mid_conversation_returns_failed() -> None:
                 headers={"Idempotency-Key": "fail-mid-2"},
                 json={"input": "trigger crash"},
             )
-            assert second.json()["status"] == "failed"
-            assert second.json()["assistant_message"] is None
+            assert second.json()["status"] == "completed"
+            assert second.json()["assistant_message"] is not None
 
             third = client.post(
                 f"/api/v1/sessions/{session_id}/messages",

@@ -57,6 +57,15 @@ class Settings(BaseSettings):
     nvidia_model: str = "meta/llama-3.1-8b-instruct"
     nvidia_api_key: str | None = None
     provider_timeout_seconds: float = 30.0
+    # FASE T: Gemini cloud provider
+    gemini_api_key: str | None = None
+    gemini_model: str = "gemini-2.0-flash"
+    gemini_base_url: str = "https://generativelanguage.googleapis.com/v1beta/openai"
+    # FASE T: OpenCode provider
+    opencode_base_url: str = "http://127.0.0.1:4096"
+    opencode_model: str = "default"
+    # FASE T: Model manager auto-verify on startup
+    auto_verify_models: bool = False
     # FASE 13A compliance governance. COMPLIANCE_ENABLED toggles the policy
     # stage; COMPLIANCE_RULES is a comma-separated list of enabled rule ids
     # (prohibited_commands, credential_leakage) resolved against
