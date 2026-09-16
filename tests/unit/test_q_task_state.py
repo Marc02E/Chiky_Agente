@@ -150,6 +150,21 @@ class TestProgressDetector:
         d.record("execute_command", {"command": "pytest"}, {"exit_code": 0})
         assert d.mutation_happened()
 
+    def test_failed_mutation_is_not_completed(self) -> None:
+        # A mutating tool that returns an error must NOT count as a performed
+        # change (FASE Q.5 completion honesty). Attempts still register so the
+        # loop-break heuristics (read_without_modify) stay unchanged.
+        d = ProgressDetector()
+        d.record("create_file", {"path": "/tmp/a.py"}, {"error": "path is required"})
+        assert not d.mutation_happened()
+        d.record("modify_file", {"path": "/tmp/a.py"}, {"result": "modified"})
+        assert d.mutation_happened()
+
+    def test_failed_execute_is_not_completed(self) -> None:
+        d = ProgressDetector()
+        d.record("execute_command", {"command": "rm"}, {"error": "permission denied"})
+        assert not d.mutation_happened()
+
     def test_identical_repetition_detected(self) -> None:
         d = ProgressDetector()
         for _ in range(MAX_IDENTICAL_CALLS + 1):

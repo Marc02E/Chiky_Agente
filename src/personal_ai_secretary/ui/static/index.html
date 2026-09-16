@@ -91,7 +91,7 @@
                                     <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
                                 </svg>
                             </button>
-                            <input type="file" id="file-input" accept="text/*,.json,.xml,.csv,.md,.txt,.log,.py,.js,.ts,.html,.css,.yaml,.yml" style="display:none" />
+                            <input type="file" id="file-input" accept="text/*,.json,.xml,.csv,.md,.txt,.log,.py,.js,.ts,.html,.css,.yaml,.yml,image/*" style="display:none" />
                             <textarea
                                 id="chat-input"
                                 class="chat-input"
@@ -123,6 +123,49 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <div class="setting-group">
+                        <h3 class="setting-label">How do you want to work?</h3>
+                        <div class="routing-mode-selector" id="routing-mode-selector">
+                            <label class="routing-mode-option">
+                                <input type="radio" name="routing-mode" value="automatic" checked>
+                                <span class="routing-mode-card">
+                                    <span class="routing-mode-icon">&#129302;</span>
+                                    <span class="routing-mode-title">Automatic</span>
+                                    <span class="routing-mode-desc">Chiky selects the best provider and model</span>
+                                </span>
+                            </label>
+                            <label class="routing-mode-option">
+                                <input type="radio" name="routing-mode" value="manual">
+                                <span class="routing-mode-card">
+                                    <span class="routing-mode-icon">&#127919;</span>
+                                    <span class="routing-mode-title">Manual</span>
+                                    <span class="routing-mode-desc">You choose exactly which provider and model to use</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div id="manual-provider-section" class="setting-group hidden">
+                        <h3 class="setting-label">Provider</h3>
+                        <select id="manual-provider-select" class="text-input">
+                            <option value="">-- Select provider --</option>
+                        </select>
+                        <h3 class="setting-label" style="margin-top:12px">Model</h3>
+                        <select id="manual-model-select" class="text-input">
+                            <option value="">-- Select model --</option>
+                        </select>
+                        <div id="manual-provider-status" class="provider-manual-status hidden">
+                            <span id="manual-status-badge" class="status-badge"></span>
+                            <span id="manual-status-text"></span>
+                        </div>
+                    </div>
+                    <div id="auto-provider-display" class="setting-group">
+                        <div class="auto-provider-info">
+                            <span class="auto-provider-label">Provider selected by Chiky:</span>
+                            <span id="auto-provider-name" class="auto-provider-name">--</span>
+                            <span id="auto-provider-model" class="auto-provider-model"></span>
+                            <span id="auto-provider-reason" class="auto-provider-reason"></span>
+                        </div>
+                    </div>
                     <div class="setting-group">
                         <h3 class="setting-label">Theme</h3>
                         <div class="theme-options" id="theme-options">
@@ -175,8 +218,28 @@
                                 <button id="btn-test-nvidia" class="btn btn-ghost btn-sm btn-test-connection" title="Test NVIDIA connection">Test Connection</button>
                             </div>
                             <div class="provider-config-item">
+                                <label class="setting-label-sm">Ollama (local)</label>
+                                <div class="input-with-status">
+                                    <input id="ollama-base-url" type="text" class="text-input" placeholder="http://localhost:11434" autocomplete="off" disabled />
+                                    <span id="ollama-status" class="provider-config-status"></span>
+                                </div>
+                                <button id="btn-test-ollama" class="btn btn-ghost btn-sm btn-test-connection" title="Test Ollama connection">Test Connection</button>
+                            </div>
+                            <div class="provider-config-item">
+                                <label class="setting-label-sm">OpenCode Server credentials</label>
+                                <div class="input-with-status">
+                                    <input id="opencode-username" type="text" class="text-input" placeholder="OpenCode username" autocomplete="off" />
+                                </div>
+                                <div class="input-with-status">
+                                    <input id="opencode-password" type="password" class="text-input" placeholder="OpenCode password" autocomplete="off" />
+                                    <span id="opencode-status" class="provider-config-status"></span>
+                                </div>
+                                <button id="btn-test-opencode" class="btn btn-ghost btn-sm btn-test-connection" title="Test OpenCode connection">Test Connection</button>
+                            </div>
+                            <div class="provider-config-item">
                                 <label class="setting-label-sm">Default Model</label>
                                 <select id="ai-provider-mode" class="text-input">
+                                    <option value="auto" selected>Auto (Detect Best Provider)</option>
                                     <option value="local">Local (Ollama)</option>
                                     <option value="remote">Cloud (Gemini/NVIDIA)</option>
                                     <option value="deterministic">Demo Mode</option>
@@ -191,6 +254,32 @@
                         <p class="setting-hint">Discovered providers and their verification status.</p>
                         <div id="provider-info-content" class="provider-info-content">
                             <div class="provider-info-loading">Loading provider info...</div>
+                        </div>
+                    </div>
+                    <div class="setting-group">
+                        <h3 class="setting-label">Execution Transparency</h3>
+                        <p class="setting-hint">Shows which provider and model executed your last request.</p>
+                        <div id="provenance-display" class="provenance-display">
+                            <div class="provenance-row">
+                                <span class="prov-label">Mode:</span>
+                                <span id="prov-mode" class="prov-value">--</span>
+                            </div>
+                            <div class="provenance-row">
+                                <span class="prov-label">Requested:</span>
+                                <span id="prov-requested" class="prov-value">--</span>
+                            </div>
+                            <div class="provenance-row">
+                                <span class="prov-label">Actual:</span>
+                                <span id="prov-actual" class="prov-value">--</span>
+                            </div>
+                            <div class="provenance-row">
+                                <span class="prov-label">Status:</span>
+                                <span id="prov-status" class="prov-value">--</span>
+                            </div>
+                            <div class="provenance-row">
+                                <span class="prov-label">Fallback:</span>
+                                <span id="prov-fallback" class="prov-value">None</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -242,6 +331,61 @@
                 <div class="modal-footer">
                     <button id="btn-cancel-approval" class="btn btn-ghost">Cancel</button>
                     <button id="btn-confirm-approval" class="btn btn-primary">Approve</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FASE AB.6: First-run setup wizard -->
+        <div id="wizard-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-label="Chiky setup">
+            <div class="modal modal-wizard">
+                <div class="modal-header">
+                    <h2 class="modal-title">Welcome to Chiky</h2>
+                </div>
+                <div class="modal-body">
+                    <p class="setting-hint">Let's configure the AI providers Chiky can use. Status is checked live; enter credentials for any provider you want to use.</p>
+                    <div id="wizard-provider-grid" class="wizard-provider-grid">
+                        <div class="provider-info-loading">Checking providers...</div>
+                    </div>
+                    <div class="setting-group wizard-routing-group">
+                        <h3 class="setting-label">How do you want to work?</h3>
+                        <div class="routing-mode-selector" id="wizard-routing-mode">
+                            <label class="routing-mode-option">
+                                <input type="radio" name="wizard-routing-mode" value="automatic" checked>
+                                <span class="routing-mode-card">
+                                    <span class="routing-mode-icon">&#129302;</span>
+                                    <span class="routing-mode-title">Automatic</span>
+                                    <span class="routing-mode-desc">Chiky selects the best provider and model</span>
+                                </span>
+                            </label>
+                            <label class="routing-mode-option">
+                                <input type="radio" name="wizard-routing-mode" value="manual">
+                                <span class="routing-mode-card">
+                                    <span class="routing-mode-icon">&#127919;</span>
+                                    <span class="routing-mode-title">Manual</span>
+                                    <span class="routing-mode-desc">You choose exactly which provider and model to use</span>
+                                </span>
+                            </label>
+                        </div>
+                        <div id="wizard-manual-selection" class="wizard-manual-selection hidden">
+                            <div class="wizard-manual-row">
+                                <label class="setting-label-sm">Provider</label>
+                                <select id="wizard-manual-provider" class="text-input">
+                                    <option value="">-- Select provider --</option>
+                                </select>
+                            </div>
+                            <div class="wizard-manual-row">
+                                <label class="setting-label-sm">Model</label>
+                                <select id="wizard-manual-model" class="text-input">
+                                    <option value="">-- Select model --</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer wizard-footer">
+                    <button id="btn-wizard-skip" class="btn btn-ghost">Skip for now</button>
+                    <span id="wizard-save-status" class="provider-config-status"></span>
+                    <button id="btn-wizard-finish" class="btn btn-primary">Start using Chiky</button>
                 </div>
             </div>
         </div>

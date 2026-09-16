@@ -19,12 +19,12 @@ os.environ["AI_PROVIDER"] = "local"
 from personal_ai_secretary.agents.builtin import ExecutionAgent
 from personal_ai_secretary.agents.contracts import AgentInput
 from personal_ai_secretary.domain.contracts import RiskLevel
-from personal_ai_secretary.tools.registry import ToolRegistry
-from personal_ai_secretary.tools.filesystem import register_filesystem_tools
-from personal_ai_secretary.tools.development import register_development_tools
+from personal_ai_secretary.providers.ollama import OllamaProvider
 from personal_ai_secretary.tools.command import register_command_tools
 from personal_ai_secretary.tools.datetime_tool import register_datetime_tools
-from personal_ai_secretary.providers.ollama import OllamaProvider
+from personal_ai_secretary.tools.development import register_development_tools
+from personal_ai_secretary.tools.filesystem import register_filesystem_tools
+from personal_ai_secretary.tools.registry import ToolRegistry
 
 
 def build_agent(model: str) -> tuple[ExecutionAgent, ToolRegistry]:
@@ -77,7 +77,7 @@ def extract_metrics(agent: ExecutionAgent, reg: ToolRegistry, elapsed: float) ->
     }
 
 
-async def run_scenario(name: str, model: str, request_text: str, context: dict, timeout: int = 300) -> dict:
+async def run_scenario(name: str, model: str, request_text: str, context: dict, timeout_s: int = 300) -> dict:
     ws = Path(os.environ.get("TEMP", ".")) / f"chiky_s1_{name}"
     ws.mkdir(parents=True, exist_ok=True)
     
@@ -95,14 +95,14 @@ async def run_scenario(name: str, model: str, request_text: str, context: dict, 
     
     start = time.monotonic()
     try:
-        artifact = await asyncio.wait_for(agent.run(data), timeout=timeout)
+        artifact = await asyncio.wait_for(agent.run(data), timeout=timeout_s)
         elapsed = time.monotonic() - start
         metrics = extract_metrics(agent, reg, elapsed)
         metrics["final_response"] = artifact.content[:500] if artifact.content else ""
         metrics["scenario"] = name
         metrics["model"] = model
         return metrics
-    except asyncio.TimeoutError:
+    except TimeoutError:
         elapsed = time.monotonic() - start
         return {
             "scenario": name,
@@ -111,7 +111,7 @@ async def run_scenario(name: str, model: str, request_text: str, context: dict, 
             "final_status": "TIMEOUT",
             "llm_calls": 0,
             "tool_calls": 0,
-            "error": f"Timeout after {timeout}s",
+            "error": f"Timeout after {timeout_s}s",
         }
     except Exception as e:
         elapsed = time.monotonic() - start
@@ -138,7 +138,7 @@ async def baseline():
         "llama3.1:latest",
         "Create a file called hello.txt with content 'Hello World'",
         {"authorized": True, "approval_granted": True},
-        timeout=180,
+        timeout_s=180,
     )
     results.append(r)
     print(f"[baseline] file_create: {r['total_duration']}s, llm={r.get('llm_calls')}, tools={r.get('tool_calls')}, rounds={r.get('tool_rounds')}")
@@ -149,7 +149,7 @@ async def baseline():
         "llama3.1:latest",
         "Analyze this project and tell me what frameworks it uses",
         {"authorized": True, "approval_granted": True},
-        timeout=180,
+        timeout_s=180,
     )
     results.append(r)
     print(f"[baseline] project_analysis: {r['total_duration']}s, llm={r.get('llm_calls')}, tools={r.get('tool_calls')}, rounds={r.get('tool_rounds')}")
@@ -160,7 +160,7 @@ async def baseline():
         "llama3.1:latest",
         "Hello, what can you do?",
         {"authorized": True, "approval_granted": True},
-        timeout=120,
+        timeout_s=120,
     )
     results.append(r)
     print(f"[baseline] simple_chat: {r['total_duration']}s, llm={r.get('llm_calls')}, tools={r.get('tool_calls')}, rounds={r.get('tool_rounds')}")
@@ -171,7 +171,7 @@ async def baseline():
         "deepseek-coder-v2:latest",
         "Create a file called test.py with content 'print(\"hello\")'",
         {"authorized": True, "approval_granted": True},
-        timeout=180,
+        timeout_s=180,
     )
     results.append(r)
     print(f"[baseline] deepseek_file_create: {r['total_duration']}s, llm={r.get('llm_calls')}, tools={r.get('tool_calls')}, rounds={r.get('tool_rounds')}")

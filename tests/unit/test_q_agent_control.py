@@ -8,8 +8,9 @@ failure recovery, honest completion, and latency classification.
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from typing import Any
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 from uuid import uuid4
 
 import pytest
@@ -73,6 +74,15 @@ def _mock_registry(
             }
         if tool_name == "modify_file":
             return {"result": "modified", "path": args.get("path", "/tmp/x.py")}
+        if tool_name == "create_project":
+            # Real create_project handler — actually produces artifacts so the
+            # task can honestly complete (FASE Q.5 requires a real mutation).
+            base = args.get("path", "/tmp/newproj")
+            for rel in ("README.md",):
+                target = Path(base) / rel
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text("created")
+            return {"result": "created", "path": base, "verified_exists": True}
         if tool_name == "read_file":
             return {"result": "content...", "path": args.get("path", "")}
         return {"result": "ok"}
@@ -82,7 +92,7 @@ def _mock_registry(
     tools = {
         name: MagicMock(name=name, requires_explicit_approval=name in approval_tools)
         for name in (
-            "execute_command", "create_file", "modify_file",
+            "execute_command", "create_file", "modify_file", "create_project",
             "read_file", "list_directory", "search_files", "file_exists",
         )
     }
@@ -237,13 +247,81 @@ async def test_scenario_f_model_failure_classified() -> None:
 
     provider.generate = AsyncMock(side_effect=generate)
     agent = ExecutionAgent(provider=provider, registry=_mock_registry())
-    result = await agent.run(_make_input("Create a file named x.txt"))
+    with patch(
+        "personal_ai_secretary.providers.factory.get_model_manager",
+        return_value=None,
+    ):
+        result = await agent.run(_make_input("Create a file named x.txt"))
     content = result.content.lower()
     assert "error" in content or "unavailable" in content
     m = agent.last_metrics
     assert m.model_failures == 1
     assert m.final_task_state == "failed"
     assert m.state_transitions[-1].endswith(">failed")
+
+
+# ---------------------------------------------------------------------------
+# Scenario F2 — RuntimeError from provider (empty/unexpected response) is
+# classified as a failure (FASE AB.4: previously bypassed the fallback gate)
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_scenario_f2_runtime_error_classified() -> None:
+    provider = MagicMock()
+    provider.name = "mock"
+    provider.model = "test-model"
+
+    async def generate(request: Any) -> ProviderResponse:
+        raise RuntimeError("OpenCode returned an empty response.")
+
+    provider.generate = AsyncMock(side_effect=generate)
+    agent = ExecutionAgent(provider=provider, registry=_mock_registry())
+    with patch(
+        "personal_ai_secretary.providers.factory.get_model_manager",
+        return_value=None,
+    ):
+        result = await agent.run(_make_input("Create a file named x.txt"))
+    content = result.content.lower()
+    assert "couldn't complete the request" in content
+    assert "unexpected error" not in content
+    m = agent.last_metrics
+    assert m.model_failures == 1
+    assert m.final_task_state == "failed"
+
+
+# ---------------------------------------------------------------------------
+# Scenario F3 — a failure suggestion must NOT masquerade as an executed
+# fallback (FASE AB.4: fallback_active must mean an actual switch)
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_scenario_f3_suggestion_not_executed_fallback() -> None:
+    """A provider that fails with no fallback manager available reports
+    fallback_active=False, even though a model suggestion may be raised.
+    MANUAL mode must never register an executed fallback that did not
+    actually happen."""
+    provider = MagicMock()
+    provider.name = "mock"
+    provider.model = "test-model"
+
+    async def generate(request: Any) -> ProviderResponse:
+        raise RuntimeError("OpenCode returned an empty response.")
+
+    provider.generate = AsyncMock(side_effect=generate)
+    # No ModelManager singleton -> the fallback switch path is never taken.
+    agent = ExecutionAgent(provider=provider, registry=_mock_registry())
+    with patch(
+        "personal_ai_secretary.providers.factory.get_model_manager",
+        return_value=None,
+    ):
+        result = await agent.run(_make_input("Create a file named x.txt"))
+    assert "couldn't complete the request" in result.content.lower()
+    m = agent.last_metrics
+    assert m.fallback_executed is False
+    meta = agent._execution_metadata()
+    assert meta.get("fallback_active") is False
 
 
 # ---------------------------------------------------------------------------

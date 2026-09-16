@@ -8,7 +8,7 @@ from personal_ai_secretary.providers.ollama import OllamaProvider
 from personal_ai_secretary.providers.remote import NVIDIAProvider
 from personal_ai_secretary.shared.config import get_settings
 
-AVAILABLE_PROVIDER_MODES: Final[tuple[str, ...]] = ("deterministic", "local", "remote")
+AVAILABLE_PROVIDER_MODES: Final[tuple[str, ...]] = ("auto", "deterministic", "local", "remote")
 
 _logger = logging.getLogger(__name__)
 
@@ -48,6 +48,31 @@ def get_provider() -> AIProvider:
                 "Set NVIDIA_API_KEY env variable or use deterministic/local mode."
             )
         return NVIDIAProvider()
+    if provider == "auto":
+        # FASE Y: Auto mode - detect best available provider
+        # Priority: local Ollama > cloud providers > deterministic fallback
+        settings = get_settings()
+        try:
+            ollama = OllamaProvider(model=None)
+            import asyncio
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                # During async context, create task instead
+                _logger.info("Auto mode: returning OllamaProvider for local inference")
+                with _model_lock:
+                    model = _current_ollama_model
+                return OllamaProvider(model=model)
+            else:
+                health = loop.run_until_complete(ollama.health())
+                if health.available:
+                    with _model_lock:
+                        model = _current_ollama_model
+                    return OllamaProvider(model=model)
+        except Exception:
+            pass
+        # Fallback to deterministic if no providers available
+        _logger.warning("Auto mode: no providers available, falling back to deterministic")
+        return DeterministicProvider()
     raise RuntimeError("Unsupported AI provider mode.")
 
 

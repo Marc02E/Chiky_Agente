@@ -1,0 +1,137 @@
+{
+  "fase": "CHAT-HANG-02",
+  "prueba": "H1_pipe_sin_drenar_launchpy",
+  "ts": "2026-09-10T19:52:06.230+00:00",
+  "spawn": "python -m uvicorn ... --stdout=subprocess.PIPE (sin reader thread, igual que launch.py)",
+  "backend_pid": 18196,
+  "ready_en_s": 18.76,
+  "ready": true,
+  "poll_after_startup": null,
+  "rafaga": [
+    {
+      "i": 1,
+      "ok": true,
+      "status": 200,
+      "ms": 3
+    },
+    {
+      "i": 2,
+      "ok": true,
+      "status": 200,
+      "ms": 4
+    },
+    {
+      "i": 3,
+      "ok": true,
+      "status": 200,
+      "ms": 5
+    },
+    {
+      "i": 4,
+      "ok": true,
+      "status": 200,
+      "ms": 4
+    },
+    {
+      "i": 5,
+      "ok": true,
+      "status": 200,
+      "ms": 5
+    },
+    {
+      "i": 6,
+      "ok": true,
+      "status": 200,
+      "ms": 5
+    },
+    {
+      "i": 7,
+      "ok": true,
+      "status": 200,
+      "ms": 5
+    },
+    {
+      "i": 8,
+      "ok": true,
+      "status": 200,
+      "ms": 4
+    },
+    {
+      "i": 9,
+      "ok": true,
+      "status": 200,
+      "ms": 4
+    },
+    {
+      "i": 10,
+      "ok": true,
+      "status": 200,
+      "ms": 4
+    },
+    {
+      "i": 11,
+      "ok": true,
+      "status": 200,
+      "ms": 4
+    },
+    {
+      "i": 12,
+      "ok": true,
+      "status": 200,
+      "ms": 4
+    },
+    {
+      "i": 13,
+      "ok": true,
+      "status": 200,
+      "ms": 4
+    },
+    {
+      "i": 14,
+      "ok": true,
+      "status": 200,
+      "ms": 5
+    },
+    {
+      "i": 15,
+      "ok": true,
+      "status": 200,
+      "ms": 3
+    },
+    {
+      "i": 16,
+      "ok": true,
+      "status": 200,
+      "ms": 5
+    },
+    {
+      "i": 17,
+      "ok": true,
+      "status": 200,
+      "ms": 4
+    },
+    {
+      "i": 18,
+      "ok": true,
+      "status": 200,
+      "ms": 4
+    },
+    {
+      "i": 19,
+      "ok": true,
+      "status": 200,
+      "ms": 4
+    },
+    {
+      "i": 20,
+      "ok": false,
+      "error": "timed out",
+      "ms": 4008
+    }
+  ],
+  "requests_total": 20,
+  "failures": 1,
+  "conclusion": "H1 CONFIRMADO: primer request bloqueado en rafaga i=20 despues de 19 requests ok (pipe lleno)",
+  "pipe_bytes": 0,
+  "al_final_pipe_estado": "terminated_por_lab"
+}

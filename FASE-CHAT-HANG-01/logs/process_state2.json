@@ -1,0 +1,211 @@
+[
+  {
+    "label": "antes_2do_arranque",
+    "at": "2026-09-10T16:54:28.968+00:00",
+    "processes": [
+      {
+        "pid": 17736,
+        "ppid": 9384,
+        "name": "OpenCode.exe",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" "
+      },
+      {
+        "pid": 14688,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "cmd": "C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe --type=crashpad-handler --user-data-dir=C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode."
+      },
+      {
+        "pid": 9808,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=gpu-process --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.de"
+      },
+      {
+        "pid": 11024,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=es-419 --servi"
+      },
+      {
+        "pid": 5036,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=utility --utility-sub-type=node.mojom.NodeService --lang=es-419 --service-san"
+      },
+      {
+        "pid": 16700,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=renderer --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.deskt"
+      },
+      {
+        "pid": 16224,
+        "ppid": 22736,
+        "name": "opencode.exe",
+        "cmd": "C:\\Users\\mriverab\\AppData\\Local\\pi-node\\current\\node_modules\\opencode-ai\\bin\\opencode.exe serve --port 58096 --hostname 127.0.0.1"
+      },
+      {
+        "pid": 8188,
+        "ppid": 4032,
+        "name": "python.exe",
+        "cmd": "\"C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe\" C:\\Users\\mriverab\\AppData\\Local\\Temp\\opencode\\chatyhang_reap2.py"
+      },
+      {
+        "pid": 17036,
+        "ppid": 8188,
+        "name": "python.exe",
+        "cmd": "\"C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe\" C:\\Users\\mriverab\\AppData\\Local\\Temp\\opencode\\chatyhang_reap2.py"
+      }
+    ],
+    "ports_8000_51021_4097": []
+  },
+  {
+    "label": "despues_2do_arranque_listo",
+    "at": "2026-09-10T16:54:49.922+00:00",
+    "processes": [
+      {
+        "pid": 17736,
+        "ppid": 9384,
+        "name": "OpenCode.exe",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" "
+      },
+      {
+        "pid": 14688,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "cmd": "C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe --type=crashpad-handler --user-data-dir=C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode."
+      },
+      {
+        "pid": 9808,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=gpu-process --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.de"
+      },
+      {
+        "pid": 11024,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=es-419 --servi"
+      },
+      {
+        "pid": 5036,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=utility --utility-sub-type=node.mojom.NodeService --lang=es-419 --service-san"
+      },
+      {
+        "pid": 16700,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=renderer --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.deskt"
+      },
+      {
+        "pid": 8188,
+        "ppid": 4032,
+        "name": "python.exe",
+        "cmd": "\"C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe\" C:\\Users\\mriverab\\AppData\\Local\\Temp\\opencode\\chatyhang_reap2.py"
+      },
+      {
+        "pid": 17036,
+        "ppid": 8188,
+        "name": "python.exe",
+        "cmd": "\"C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe\" C:\\Users\\mriverab\\AppData\\Local\\Temp\\opencode\\chatyhang_reap2.py"
+      },
+      {
+        "pid": 23268,
+        "ppid": 17036,
+        "name": "python.exe",
+        "cmd": "C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe -m uvicorn personal_ai_secretary.api.app:app --host 127.0.0.1 --port 8000 -"
+      },
+      {
+        "pid": 22608,
+        "ppid": 23268,
+        "name": "python.exe",
+        "cmd": "C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe -m uvicorn personal_ai_secretary.api.app:app --host 127.0.0.1 --port 8000 -"
+      },
+      {
+        "pid": 3176,
+        "ppid": 22608,
+        "name": "opencode.exe",
+        "cmd": "C:\\Users\\mriverab\\AppData\\Local\\pi-node\\current\\node_modules\\opencode-ai\\bin\\opencode.exe serve --port 53120 --hostname 127.0.0.1"
+      }
+    ],
+    "ports_8000_51021_4097": [
+      "TCP    127.0.0.1:8000         0.0.0.0:0              LISTENING       22608",
+      "TCP    127.0.0.1:53126        127.0.0.1:8000         TIME_WAIT       0"
+    ]
+  },
+  {
+    "label": "served_js",
+    "at": "2026-09-10T16:54:50.938276+00:00",
+    "markers_encontrados": [
+      "CHIKY_CHAT_TIMEOUT_MS",
+      "CHAT_REQUEST_TIMEOUT_MS",
+      "chatFailureMessage",
+      "AbortController"
+    ],
+    "len_js": 84265,
+    "index_tiene_appjs": true,
+    "fragmento_timeout": "CHIKY_CHAT_TIMEOUT_MS.\r\n    var CHAT_REQUEST_TIMEOUT_MS = 180000;\r\n    function chatRequestTimeoutMs() {\r\n        var custom = window.CHIKY_CHAT_TIMEOUT_MS;\r\n        return (typeof custom === 'number' && custom > 0) ? cu"
+  },
+  {
+    "label": "despues_apagado",
+    "at": "2026-09-10T16:54:54.245+00:00",
+    "processes": [
+      {
+        "pid": 17736,
+        "ppid": 9384,
+        "name": "OpenCode.exe",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" "
+      },
+      {
+        "pid": 14688,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "cmd": "C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe --type=crashpad-handler --user-data-dir=C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode."
+      },
+      {
+        "pid": 9808,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=gpu-process --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.de"
+      },
+      {
+        "pid": 11024,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=es-419 --servi"
+      },
+      {
+        "pid": 5036,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=utility --utility-sub-type=node.mojom.NodeService --lang=es-419 --service-san"
+      },
+      {
+        "pid": 16700,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=renderer --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.deskt"
+      },
+      {
+        "pid": 8188,
+        "ppid": 4032,
+        "name": "python.exe",
+        "cmd": "\"C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe\" C:\\Users\\mriverab\\AppData\\Local\\Temp\\opencode\\chatyhang_reap2.py"
+      },
+      {
+        "pid": 17036,
+        "ppid": 8188,
+        "name": "python.exe",
+        "cmd": "\"C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe\" C:\\Users\\mriverab\\AppData\\Local\\Temp\\opencode\\chatyhang_reap2.py"
+      }
+    ],
+    "ports_8000_51021_4097": [
+      "TCP    127.0.0.1:53126        127.0.0.1:8000         TIME_WAIT       0",
+      "TCP    127.0.0.1:56734        127.0.0.1:8000         TIME_WAIT       0",
+      "TCP    127.0.0.1:56735        127.0.0.1:8000         TIME_WAIT       0"
+    ]
+  }
+]

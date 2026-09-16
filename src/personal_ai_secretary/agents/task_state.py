@@ -246,6 +246,8 @@ class ProgressDetector:
     read_only_rounds: int = 0
     mutating_calls: int = 0
     executing_calls: int = 0
+    successful_mutating_calls: int = 0
+    successful_executing_calls: int = 0
     last_tools: list[str] = field(default_factory=list)
     directives_issued: int = 0
 
@@ -274,13 +276,23 @@ class ProgressDetector:
         elif tool_name in MODIFY_TOOLS:
             self.mutating_calls += 1
             self.read_only_rounds = 0
+            if not result.get("error"):
+                self.successful_mutating_calls += 1
         elif tool_name in EXECUTE_TOOLS:
             self.executing_calls += 1
             self.read_only_rounds = 0
+            if not result.get("error"):
+                self.successful_executing_calls += 1
 
     def mutation_happened(self) -> bool:
-        """Whether any state-changing operation (file or command) executed."""
-        return self.mutating_calls > 0 or self.executing_calls > 0
+        """Whether any state-changing operation (file or command) succeeded.
+
+        An attempted mutation whose handler returned an ``error`` is NOT a
+        performed change: it must not satisfy FASE Q.5's completion
+        requirement. Attempt counts (``mutating_calls``/``executing_calls``)
+        are kept for loop-break heuristics (``read_without_modify``).
+        """
+        return self.successful_mutating_calls > 0 or self.successful_executing_calls > 0
 
     def evaluate(
         self,

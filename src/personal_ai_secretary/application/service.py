@@ -40,12 +40,18 @@ _STALE_RUNNING_RESULT = (
     "Workflow execution was interrupted; request recovered from a stale running state."
 )
 
+_MANUAL_UNAVAILABLE_MESSAGE = (
+    "The selected provider is unavailable in MANUAL routing mode; "
+    "no automatic fallback is allowed. Enable Automatic routing or select "
+    "an available provider."
+)
+
 
 class RequestService:
     def __init__(
         self,
         session: AsyncSession,
-        provider: AIProvider,
+        provider: AIProvider | None,
         memory: MemoryStore | None = None,
         retriever: Retriever | None = None,
         tools: ToolRegistry | None = None,
@@ -59,6 +65,7 @@ class RequestService:
         self.tools = tools
         self.evaluator = evaluator
         self.observability = observability
+        self._last_fallback: dict[str, Any] | None = None
 
     async def create(
         self,
@@ -167,6 +174,7 @@ class RequestService:
         request_id: UUID,
         user_id: str | None = None,
         approval_granted: bool = False,
+        image_attachments: list[str] | None = None,
     ) -> RequestStatus | None:
         transition = (
             update(RequestRecord)
@@ -219,7 +227,32 @@ class RequestService:
             observability=observation,
         )
         session_history = await self._fetch_session_history(record.session_id, record.user_id)
+        if self.provider is None:
+            # FASE RELEASE: MANUAL mode with an unavailable provider. Fail
+            # explicitly with provenance instead of silently executing another
+            # provider. _service() pre-set self._last_fallback with the
+            # "unavailable" provenance for this request; do not overwrite it.
+            record.status = "failed"
+            record.result = _MANUAL_UNAVAILABLE_MESSAGE
+            if observation is not None:
+                observation.inc("requests_failed")
+                await observation.emit(
+                    stage="request",
+                    request_id=record.request_id,
+                    user_id=record.user_id,
+                    correlation_id=record.correlation_id,
+                    session_id=record.session_id,
+                    outcome="failed",
+                    error=_MANUAL_UNAVAILABLE_MESSAGE,
+                )
+            record.updated_at = datetime.now(UTC)
+            await self.session.commit()
+            return await self.get(request_id, user_id)
         result: WorkflowResult | None = None
+        # FASE AB.6: image attachments travel to the vision provider directly.
+        _context: dict[str, object] = {"approval_granted": approval_granted}
+        if image_attachments:
+            _context["images"] = list(image_attachments)
         try:
             result = await workflow.run(
                 request_id=record.request_id,
@@ -228,7 +261,7 @@ class RequestService:
                 text=record.input,
                 correlation_id=record.correlation_id,
                 risk_level=classify_risk(record.input),
-                context={"approval_granted": approval_granted},
+                context=_context,
                 session_history=session_history,
             )
         except Exception as exc:
@@ -250,6 +283,7 @@ class RequestService:
                     error=exc,
                 )
         if result is not None:
+            self._last_fallback = result.fallback
             record.status = result.status
             if result.status == "completed":
                 record.result = result.response
@@ -391,9 +425,12 @@ class RequestService:
         correlation_id: str,
         idempotency_key: str | None,
         approval_granted: bool = False,
+        image_attachments: list[str] | None = None,
     ) -> SendMessageResponse:
         accepted = await self.create(payload, user_id, correlation_id, idempotency_key)
-        result = await self.execute(accepted.request_id, user_id, approval_granted)
+        result = await self.execute(
+            accepted.request_id, user_id, approval_granted, image_attachments or []
+        )
         if result is None:
             raise RuntimeError("Request disappeared during message execution")
 
@@ -433,6 +470,7 @@ class RequestService:
             user_message=user_message,
             assistant_message=assistant_message,
             correlation_id=request_record.correlation_id,
+            fallback_info=self._last_fallback,
         )
 
     async def history(

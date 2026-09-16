@@ -44,15 +44,17 @@ class ProviderDiscovery:
         provider = OllamaProvider()
         health = await provider.health()
         models: list[str] = []
-        if health.available:
-            try:
-                models = await provider.list_models()
-            except Exception:
-                models = []
+        # Even when the configured default model is absent, Ollama may still
+        # serve other models; always try to enumerate them so the registry
+        # can offer them for selection.
+        try:
+            models = await provider.list_models()
+        except Exception:
+            models = []
         self._discovered["ollama"] = DiscoveredProvider(
             name="ollama",
             display_name="Ollama (Local)",
-            available=health.available,
+            available=health.available or bool(models),
             mode="local",
             models=models,
             detail=health.detail,
@@ -87,11 +89,15 @@ class ProviderDiscovery:
         from personal_ai_secretary.providers.opencode_provider import OpenCodeProvider
 
         settings = get_settings()
+        # FASE AB.7: a single provider handles both an externally reachable
+        # server AND a Chiky-managed `opencode serve` process (auto-started).
         provider = OpenCodeProvider(
             base_url=settings.opencode_base_url,
             model=settings.opencode_model,
+            manage_server=True,
         )
         health = await provider.health()
+
         models: list[str] = []
         if health.available:
             try:

@@ -187,3 +187,34 @@ class TestEndpointCoverage:
             headers=self.AUTH,
         )
         assert resp.status_code in (400, 500)
+
+
+# FASE AB.6 — First-run setup status shape
+
+
+class TestSetupStatus:
+    def test_setup_status_shape(self, client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+        from personal_ai_secretary.providers import setup as setup_module
+        from personal_ai_secretary.providers.setup import ProviderStatus
+
+        async def _fake_statuses() -> list[ProviderStatus]:
+            return [
+                ProviderStatus(provider="ollama", status="AVAILABLE", detail="Ollama reachable with 5 models", models=["qwen3:32b", "llama3.1:8b"]),
+                ProviderStatus(provider="opencode", status="AUTH_ERROR", detail="OpenCode authentication failed"),
+                ProviderStatus(provider="gemini", status="NOT_CONFIGURED", detail="Gemini API key not configured"),
+                ProviderStatus(provider="nvidia", status="NOT_CONFIGURED", detail="NVIDIA API key not configured"),
+            ]
+
+        monkeypatch.setattr(setup_module, "provider_statuses", _fake_statuses)
+        resp = client.get("/api/v1/setup/status")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert "setup_required" in data
+        assert isinstance(data["setup_required"], bool)
+        assert "routing_configured" in data
+        assert isinstance(data["routing_configured"], bool)
+        providers = data["providers"]
+        assert set(providers) == {"ollama", "opencode", "gemini", "nvidia"}
+        assert providers["ollama"]["status"] == "AVAILABLE"
+        # With Ollama available and cloud unconfigured, wizard is not mandatory
+        assert data["setup_required"] is False

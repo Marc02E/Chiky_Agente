@@ -1,0 +1,2 @@
+INFO:     127.0.0.1:58104 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58106 - "POST /api/v1/sessions/108c9b3a-4cfb-4dce-a393-260a8925cc42/messages HTTP/1.1" 200 OK

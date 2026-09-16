@@ -18,20 +18,17 @@ from uuid import uuid4
 import pytest
 
 from personal_ai_secretary.agents.builtin import ExecutionAgent
-from personal_ai_secretary.agents.evidence import EvidenceTracker
-from personal_ai_secretary.agents.contracts import AgentInput, AgentRole
+from personal_ai_secretary.agents.contracts import AgentInput
 from personal_ai_secretary.domain.contracts import RiskLevel
-from personal_ai_secretary.tools.registry import ToolRegistry, ToolError
-from personal_ai_secretary.tools.filesystem import (
-    register_filesystem_tools,
-    DEFAULT_ALLOWED_ROOTS,
-)
-from personal_ai_secretary.tools.development import register_development_tools
+from personal_ai_secretary.providers.ollama import OllamaProvider
 from personal_ai_secretary.tools.command import register_command_tools
 from personal_ai_secretary.tools.datetime_tool import register_datetime_tools
-from personal_ai_secretary.providers.ollama import OllamaProvider
-from personal_ai_secretary.shared.config import get_settings
-
+from personal_ai_secretary.tools.development import register_development_tools
+from personal_ai_secretary.tools.filesystem import (
+    DEFAULT_ALLOWED_ROOTS,
+    register_filesystem_tools,
+)
+from personal_ai_secretary.tools.registry import ToolError, ToolRegistry
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -82,7 +79,7 @@ class TestSecurityBackend:
                 approved=True,
             )
         assert not outside.exists(), "File was created outside allowed root!"
-        print(f"  [Security] Path traversal: BLOCKED")
+        print("  [Security] Path traversal: BLOCKED")
 
     @pytest.mark.asyncio
     async def test_sibling_directory_bypass_blocked(self, narrow_registry, narrow_workspace):
@@ -97,7 +94,7 @@ class TestSecurityBackend:
                 approved=True,
             )
         assert not target.exists(), "File created outside allowed root!"
-        print(f"  [Security] Sibling bypass: BLOCKED")
+        print("  [Security] Sibling bypass: BLOCKED")
 
     @pytest.mark.asyncio
     async def test_protected_file_delete_requires_approval(self, narrow_registry, narrow_workspace):
@@ -112,7 +109,7 @@ class TestSecurityBackend:
                 approved=False,
             )
         assert target.exists(), "File deleted without approval!"
-        print(f"  [Security] Protected file delete: BLOCKED (no approval)")
+        print("  [Security] Protected file delete: BLOCKED (no approval)")
 
     @pytest.mark.asyncio
     async def test_command_chaining_blocked(self, full_registry, narrow_workspace):
@@ -123,7 +120,7 @@ class TestSecurityBackend:
             approved=True,
         )
         assert result.get("error"), f"Command chaining NOT blocked: {result}"
-        print(f"  [Security] Command chaining: BLOCKED")
+        print("  [Security] Command chaining: BLOCKED")
 
     @pytest.mark.asyncio
     async def test_blocked_command_rejected(self, full_registry, narrow_workspace):
@@ -136,7 +133,7 @@ class TestSecurityBackend:
                 approved=True,
             )
             assert result.get("error"), f"Dangerous command NOT blocked: {cmd}"
-        print(f"  [Security] Dangerous commands: ALL BLOCKED")
+        print("  [Security] Dangerous commands: ALL BLOCKED")
 
     def test_approval_requires_explicit_flag(self, full_registry):
         """High-risk tools must have requires_explicit_approval=True."""
@@ -152,7 +149,7 @@ class TestSecurityBackend:
             assert not tool.requires_explicit_approval, (
                 f"{tool_name} should not require_explicit_approval"
             )
-        print(f"  [Security] Approval flags: ALL CORRECT")
+        print("  [Security] Approval flags: ALL CORRECT")
 
     @pytest.mark.asyncio
     async def test_path_traversal_in_read_blocked(self, narrow_registry, narrow_workspace):
@@ -163,7 +160,7 @@ class TestSecurityBackend:
                 {"path": str(narrow_workspace / ".." / ".." / "etc" / "passwd")},
                 approved=True,
             )
-        print(f"  [Security] Path traversal read: BLOCKED")
+        print("  [Security] Path traversal read: BLOCKED")
 
     @pytest.mark.asyncio
     async def test_write_to_dot_git_blocked(self, narrow_registry, narrow_workspace):
@@ -175,7 +172,7 @@ class TestSecurityBackend:
                 {"path": str(outside_target), "content": "malicious"},
                 approved=True,
             )
-        print(f"  [Security] .git write (outside root): BLOCKED")
+        print("  [Security] .git write (outside root): BLOCKED")
 
 
 class TestAliasingFix:
@@ -194,7 +191,7 @@ class TestAliasingFix:
             f"DEFAULT_ALLOWED_ROOTS NOT restored! "
             f"Before: {original_roots}, After: {DEFAULT_ALLOWED_ROOTS}"
         )
-        print(f"  [Security] Aliasing fix: PASS — roots restored correctly")
+        print("  [Security] Aliasing fix: PASS — roots restored correctly")
 
 
 # ---------------------------------------------------------------------------

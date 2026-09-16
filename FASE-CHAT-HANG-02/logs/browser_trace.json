@@ -1,0 +1,99 @@
+{
+  "backend_pid": 8308,
+  "ts": "2026-09-10T20:09:06.608+00:00",
+  "boot_requests": [
+    [
+      "res",
+      "/api/v1/providers/models",
+      200,
+      "2026-09-10T20:09:06.903+00:00"
+    ],
+    [
+      "res",
+      "/api/v1/providers/config",
+      200,
+      "2026-09-10T20:09:06.910+00:00"
+    ],
+    [
+      "res",
+      "/api/v1/providers/transparency",
+      200,
+      "2026-09-10T20:09:06.917+00:00"
+    ],
+    [
+      "res",
+      "/api/v1/providers/config",
+      200,
+      "2026-09-10T20:09:06.940+00:00"
+    ],
+    [
+      "res",
+      "/api/v1/ui/sessions",
+      200,
+      "2026-09-10T20:09:06.941+00:00"
+    ]
+  ],
+  "boot_failed": [],
+  "testA": {
+    "t": "2026-09-10T20:09:07.560+00:00",
+    "t_sent": "2026-09-10T20:09:07.892+00:00",
+    "respuesta_en_30s": true,
+    "t_resultado": "2026-09-10T20:09:30.824+00:00",
+    "ms_send_a_respuesta": 22933
+  },
+  "testB": {
+    "db_sessions_before_reload": 370,
+    "pid_after_reload": null,
+    "health_after_reload": [
+      "200",
+      255
+    ],
+    "session_items_after_reload": 50,
+    "restore_open_ok": true,
+    "respuesta_en_25s": true,
+    "health_final": [
+      "200",
+      438
+    ]
+  },
+  "testC": {
+    "db_total_sessions_before": 370,
+    "delete_responses": [
+      [
+        "res",
+        "/api/v1/ui/sessions/19f42ff4-7309-4db2-b196-ed6b4374b994",
+        204,
+        "2026-09-10T20:09:33.902+00:00"
+      ]
+    ],
+    "session_items_after_delete": 50,
+    "db_total_sessions_after": 369
+  },
+  "reloads": [
+    {
+      "n": 1,
+      "pid": null,
+      "health": [
+        "200",
+        181
+      ]
+    },
+    {
+      "n": 2,
+      "pid": null,
+      "health": [
+        "200",
+        291
+      ]
+    },
+    {
+      "n": 3,
+      "pid": null,
+      "health": [
+        "200",
+        330
+      ]
+    }
+  ],
+  "pid_final": null
+}

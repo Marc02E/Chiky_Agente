@@ -1,0 +1,25 @@
+INFO:     Started server process [22608]
+INFO:     Waiting for application startup.
+2026-09-10 10:54:30,820 INFO personal_ai_secretary.shared.settings_store correlation_id=- Loaded 7 provider settings from database
+2026-09-10 10:54:30,821 INFO personal_ai_secretary.startup correlation_id=- Loaded persisted provider settings from database
+2026-09-10 10:54:30,822 INFO personal_ai_secretary.providers.factory correlation_id=- Auto mode: returning OllamaProvider for local inference
+2026-09-10 10:54:33,070 INFO personal_ai_secretary.providers.model_manager correlation_id=- ModelManager: initializing provider discovery...
+2026-09-10 10:54:36,887 WARNING personal_ai_secretary.providers.ollama correlation_id=- Ollama warmup failed (non-fatal): All connection attempts failed
+2026-09-10 10:54:43,827 WARNING personal_ai_secretary.providers.opencode_server correlation_id=- Reaped orphaned managed OpenCode serve (pid 16224, ppid 22736)
+2026-09-10 10:54:44,051 INFO personal_ai_secretary.providers.opencode_server correlation_id=- Managed OpenCode server launching on port 53120 (pid 3176)
+2026-09-10 10:54:45,828 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:53120/config "HTTP/1.1 200 OK"
+2026-09-10 10:54:46,241 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:53120/config "HTTP/1.1 200 OK"
+2026-09-10 10:54:46,823 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:53120/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 10:54:48,096 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:53120/config/providers "HTTP/1.1 200 OK"
+2026-09-10 10:54:48,100 INFO personal_ai_secretary.providers.model_manager correlation_id=- ModelManager: discovered 4 providers, 8 models
+2026-09-10 10:54:48,100 INFO personal_ai_secretary.providers.factory correlation_id=- ModelManager initialized: 8 models across providers
+2026-09-10 10:54:48,100 INFO personal_ai_secretary.providers.model_manager correlation_id=- Routing mode set to automatic
+2026-09-10 10:54:48,100 INFO personal_ai_secretary.providers.model_manager correlation_id=- Selected provider=opencode model=big-pickle
+2026-09-10 10:54:48,100 INFO personal_ai_secretary.startup correlation_id=- Restored routing_mode=automatic provider=opencode model=big-pickle
+2026-09-10 10:54:48,101 INFO personal_ai_secretary.providers.factory correlation_id=- Auto mode: returning OllamaProvider for local inference
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+2026-09-10 10:54:48,639 INFO httpx correlation_id=- HTTP Request: GET https://dns.google/resolve?name=google.com "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:53126 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56734 - "GET /static/js/app.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56735 - "GET / HTTP/1.1" 200 OK

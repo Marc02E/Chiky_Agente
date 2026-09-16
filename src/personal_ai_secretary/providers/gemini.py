@@ -38,6 +38,10 @@ class GeminiProvider:
     def model(self) -> str:
         return self._model
 
+    @model.setter
+    def model(self, value: str) -> None:
+        self._model = value
+
     async def health(self) -> ProviderInfo:
         if not self._api_key:
             return ProviderInfo(

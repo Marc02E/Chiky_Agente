@@ -6,12 +6,12 @@ from pathlib import Path
 
 import pytest
 
-from personal_ai_secretary.tools.filesystem import (
-    register_filesystem_tools,
-    DEFAULT_ALLOWED_ROOTS,
-)
 from personal_ai_secretary.tools.development import (
     register_development_tools,
+)
+from personal_ai_secretary.tools.filesystem import (
+    DEFAULT_ALLOWED_ROOTS,
+    register_filesystem_tools,
 )
 from personal_ai_secretary.tools.registry import ToolRegistry
 

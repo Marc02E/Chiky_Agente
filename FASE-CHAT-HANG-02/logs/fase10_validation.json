@@ -1,0 +1,302 @@
+{
+  "fase": "CHAT-HANG-02",
+  "paso": "FASE-10-validacion",
+  "fecha": "2026-09-10T20:13:49.761+00:00",
+  "launcher_pid": 8600,
+  "ready": true,
+  "lance_readiness_en_s": 15.1,
+  "lance_readiness_ok": true,
+  "vere": {},
+  "health_inicial": [
+    200,
+    4
+  ],
+  "boot": {
+    "reqs": [
+      [
+        "res",
+        "/api/v1/providers/models",
+        200,
+        "2026-09-10T20:14:08.061+00:00"
+      ],
+      [
+        "res",
+        "/api/v1/providers/transparency",
+        200,
+        "2026-09-10T20:14:08.090+00:00"
+      ],
+      [
+        "res",
+        "/api/v1/providers/config",
+        200,
+        "2026-09-10T20:14:08.090+00:00"
+      ],
+      [
+        "res",
+        "/api/v1/ui/sessions",
+        200,
+        "2026-09-10T20:14:08.123+00:00"
+      ],
+      [
+        "res",
+        "/api/v1/providers/config",
+        200,
+        "2026-09-10T20:14:08.143+00:00"
+      ]
+    ],
+    "sessions_200": true
+  },
+  "smoke": {
+    "respuesta_200": true,
+    "ms": 6953,
+    "bubble_texto": true,
+    "texto_muestra": "Youhola, mi nombre es esteban02:14 p. m.ChikyHola Esteban! ¿En qué te puedo ayudar hoy? | Ejecutado por: opencode · big-pickle · OK · 6533ms02:14 p. m."
+  },
+  "db_actualizacion": true,
+  "db_fila": {
+    "session_id": "b6da50f0b8544ded94ba7a8e59070d80",
+    "status": "completed",
+    "res": "Hola Esteban! ¿En qué te puedo ayudar hoy?",
+    "created": "2026-09-10 20:14:08"
+  },
+  "db_settings": {
+    "raw": {
+      "user_id": "system",
+      "setting_key": "ai_provider",
+      "setting_value": "auto",
+      "updated_at": "2026-09-02 20:48:11.374649"
+    }
+  },
+  "provenance": {
+    "transparency_200": true,
+    "body": {
+      "provider": "opencode",
+      "model": "big-pickle",
+      "status": "unknown",
+      "mode": "auto",
+      "routing_mode": "automatic",
+      "connectivity": {
+        "online": true,
+        "latency_ms": 582.9
+      },
+      "auto_selected": false,
+      "fallback_active": false,
+      "fallback_from": null,
+      "fallback_model": null,
+      "verified_capabilities": {
+        "basic_response": false,
+        "tool_calling": false,
+        "coding": false,
+        "file_creation": false,
+        "file_modification": false,
+        "multi_step": false,
+        "security": false,
+        "context_handling": false,
+        "verification": false,
+        "system_prompt": false,
+        "argument_compatibility": false,
+        "score": 0.0
+      },
+      "provider_health": {
+        "name": "opencode",
+        "mode": "local",
+        "available": true,
+        "is_ai": true,
+        "detail": "OpenCode server running at http://127.0.0.1:65320"
+      },
+      "all_providers": [
+        {
+          "provider": "opencode",
+          "model": "nemotron-3-ultra-free",
+          "display_name": "OpenCode: nemotron-3-ultra-free",
+          "status": "unknown",
+          "latency_ms": 0.0,
+          "reliability": 0.0,
+          "success_count": 0,
+          "failure_count": 0,
+          "verified_capabilities_score": 0.0
+        },
+        {
+          "provider": "opencode",
+          "model": "muse-spark-1.3-contributor-free",
+          "display_name": "OpenCode: muse-spark-1.3-contributor-free",
+          "status": "unknown",
+          "latency_ms": 0.0,
+          "reliability": 0.0,
+          "success_count": 0,
+          "failure_count": 0,
+          "verified_capabilities_score": 0.0
+        },
+        {
+          "provider": "opencode",
+          "model": "muse-spark-1.2-contributor-free",
+          "display_name": "OpenCode: muse-spark-1.2-contributor-free",
+          "status": "unknown",
+          "latency_ms": 0.0,
+          "reliability": 0.0,
+          "success_count": 0,
+          "failure_count": 0,
+          "verified_capabilities_score": 0.0
+        },
+        {
+          "provider": "opencode",
+          "model": "nemotron-3.5-lightning-free",
+          "display_name": "OpenCode: nemotron-3.5-lightning-free",
+          "status": "unknown",
+          "latency_ms": 0.0,
+          "reliability": 0.0,
+          "success_count": 0,
+          "failure_count": 0,
+          "verified_capabilities_score": 0.0
+        },
+        {
+          "provider": "opencode",
+          "model": "mimo-v2.5-free",
+          "display_name": "OpenCode: mimo-v2.5-free",
+          "status": "unknown",
+          "latency_ms": 0.0,
+          "reliability": 0.0,
+          "success_count": 0,
+          "failure_count": 0,
+          "verified_capabilities_score": 0.0
+        },
+        {
+          "provider": "opencode",
+          "model": "big-pickle",
+          "display_name": "OpenCode: big-pickle",
+          "status": "unknown",
+          "latency_ms": 0.0,
+          "reliability": 1.0,
+          "success_count": 1,
+          "failure_count": 0,
+          "verified_capabilities_score": 0.0
+        },
+        {
+          "provider": "opencode",
+          "model": "ling-3.0-flash-fin-free",
+          "display_name": "OpenCode: ling-3.0-flash-fin-free",
+          "status": "unknown",
+          "latency_ms": 0.0,
+          "reliability": 0.0,
+          "success_count": 0,
+          "failure_count": 0,
+          "verified_capabilities_score": 0.0
+        },
+        {
+          "provider": "nvidia",
+          "model": "meta/llama-3.2-11b-vision-instruct",
+          "display_name": "NVIDIA (Cloud): meta/llama-3.2-11b-vision-instruct",
+          "status": "unknown",
+          "latency_ms": 0.0,
+          "reliability": 0.0,
+          "success_count": 0,
+          "failure_count": 0,
+          "verified_capabilities_score": 0.0
+        },
+        {
+          "provider": "ollama",
+          "model": null,
+          "display_name": "Ollama (Local)",
+          "status": "unavailable",
+          "latency_ms": 0.0,
+          "reliability": 0.0,
+          "success_count": 0,
+          "failure_count": 0,
+          "verified_capabilities_score": 0.0,
+          "available": false,
+          "detail": "Ollama is not running. Start Ollama and try again."
+        },
+        {
+          "provider": "gemini",
+          "model": null,
+          "display_name": "Google Gemini (Cloud)",
+          "status": "unavailable",
+          "latency_ms": 0.0,
+          "reliability": 0.0,
+          "success_count": 0,
+          "failure_count": 0,
+          "verified_capabilities_score": 0.0,
+          "available": false,
+          "detail": "API key not configured. Set GEMINI_API_KEY."
+        }
+      ],
+      "latency_ms": 0.0,
+      "reliability": 1.0,
+      "success_count": 1,
+      "failure_count": 0
+    }
+  },
+  "reload_ok": true,
+  "restaurar_ok": true,
+  "re_msg_ok": true,
+  "delete_204": true,
+  "db_tras_delete": true,
+  "n_sessions_before_delete": 371,
+  "n_sessions_after_delete": 370,
+  "hammer": {
+    "n": 60,
+    "fallos": [],
+    "ok": true
+  },
+  "backend_log_crece": true,
+  "backend_log_size": 15910,
+  "health_final": [
+    200,
+    29
+  ],
+  "launcher_exit": 1,
+  "cierre_limpio": false,
+  "procesos_chiky_tras_cierre": [
+    {
+      "ProcessId": 15300,
+      "ParentProcessId": 8408,
+      "Name": "python.exe",
+      "CommandLine": "\"C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe\" C:\\Users\\mriverab\\AppData\\Local\\Temp\\opencode\\chatyhang_fase10.py"
+    },
+    {
+      "ProcessId": 10452,
+      "ParentProcessId": 15300,
+      "Name": "python.exe",
+      "CommandLine": "\"C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe\" C:\\Users\\mriverab\\AppData\\Local\\Temp\\opencode\\chatyhang_fase10.py"
+    },
+    {
+      "ProcessId": 13932,
+      "ParentProcessId": 22780,
+      "Name": "python.exe",
+      "CommandLine": "C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe -m uvicorn personal_ai_secretary.api.app:app --host 127.0.0.1 --port 8000 --log-level info"
+    },
+    {
+      "ProcessId": 2352,
+      "ParentProcessId": 13932,
+      "Name": "python.exe",
+      "CommandLine": "C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe -m uvicorn personal_ai_secretary.api.app:app --host 127.0.0.1 --port 8000 --log-level info"
+    },
+    {
+      "ProcessId": 19576,
+      "ParentProcessId": 2352,
+      "Name": "opencode.exe",
+      "CommandLine": "C:\\Users\\mriverab\\AppData\\Local\\pi-node\\current\\node_modules\\opencode-ai\\bin\\opencode.exe serve --port 65320 --hostname 127.0.0.1"
+    }
+  ],
+  "verificacion": {
+    "16_puntos": false,
+    "puntos": {
+      "1_arranque_via_launcher": true,
+      "2_launcher_readiness": true,
+      "3_health_live_200": true,
+      "4_sessions_list_200": true,
+      "5_smoke_respuesta_<=30s": true,
+      "6_bubble_texto": true,
+      "7_db_fila_con_resultado": true,
+      "8_provenance": true,
+      "9_reload_pid_vivo": true,
+      "10_conversacion_restaurada": true,
+      "11_mensaje_de_nuevo_200": true,
+      "12_delete_204": true,
+      "13_db_tras_delete": true,
+      "14_hammer_60_200": true,
+      "15_backend_log_crece": true,
+      "16_cierre_limpio_sin_huerfanos": false
+    }
+  }
+}

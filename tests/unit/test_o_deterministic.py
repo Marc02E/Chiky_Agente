@@ -9,13 +9,13 @@ from __future__ import annotations
 
 import json
 from typing import Any
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 from uuid import uuid4
 
 import pytest
 
 from personal_ai_secretary.agents.builtin import ExecutionAgent
-from personal_ai_secretary.agents.contracts import AgentInput, AgentRole, RiskLevel
+from personal_ai_secretary.agents.contracts import AgentInput, RiskLevel
 from personal_ai_secretary.agents.evidence import EvidenceTracker, validate_response
 from personal_ai_secretary.domain.contracts import ProviderResponse
 
@@ -138,7 +138,7 @@ async def test_scenario_c_deduplication() -> None:
     registry = _mock_registry()
     agent = ExecutionAgent(provider=provider, registry=registry)
     data = _make_input("Run echo duplicate many times")
-    result = await agent.run(data)
+    await agent.run(data)
     # The dedup loop should detect repeated calls and break before executing
     # (or execute only the first occurrence)
     # Either way, the tool is called at most once
@@ -253,7 +253,7 @@ def test_scenario_f_response_validation_with_evidence() -> None:
         verified=True,
     )
 
-    result = validate_response(
+    validate_response(
         "I created the file successfully.",
         tracker,
     )

@@ -1,8 +1,8 @@
 """R.7 — Debugging scenario test (live Ollama)."""
 import asyncio
 import os
-import time
 import shutil
+import time
 from pathlib import Path
 from uuid import uuid4
 
@@ -12,12 +12,12 @@ os.environ.setdefault("OLLAMA_MODEL", "llama3.1:latest")
 from personal_ai_secretary.agents.builtin import ExecutionAgent
 from personal_ai_secretary.agents.contracts import AgentInput
 from personal_ai_secretary.domain.contracts import RiskLevel
-from personal_ai_secretary.tools.registry import ToolRegistry
-from personal_ai_secretary.tools.filesystem import register_filesystem_tools
-from personal_ai_secretary.tools.development import register_development_tools
+from personal_ai_secretary.providers.ollama import OllamaProvider
 from personal_ai_secretary.tools.command import register_command_tools
 from personal_ai_secretary.tools.datetime_tool import register_datetime_tools
-from personal_ai_secretary.providers.ollama import OllamaProvider
+from personal_ai_secretary.tools.development import register_development_tools
+from personal_ai_secretary.tools.filesystem import register_filesystem_tools
+from personal_ai_secretary.tools.registry import ToolRegistry
 
 
 async def test_r7_debugging():
@@ -27,7 +27,7 @@ async def test_r7_debugging():
 
     buggy = ws / "calc.py"
     buggy.write_text("def add(a, b):\n    return a - b\n", encoding="utf-8")
-    print(f"[R.7] Bug: add() returns subtraction instead of addition")
+    print("[R.7] Bug: add() returns subtraction instead of addition")
     print(f"[R.7] Content:\n{buggy.read_text()}")
 
     provider = OllamaProvider(model=model)
@@ -53,7 +53,7 @@ async def test_r7_debugging():
     try:
         artifact = await asyncio.wait_for(agent.run(data), timeout=360)
         elapsed = time.monotonic() - start
-        print(f"\n=== R.7 DEBUGGING RESULT ===")
+        print("\n=== R.7 DEBUGGING RESULT ===")
         print(f"Model: {model}")
         print(f"Time: {elapsed:.1f}s")
         print(f"Response: {artifact.content[:500]}")

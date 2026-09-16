@@ -124,3 +124,19 @@ class EvidenceSourceRecord(Base):
     expires_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
+
+
+class ProviderSettingRecord(Base):
+    """FASE X: Persistent provider configuration (API keys, routing mode, etc.)."""
+
+    __tablename__ = "provider_settings"
+    __table_args__ = (
+        PrimaryKeyConstraint("user_id", "setting_key", name="pk_provider_settings"),
+    )
+
+    user_id: Mapped[str] = mapped_column(String(200))
+    setting_key: Mapped[str] = mapped_column(String(64))
+    setting_value: Mapped[str] = mapped_column(Text)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(UTC)
+    )

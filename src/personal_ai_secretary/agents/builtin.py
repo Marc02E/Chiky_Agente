@@ -1,8 +1,9 @@
+import contextlib
 import json
 import logging
 import re
 import time
-from typing import Any
+from typing import Any, Protocol, cast
 
 from personal_ai_secretary.agents.classifier import classify_task
 from personal_ai_secretary.agents.contracts import (
@@ -70,11 +71,18 @@ from personal_ai_secretary.providers.model_intelligence import (
 )
 from personal_ai_secretary.rag.service import Evidence, Retriever
 from personal_ai_secretary.shared.config import get_settings
+from personal_ai_secretary.tools.filesystem import routing_workspace
 from personal_ai_secretary.tools.registry import (
     ToolError,
     ToolRegistry,
     parse_tool_call,
 )
+
+
+class ModelSwitchable(Protocol):
+    """A provider that exposes a settable ``model`` identifier."""
+
+    model: str
 
 logger = logging.getLogger("personal_ai_secretary.agents")
 
@@ -82,6 +90,47 @@ logger = logging.getLogger("personal_ai_secretary.agents")
 # user approval before executing a tool. The API layer parses and strips this
 # prefix before returning the assistant message to the client.
 APPROVAL_REQUIRED_PREFIX = "__APPROVAL_REQUIRED__:"
+
+
+def _status_for_exception(exc: BaseException) -> str:
+    """Map an exception to the FASE AB.6 provenance status vocabulary."""
+    if isinstance(exc, TimeoutError):
+        return "timeout"
+    if isinstance(exc, ConnectionError):
+        return "connection_error"
+    if isinstance(exc, RuntimeError):
+        msg = str(exc).lower()
+        if "invalid or expired" in msg or "401" in msg or "unauthorized" in msg:
+            return "unauthorized"
+        return "failed"
+    return "unknown"
+
+
+_STATUS_CAUSE_PHRASES: dict[str, str] = {
+    "timeout": "the connection timed out",
+    "connection_error": "the connection failed",
+    "unauthorized": "the credentials were rejected",
+    "failed": "the provider reported an error",
+    "unknown": "an unexpected error occurred",
+}
+
+
+def _redact_internal_paths(text: str) -> str:
+    """Scrub absolute filesystem paths from a user-facing message.
+
+    Exception text can embed internal machine paths (e.g. a failing
+    ``/home/user/.ollama`` model path or a Windows ``C:\\Users\\...`` path).
+    Those must never reach the user. Replaces any absolute path with a neutral
+    placeholder. Scoped to error messages only; legit conversation responses
+    keep real user file paths.
+    """
+    # Regex Windows drive paths: C:\Users\... and C:/Users/... forms.
+    windows = re.compile(r"([A-Za-z]:[\\/][^\s,;()]+)")
+    text = windows.sub("[internal path]", text)
+    # POSIX absolute paths: /home/user/.ollama, /usr/share/..., etc.
+    posix = re.compile(r"(?<![\w:])/(?:[\w.\-]+/)+[\w.\-]+")
+    text = posix.sub("[internal path]", text)
+    return text
 
 
 class PlannerAgent:
@@ -249,7 +298,36 @@ class ExecutionAgent:
             request_id=data.request_id,
             content=content,
             risk_level=data.risk_level,
+            metadata=self._execution_metadata(),
         )
+
+    def _execution_metadata(self) -> dict[str, Any]:
+        """FASE AB.4/AB.6: expose the resolved execution chain so the API can
+        surface requested/selected/attempted/fallback/executed honestly."""
+        meta: dict[str, Any] = {}
+        if self.last_metrics is None:
+            return meta
+        m = self.last_metrics
+        meta["executed_provider"] = m.provider
+        meta["executed_model"] = m.model
+        meta["requested_provider"] = m.requested_provider
+        meta["requested_model"] = m.requested_model
+        # FASE AB.6: the routing-mode selection recorded before execution.
+        meta["selected_provider"] = m.selected_provider or m.requested_provider
+        meta["selected_model"] = m.selected_model or m.requested_model
+        # The provider actually attempted (and failed) is the fallback-from side.
+        meta["attempted_provider"] = m.fallback_from_provider or m.provider
+        meta["attempted_model"] = m.fallback_from_model or m.model
+        meta["fallback_active"] = bool(m.fallback_executed)
+        meta["fallback_chain"] = list(m.fallback_chain)
+        meta["status"] = m.status
+        meta["latency_ms"] = m.latency_ms
+        meta["routing_reason"] = m.routing_reason
+        if m.fallback_executed:
+            meta["fallback_from_provider"] = m.fallback_from_provider
+            meta["fallback_from_model"] = m.fallback_from_model
+            meta["fallback_model"] = m.fallback_model
+        return meta
 
     async def _run_with_provider(self, data: AgentInput) -> str:
         """Run the LLM with system prompt and agentic tool-calling loop."""
@@ -269,12 +347,18 @@ class ExecutionAgent:
         provider_model = getattr(provider, "model", None)
         if isinstance(provider_model, str) and provider_model:
             metrics.model = provider_model
+        metrics.requested_provider = provider.name
+        metrics.requested_model = (
+            str(provider_model) if isinstance(provider_model, str) else ""
+        )
+        # FASE AB.6: the routing-mode selection (what was chosen BEFORE any
+        # fallback) must be recorded independently of what finally executed.
+        metrics.selected_provider = provider.name
+        metrics.selected_model = metrics.requested_model
 
         # Build compact system prompt with tool descriptions
         tool_names = self.registry.names() if self.registry else []
-        compact_descs = (
-            self.registry.compact_descriptions() if self.registry else []
-        )
+        compact_descs = self._tool_description_lines()
         memory_notes = data.context.get("memory_notes")
         extra_context: str | None = None
         if isinstance(memory_notes, list) and memory_notes:
@@ -408,6 +492,11 @@ class ExecutionAgent:
         consecutive_failures = 0  # Q.6 consecutive failed tool operations
         mutation_done = False     # has the task reached MODIFYING/EXECUTING?
         project_desc = None       # FASE S.1.10: initialized for simple task fast path
+        blocked_providers: set[str] = set()  # FASE AB.4: cumulative per-request failures
+        # AB.5: last successful tool result, so a loop that must give up can
+        # still surface REAL evidence to the user instead of raw protocol text.
+        last_tool_summary: str = ""
+        last_tool_name: str = ""
         task_machine.transition(TaskState.READING)
 
         for _round in range(self.MAX_TOOL_ROUNDS):
@@ -456,6 +545,21 @@ class ExecutionAgent:
                     f"{round_system_prompt}\n{task_contract.render_directive()}"
                 )
 
+            # FASE AB.6: forward real image attachments on EVERY round so each
+            # provider generation (including post-tool rounds) still shows
+            # the image to the vision model.
+            round_images: list[str] = []
+            _ctx_images = (data.context or {}).get("images") or []
+            for _img in _ctx_images:
+                if isinstance(_img, str) and _img:
+                    round_images.append(_img)
+            if _round == 0 and round_images:
+                round_system_prompt = (
+                    f"{round_system_prompt}\n"
+                    "An image was attached by the user and is being sent to you. "
+                    "Observe it carefully and describe what it contains."
+                )
+
             envelope = RequestEnvelope(
                 request_id=data.request_id,
                 session_id=data.session_id,
@@ -465,6 +569,8 @@ class ExecutionAgent:
                 correlation_id=data.correlation_id,
                 messages=current_messages,
                 context_summary=round_system_prompt,
+                tool_schemas=self._build_tool_schemas(provider),
+                images=round_images,
             )
 
             if observation is not None:
@@ -491,7 +597,7 @@ class ExecutionAgent:
                         provider_span.set_attribute(ATTRIBUTE_OUTCOME, "error")
                         raise
                     provider_span.set_attribute(ATTRIBUTE_OUTCOME, "ok")
-            except (ConnectionError, TimeoutError, ValueError) as exc:
+            except (ConnectionError, TimeoutError, ValueError, RuntimeError) as exc:
                 logger.warning("Provider error in round %d: %s", _round + 1, exc)
                 if observation is not None:
                     observation.inc("provider_failures")
@@ -508,15 +614,59 @@ class ExecutionAgent:
                 # ── FASE U: Intelligent fallback ──────────────────────────
                 # When a provider fails, try to switch to a fallback provider
                 # instead of just failing. This makes the system resilient.
+                # FASE Y: Skip fallback in MANUAL mode - user chose exactly
+                # what they want, and we must not silently switch.
                 from personal_ai_secretary.providers.factory import get_model_manager
                 from personal_ai_secretary.providers.model_manager import ModelManager
 
                 manager = get_model_manager()
-                if isinstance(manager, ModelManager) and manager._initialized:
+                _is_manual = (
+                    isinstance(manager, ModelManager)
+                    and manager.routing_mode == "manual"
+                )
+                if _is_manual:
+                    manual_provider_name = getattr(provider, "name", "the selected provider")
+                    logger.warning(
+                        "MANUAL mode: provider '%s' failed, no fallback allowed. "
+                        "Reporting error.",
+                        manual_provider_name,
+                    )
+                    metrics.model_failures += 1
+                    metrics.latency_classification = classify_latency_source(
+                        sum(metrics.llm_times),
+                        sum(metrics.tool_times),
+                        float(sum(metrics.command_durations)),
+                    )
+                    metrics.finish()
+                    metrics.latency_ms = int(metrics.total_time * 1000)
+                    metrics.status = _status_for_exception(exc)
+                    self.last_metrics = metrics
+                    # FASE AB.6: keep the strict no-fallback contract AND the
+                    # specific cause so the user knows what actually failed.
+                    _cause_phrase = _STATUS_CAUSE_PHRASES.get(
+                        metrics.status, "the provider reported an error"
+                    )
+                    _detail = _redact_internal_paths(str(exc))[:160].strip()
+                    message = (
+                        f"Provider '{manual_provider_name}' is unavailable or "
+                        f"authentication failed ({_cause_phrase}). "
+                        + (f"Detail: {_detail}. " if _detail else "")
+                        + "In Manual mode, no automatic fallback is allowed. "
+                        "Please configure a valid provider and model and try again."
+                    )
+                    message = _redact_internal_paths(message)
+                    return self._sanitize_response(message)
+                elif isinstance(manager, ModelManager) and manager._initialized:
                     failed_provider = getattr(provider, "name", "")
                     failed_model = getattr(provider, "model", "")
+                    # FASE AB.4: only connectivity/credential failures blacklist
+                    # the provider for the rest of the request — a dead server's
+                    # other models can't help, but a bad model from a reachable
+                    # provider must not block that provider's other models.
+                    if isinstance(exc, (ConnectionError, TimeoutError)):
+                        blocked_providers.add(failed_provider)
                     fallback = manager.get_fallback_provider(
-                        failed_provider, failed_model
+                        failed_provider, failed_model, blocked_providers
                     )
                     if fallback:
                         fb_provider_name, fb_model_id = fallback
@@ -530,10 +680,27 @@ class ExecutionAgent:
                                 fb_model_id,
                             )
                             provider = fb_instance
+                            # FASE AB.4: apply the resolved fallback model so the
+                            # selected fallback model_id actually executes.
+                            try:
+                                cast(ModelSwitchable, provider).model = fb_model_id
+                            except (AttributeError, TypeError):
+                                logger.warning(
+                                    "Fallback: provider '%s' does not allow "
+                                    "switching model, keeping configured model",
+                                    fb_provider_name,
+                                )
                             metrics.fallback_suggested = True
+                            metrics.fallback_executed = True
                             metrics.fallback_model = fb_model_id
                             metrics.fallback_from_provider = failed_provider
                             metrics.fallback_from_model = failed_model
+                            # FASE AB.6: preserve the full attempted chain.
+                            metrics.fallback_chain.append(
+                                f"{failed_provider}:{failed_model}"
+                            )
+                            metrics.provider = fb_provider_name
+                            metrics.model = fb_model_id
                             # Record the failure of the original provider
                             manager.record_failure(failed_provider, failed_model)
                             # Continue the loop with the new provider
@@ -552,10 +719,18 @@ class ExecutionAgent:
                 metrics.state_transitions = task_machine.history_values()
                 metrics.final_task_state = task_machine.state.value
                 metrics.finish()
+                metrics.latency_ms = int(metrics.total_time * 1000)
+                metrics.status = _status_for_exception(exc)
                 message = (
                     f"I couldn't complete the request ({failure_info.reason}): "
                     f"{exc}. {failure_info.suggestion}"
                 )
+                # FASE AB.5: never leak internal absolute paths to the user.
+                # Exception text can embed filesystem paths (e.g. a failing
+                # .ollama model path on a Unix box); scrub them from the
+                # user-facing message. Scoped to the error path only — normal
+                # responses may legitimately mention real user file paths.
+                message = _redact_internal_paths(message)
                 fallback_model = should_suggest_fallback(
                     failure_info, metrics.model or ""
                 )
@@ -583,6 +758,8 @@ class ExecutionAgent:
                         details={"provider": provider.name, "round": _round + 1},
                     )
                 metrics.finish()
+                metrics.latency_ms = int(metrics.total_time * 1000)
+                metrics.status = _status_for_exception(exc)
                 return (
                     "I encountered an unexpected error while processing your request. "
                     "Please try again."
@@ -608,6 +785,8 @@ class ExecutionAgent:
             if not llm_output:
                 logger.warning("Empty LLM response in round %d", _round + 1)
                 metrics.finish()
+                metrics.latency_ms = int(metrics.total_time * 1000)
+                metrics.status = "failed"
                 return (
                     "The model returned an empty response. "
                     "Please try rephrasing your question."
@@ -633,6 +812,30 @@ class ExecutionAgent:
             # Try to detect tool calls in the LLM output (may be multiple)
             tool_calls = self._extract_all_tool_calls(llm_output)
             if not tool_calls or self.registry is None:
+                # FASE Y (WS11): a mutating task whose model reply contains no
+                # tool call has NOT performed its required change. Coach the
+                # model toward the required mutation before declaring
+                # completion. Small local models often answer with prose once
+                # before acting, so allow up to 3 bounded nudges.
+                if (
+                    task_contract.requires_modification
+                    and not mutation_done
+                    and metrics.backend_directives < 3
+                ):
+                    directive = (
+                        "You have not performed the required change. "
+                        "Call the appropriate tool now (e.g. create_file/write_file) "
+                        "with the exact path and content requested. Do not reply "
+                        "with a plan — act."
+                    )
+                    current_messages.append(
+                        ConversationTurn(role="user", content=directive)
+                    )
+                    metrics.backend_directives += 1
+                    logger.info(
+                        "FASE Y mutation directive injected: no tool call in mutating task"
+                    )
+                    continue
                 break
 
             # ── FASE Q — backend-controlled call admission ───────────────
@@ -683,6 +886,37 @@ class ExecutionAgent:
                     final_text = stall_stop_msg
                     break
                 # Non-modification task (analysis/chat): info already gathered.
+                # FASE Y (WS10/WS11): when the model stalls by re-proposing an
+                # already-executed call, coach it once to ANSWER with the real
+                # tool result instead of leaving the tool-call protocol text as
+                # the final response.
+                if metrics.backend_directives == 0:
+                    directive = (
+                        "The requested tool has already been executed and its "
+                        "result is shown above. Do not call any tool again. "
+                        "Answer the user directly using that result."
+                    )
+                    current_messages.append(
+                        ConversationTurn(role="user", content=directive)
+                    )
+                    metrics.backend_directives += 1
+                    logger.info("FASE Y answer directive injected after tool exec")
+                    continue
+                # AB.5: the model still refuses to answer. Never expose raw
+                # tool-call protocol text as the final message: surface the
+                # REAL tool result gathered so far.
+                if last_tool_name and last_tool_summary:
+                    final_text = (
+                        f"I executed '{last_tool_name}' and its real result is:\n"
+                        f"{last_tool_summary}\n\n"
+                        "(The model did not produce a plain-text summary; "
+                        "showing the actual tool result above.)"
+                    )
+                else:
+                    final_text = (
+                        "I gathered the tool results but could not produce a "
+                        "final answer. Please refresh the page and try again."
+                    )
                 break
 
             # Limit checks on repeated behaviour (valid repetition vs loop):
@@ -760,6 +994,12 @@ class ExecutionAgent:
                     verified=not tool_result.get("verification_failed", False),
                     timestamp=tool_start,
                 )
+
+                # AB.5: remember the last successful tool outcome so a give-up
+                # exit can still answer with real data (never hallucinated).
+                if not tool_result.get("error"):
+                    last_tool_name = tool_name
+                    last_tool_summary = json.dumps(tool_result, default=str)[:1500]
 
                 # ── FASE Q — state machine + progress tracking ───────
                 # Q.2: every executed call feeds progress detection so
@@ -1040,6 +1280,8 @@ class ExecutionAgent:
         else:
             metrics.final_outcome = task_type.value
         metrics.finish()
+        metrics.latency_ms = int(metrics.total_time * 1000)
+        metrics.status = "ok"
         self.last_metrics = metrics
         logger.info(
             "Agentic loop completed: rounds=%d tool_calls=%d dedup=%d elapsed=%.2fs metrics=%s",
@@ -1075,6 +1317,11 @@ class ExecutionAgent:
                 f"{final_text}\n\n"
                 + "\n".join(validation.disclaimers)
             )
+        # FASE Y (WS10): Ground datetime claims in the real tool result.
+        # Some models fabricate "today's date/time" instead of using the
+        # real datetime_now result, so we correct the final text with the
+        # actual evidence value when it contradicts the model's prose.
+        final_text = self._ground_response_with_evidence(final_text)
         # Store evidence summary in metrics for observability
         evidence_summary = self._evidence.get_evidence_summary()
         metrics.correction_attempts = evidence_summary.get("failed", 0)
@@ -1095,14 +1342,102 @@ class ExecutionAgent:
 
         return self._sanitize_response(final_text)
 
+    def _ground_response_with_evidence(self, text: str) -> str:
+        """Replace confirmed counterfactual claims with the real evidence.
+
+        FASE Y (WS10): a model may answer "La fecha y hora actuales son
+        25 de abril de 2023, 14:30" even though the real datetime_now
+        tool (executed and recorded in evidence) returned a different
+        value. We patch the final response so it cannot contradict the
+        recorded real result.
+        """
+        import re
+
+        grounded = text
+        for record in self._evidence.records:
+            if record.tool_name != "datetime_now":
+                continue
+            if "error" in record.result or record.result.get("verification_failed"):
+                continue
+            real_date = record.result.get("date")
+            real_time = record.result.get("time")
+            if not real_date or not real_time:
+                continue
+            break
+        else:
+            return grounded
+
+        # Compare against the real result: if the model's prose already
+        # carries the real date, leave it untouched.
+        _date_in = (
+            real_date in grounded
+            or any(
+                real_date in piece
+                for piece in re.findall(r"\d{4}-\d{2}-\d{2}", grounded)
+            )
+        )
+        _time_in = any(
+            real_time in piece
+            for piece in re.findall(r"\d{2}:\d{2}(?::\d{2})?", grounded)
+        )
+        if _date_in and _time_in:
+            return grounded
+
+        # Detect a conflicting claimed datetime in the response.
+        conflicting_dates = set(re.findall(r"\d{4}-\d{2}-\d{2}", grounded))
+        conflicting_times = set(re.findall(r"\d{1,2}:\d{2}(?::\d{2})?", grounded))
+        has_conflict = (
+            (conflicting_dates and any(d != real_date for d in conflicting_dates))
+            or (conflicting_times and any(t != real_time for t in conflicting_times))
+        )
+        if has_conflict or (not _date_in and not conflicting_times):
+            # Remove the fabricated date/time fragments to avoid a
+            # self-contradicting message, then state the real value.
+            grounded = re.sub(r"\b\d{4}-\d{2}-\d{2}\b", real_date, grounded)
+            grounded = re.sub(r"\b\d{1,2}:\d{2}(?::\d{2})?\b", real_time, grounded)
+            appendix = (
+                f"\n\n(La hora real obtenida con la herramienta es: "
+                f"{real_date} a las {real_time} UTC.)"
+            )
+            if appendix not in grounded:
+                grounded = grounded + appendix
+        return grounded
+
     @staticmethod
     def _sanitize_response(text: str) -> str:
         """Remove internal LLM protocol tokens from the final response.
 
         Some models (e.g. DeepSeek) emit special tokens like <|tool_calls_begin|>
-        that must never be shown to the user.
+        that must never be shown to the user. DeepSeek models use Unicode
+        fullwidth delimiters (\\uff5c) and lower-block separators (\\u2581)
+        instead of ASCII pipes in the raw output.
+
+        The tool token block is NESTED:
+          <delim>tool_calls_begin<delim>
+            <delim>tool_call_begin<delim> ... <delim>tool_call_end<delim>
+          <delim>tool_calls_end<delim>
+          <delim>tool_outputs_begin<delim>
+            <delim>tool_output_begin<delim> content <delim>tool_output_end<delim>
+          <delim>tool_outputs_end</delim>
+
+        Non-greedy regex stops at the first closing delimiter (inner token),
+        leaving intermediate content (e.g. tool output JSON).  Instead, we
+        find the FIRST opening ``<delim`` and the LAST ``delim>`` and remove
+        the entire range in one shot.
         """
-        # Strip known special tokens used by various models
+        cleaned = text
+        # ── DeepSeek non-ASCII token block removal ────────────────────
+        # DeepSeek models use Unicode fullwidth characters as delimiters:
+        #   <\uff5c tool \u2581 calls \u2581 begin \uff5c>
+        # Found via hex analysis of actual Ollama responses.
+        _DEEPSEEK_OPEN_DELIM = "\uff5c"
+        _DEEPSEEK_CLOSE_DELIM = "\uff5c"
+        start = cleaned.find(f"<{_DEEPSEEK_OPEN_DELIM}")
+        if start != -1:
+            last_close = cleaned.rfind(f"{_DEEPSEEK_CLOSE_DELIM}>", start)
+            if last_close != -1:
+                cleaned = cleaned[:start] + cleaned[last_close + len(f"{_DEEPSEEK_CLOSE_DELIM}>"):]
+        # ── ASCII special tokens ──────────────────────────────────────
         special_tokens = [
             r"<\|tool_calls_begin\|>",
             r"<\|tool_calls_end\|>",
@@ -1112,6 +1447,7 @@ class ExecutionAgent:
             r"<\|tool_outputs_end\|>",
             r"<\|tool_output_begin\|>",
             r"<\|tool_output_end\|>",
+            r"<\|tool_sep\|>",
             r"<\|plugin_call\|>",
             r"<\|endoftext\|>",
             r"<\|im_start\|>",
@@ -1123,10 +1459,57 @@ class ExecutionAgent:
             r"\[TOOL_RESULTS\]",
         ]
         pattern = "|".join(special_tokens)
-        cleaned = re.sub(pattern, "", text)
+        cleaned = re.sub(pattern, "", cleaned)
+        # ── DeepSeek mojibake fix ──────────────────────────────────────
+        # DeepSeek tokenizer splits accented chars into Â + base char,
+        # producing double-encoded UTF-8 (e.g. Â¡ instead of ¡).
+        # Fix common Spanish/French/Portuguese patterns.
+        _MOJIBAKE_MAP = {
+            "\u00c2\u00a1": "\u00a1",  # Â¡ -> ¡
+            "\u00c2\u00bf": "\u00bf",  # Â¿ -> ¿
+            "\u00c3\u00a9": "\u00e9",  # Ã© -> é
+            "\u00c3\u00a1": "\u00e1",  # Ã¡ -> á
+            "\u00c3\u00ad": "\u00ed",  # Ã­ -> í
+            "\u00c3\u00b3": "\u00f3",  # Ã³ -> ó
+            "\u00c3\u00ba": "\u00fa",  # Ãº -> ú
+            "\u00c3\u00b1": "\u00f1",  # Ã± -> ñ
+            "\u00c3\u00bc": "\u00fc",  # Ã¼ -> ü
+            "\u00c3\u00a0": "\u00e0",  # Ã  -> à
+            "\u00c3\u00aa": "\u00ea",  # Ãª -> ê
+            "\u00c3\u00b4": "\u00f4",  # Ã´ -> ô
+            "\u00c3\u00a3": "\u00e3",  # Ã£ -> ã
+            "\u00c2\u00ba": "\u00ba",  # Âº -> º
+            "\u00c2\u00aa": "\u00aa",  # Âª -> ª
+            "\u00c3\u0081": "\u00c1",  # Ã\u0081 -> Á
+            "\u00c3\u0089": "\u00c9",  # Ã\u0089 -> É
+            "\u00c3\u0093": "\u00d3",  # Ã\u0093 -> Ó
+            "\u00c3\u009a": "\u00da",  # Ã\u009a -> Ú
+            "\u00c3\u0091": "\u00d1",  # Ã\u0091 -> Ñ
+        }
+        for bad, good in _MOJIBAKE_MAP.items():
+            cleaned = cleaned.replace(bad, good)
+        # ── Fenced tool-call blocks ────────────────────────────────────
+        # The agent drives tool execution from ```tool ... ``` reports; if
+        # a stall leaves one of these blocks as (part of) the final text it
+        # must never be shown verbatim to the user.
+        cleaned = re.sub(r"```tool\s*\n.*?\n```", "", cleaned, flags=re.DOTALL)
         # Collapse runs of blank lines produced by token removal
         cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
-        return cleaned.strip()
+        result = cleaned.strip()
+        if not result and text.strip():
+            logger.warning(
+                "Sanitization stripped entire response! "
+                "Original len=%d preview=%.200s",
+                len(text), text[:200],
+            )
+            # FASE Y (WS11): a response that was only a raw tool-call block
+            # (e.g. stalled loop left ```tool...``` as the final text) must
+            # never arrive at the user empty. Fall back to a neutral summary.
+            return (
+                "The requested action was completed. "
+                "Some details were omitted from the response."
+            )
+        return result
 
     def _extract_tool_call(self, text: str) -> tuple[str, dict[str, Any]] | None:
         """Extract a single tool call from LLM output.
@@ -1136,6 +1519,86 @@ class ExecutionAgent:
         """
         calls = self._extract_all_tool_calls(text)
         return calls[0] if calls else None
+
+    def _tool_description_lines(self) -> list[str]:
+        """Build 'name: description (args: ...)' lines for the text prompt.
+
+        Models using the text-based ```tool``` protocol (e.g.
+        deepseek-coder-v2, which has no native tool calling) frequently emit
+        tool calls with empty or missing required arguments when the prompt
+        only lists tool names. Appending the required and optional argument
+        names to each tool line materially reduces such malformed calls.
+        """
+        if self.registry is None:
+            return []
+        lines: list[str] = []
+        for name in sorted(self.registry.names()):
+            definition = self.registry.get(name)
+            if definition is None:
+                continue
+            desc = definition.compact_description or name
+            arg_hints: list[str] = []
+            for arg in (definition.argument_schema or {}):
+                if arg not in arg_hints:
+                    arg_hints.append(arg)
+            for arg in sorted(definition.optional_arguments or frozenset()):
+                if arg not in arg_hints:
+                    arg_hints.append(arg)
+            if arg_hints:
+                lines.append(f"{name}: {desc} (args: {', '.join(arg_hints)})")
+            else:
+                lines.append(f"{name}: {desc}")
+        return lines
+
+    def _build_tool_schemas(self, provider: Any) -> list[dict[str, Any]]:
+        """Build native function-call schemas for tool-capable providers.
+
+        Returns empty list when the provider does not support native
+        function calling, so callers can skip the native `tools` payload.
+        """
+        if self.registry is None:
+            return []
+        provider_name = getattr(provider, "name", "")
+        if provider_name != "ollama":
+            return []
+        try:
+            from personal_ai_secretary.providers.model_intelligence import (
+                get_model_capabilities,
+            )
+            model_id = getattr(provider, "model", None) or ""
+            caps = get_model_capabilities(str(model_id))
+            if not caps.tool_calling:
+                return []
+        except Exception:  # noqa: BLE001
+            return []
+        schemas: list[dict[str, Any]] = []
+        for name in sorted(self.registry.names()):
+            definition = self.registry.get(name)
+            if definition is None:
+                continue
+            if getattr(definition, "requires_explicit_approval", False):
+                continue
+            properties: dict[str, Any] = {}
+            required: list[str] = []
+            for arg_name, arg_type in (definition.argument_schema or {}).items():
+                properties[arg_name] = {"type": arg_type}
+                required.append(arg_name)
+            for opt_name in (definition.optional_arguments or frozenset()):
+                if opt_name not in properties:
+                    properties[opt_name] = {"type": "string"}
+            schemas.append({
+                "type": "function",
+                "function": {
+                    "name": name,
+                    "description": definition.compact_description or name,
+                    "parameters": {
+                        "type": "object",
+                        "properties": properties,
+                        "required": required,
+                    },
+                },
+            })
+        return schemas
 
     def _extract_all_tool_calls(
         self, text: str
@@ -1155,13 +1618,47 @@ class ExecutionAgent:
         calls: list[tuple[str, dict[str, Any]]] = []
 
         def _parse_tool_json(parsed: dict[str, Any]) -> tuple[str, dict[str, Any]] | None:
-            """Normalize tool call JSON: supports tool/args and tool_name/tool_args."""
+            """Normalize tool call JSON.
+
+            Supports multiple model formats:
+            - {"tool": "...", "args": {...}}
+            - {"tool_name": "...", "tool_args": {...}}
+            - {"name": "...", "parameters": {...}}   (OpenAI style)
+            - {"name": "...", "arguments": {...}}    (OpenAI style)
+            - {"function": {"name": "...", "arguments": ...}}
+            """
             if not isinstance(parsed, dict):
                 return None
+            # OpenAI wrapper: {"function": {"name": ..., "arguments": ...}}
+            function = parsed.get("function")
+            if isinstance(function, dict) and function.get("name"):
+                tool_name = function["name"]
+                tool_args = function.get("arguments")
+                # arguments may be a JSON-encoded string
+                if isinstance(tool_args, str):
+                    try:
+                        import json as _json
+
+                        decoded = _json.loads(tool_args)
+                        tool_args = decoded if isinstance(decoded, dict) else {}
+                    except (json.JSONDecodeError, ValueError):
+                        tool_args = {}
+                if not isinstance(tool_args, dict):
+                    tool_args = {}
+                return (str(tool_name), tool_args)
             tool_name = parsed.get("tool") or parsed.get("tool_name")
+            tool_args = parsed.get("args") or parsed.get("tool_args")
+            if not tool_name:
+                # OpenAI style: {"name": ..., "parameters": ...}
+                if "name" in parsed and (
+                    "parameters" in parsed or "arguments" in parsed
+                ):
+                    tool_name = parsed.get("name")
+                    tool_args = (
+                        parsed.get("parameters") or parsed.get("arguments")
+                    )
             if not tool_name:
                 return None
-            tool_args = parsed.get("args") or parsed.get("tool_args") or {}
             if not isinstance(tool_args, dict):
                 tool_args = {}
             return (str(tool_name), tool_args)
@@ -1170,9 +1667,17 @@ class ExecutionAgent:
         for match in re.finditer(r"```tool\s*\n(.*?)\n```", text, re.DOTALL):
             try:
                 parsed = json.loads(match.group(1).strip())
-                result = _parse_tool_json(parsed)
-                if result is not None:
-                    calls.append(result)
+                # Models (esp. deepseek-coder-v2) may emit a whole ARRAY of
+                # tool calls inside a single ```tool block for multi-file tasks.
+                if isinstance(parsed, list):
+                    for item in parsed:
+                        result = _parse_tool_json(item)
+                        if result is not None:
+                            calls.append(result)
+                else:
+                    result = _parse_tool_json(parsed)
+                    if result is not None:
+                        calls.append(result)
             except (json.JSONDecodeError, ValueError) as exc:
                 logger.debug("Failed to parse tool block: %s", exc)
 
@@ -1188,6 +1693,48 @@ class ExecutionAgent:
                         calls.append(result)
                 except (json.JSONDecodeError, ValueError):
                     pass
+
+        # FASE Y: DeepSeek delimiter format.
+        #   <\uff5ctool\u2581calls\u2581begin\uff5c>
+        #     <\uff5ctool\u2581call\u2581begin\uff5c>function<\uff5ctool\u2581sep\uff5c>
+        #     tool_name\n```json\n{args}\n```
+        #     <\uff5ctool\u2581call\u2581end\uff5c>
+        #   <\uff5ctool\u2581calls\u2581end\uff5c>
+        if not calls:
+            _D = "\uff5c"
+            _S = "\u2581"
+            _call_block = re.compile(
+                rf"{_D}tool{_S}call{_S}begin{_D}"
+                rf"(.*?)"
+                rf"{_D}tool{_S}call{_S}end{_D}",
+                re.DOTALL,
+            )
+            for cm in _call_block.finditer(text):
+                inner = cm.group(1)
+                sep_marker = f"function<{_D}tool{_S}sep{_D}>"
+                sep_idx = inner.find(sep_marker)
+                if sep_idx == -1:
+                    continue
+                rest = inner[sep_idx + len(sep_marker):].strip()
+                name_line, _, args_part = rest.partition("\n")
+                tool_name = name_line.strip()
+                if not tool_name:
+                    continue
+                args_json = args_part.strip()
+                # xargs may be wrapped in ```json ... ``` or plain XML-adjacent text.
+                args_json = args_json.replace("```json", "").replace("```", "").strip()
+                args: dict[str, Any] = {}
+                if args_json:
+                    try:
+                        parsed_args = json.loads(args_json)
+                        if isinstance(parsed_args, dict):
+                            args = parsed_args
+                    except (json.JSONDecodeError, ValueError):
+                        logger.debug(
+                            "DeepSeek tool args unparseable for %s: %.80s",
+                            tool_name, args_json,
+                        )
+                calls.append((tool_name, args))
 
         # If no tool blocks found, try inline pattern
         if not calls:
@@ -1209,6 +1756,35 @@ class ExecutionAgent:
 
         calls: list[tuple[str, dict[str, Any]]] = []
 
+        # OpenAI wrapper: {"function": {"name": ..., "arguments": ...}}
+        pattern = re.compile(r'\{"function"\s*:\s*\{')
+        for match in pattern.finditer(text):
+            start = match.start()
+            json_obj = self._extract_balanced_json(text, start)
+            if json_obj is not None:
+                try:
+                    parsed = json.loads(json_obj)
+                    function = parsed.get("function")
+                    if isinstance(function, dict) and function.get("name"):
+                        tool_args = function.get("arguments")
+                        if isinstance(tool_args, str):
+                            try:
+                                decoded = json.loads(tool_args)
+                                tool_args = (
+                                    decoded
+                                    if isinstance(decoded, dict)
+                                    else {}
+                                )
+                            except (json.JSONDecodeError, ValueError):
+                                tool_args = {}
+                        if isinstance(tool_args, dict):
+                            calls.append(
+                                (str(function["name"]), tool_args)
+                            )
+                            break
+                except (json.JSONDecodeError, ValueError):
+                    pass
+
         # Find the start of a potential tool call (both formats)
         pattern = re.compile(r'\{"tool(?:_name)?"\s*:\s*"')
         for match in pattern.finditer(text):
@@ -1227,6 +1803,34 @@ class ExecutionAgent:
                         break  # Only first inline match
                 except (json.JSONDecodeError, ValueError):
                     pass
+
+        if not calls:
+            # OpenAI style: {"name": "...", "parameters": {...}} or
+            # {"name": "...", "arguments": {...}}
+            pattern = re.compile(r'\{"name"\s*:\s*"')
+            for match in pattern.finditer(text):
+                start = match.start()
+                json_obj = self._extract_balanced_json(text, start)
+                if json_obj is not None:
+                    try:
+                        parsed = json.loads(json_obj)
+                        if (
+                            isinstance(parsed, dict)
+                            and parsed.get("name")
+                            and (
+                                "parameters" in parsed or "arguments" in parsed
+                            )
+                        ):
+                            tool_args = (
+                                parsed.get("parameters")
+                                or parsed.get("arguments")
+                                or {}
+                            )
+                            if isinstance(tool_args, dict):
+                                calls.append((str(parsed["name"]), tool_args))
+                                break
+                    except (json.JSONDecodeError, ValueError):
+                        pass
 
         return calls
 
@@ -1304,9 +1908,10 @@ class ExecutionAgent:
                 tool_span.set_attribute(ATTRIBUTE_TOOL_NAME, tool_name)
                 tool_span.set_attribute(ATTRIBUTE_STAGE, self.role.value)
                 try:
-                    result = await self.registry.execute(
-                        tool_name, tool_args, approved=approved
-                    )
+                    with self._workspace_bound(data):
+                        result = await self.registry.execute(
+                            tool_name, tool_args, approved=approved
+                        )
                 except BaseException as exc:
                     mark_span_error(exc)
                     tool_span.set_attribute(ATTRIBUTE_OUTCOME, "error")
@@ -1354,6 +1959,21 @@ class ExecutionAgent:
                 details={"name": tool_name},
             )
         return result
+
+    @contextlib.contextmanager
+    def _workspace_bound(self, data: AgentInput) -> Any:
+        """Bind file-tool path resolution to the request's working directory.
+
+        FASE AB.6: an agent must never write outside its workspace. Relative
+        tool paths are anchored to ``working_directory`` (when provided) and
+        access outside it is rejected; otherwise they fall back to
+        WORKSPACE_ROOT instead of the server's process CWD.
+        """
+        wd = data.context.get("working_directory") if data.context else None
+        if not isinstance(wd, str) or not wd:
+            wd = None
+        with routing_workspace(wd):
+            yield
 
     async def _try_tool(self, data: AgentInput) -> AgentArtifact | None:
         observation = self.observability
@@ -1442,9 +2062,10 @@ class ExecutionAgent:
                 tool_span.set_attribute(ATTRIBUTE_TOOL_NAME, call.name)
                 tool_span.set_attribute(ATTRIBUTE_STAGE, self.role.value)
                 try:
-                    result = await self.registry.execute(
-                        call.name, call.arguments, approved=approved
-                    )
+                    with self._workspace_bound(data):
+                        result = await self.registry.execute(
+                            call.name, call.arguments, approved=approved
+                        )
                 except BaseException as exc:
                     mark_span_error(exc)
                     tool_span.set_attribute(ATTRIBUTE_OUTCOME, "error")

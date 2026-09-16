@@ -64,6 +64,7 @@ class ModelManager:
         self._initialized = False
         self._selected_provider: str | None = None
         self._selected_model: str | None = None
+        self._routing_mode: str = "automatic"
         self._fallback_history: list[str] = []
         self._provider_instances: dict[str, Any] = {}
 
@@ -82,6 +83,16 @@ class ModelManager:
     @property
     def selected_model(self) -> str | None:
         return self._selected_model
+
+    @property
+    def routing_mode(self) -> str:
+        return self._routing_mode
+
+    def set_routing_mode(self, mode: str) -> None:
+        with self._lock:
+            if mode in ("automatic", "manual"):
+                self._routing_mode = mode
+                logger.info("Routing mode set to %s", mode)
 
     async def initialize(self) -> None:
         if self._initialized:
@@ -108,6 +119,9 @@ class ModelManager:
 
     async def discover_providers(self) -> dict[str, DiscoveredProvider]:
         await self.initialize()
+        return self._discovery.discovered
+
+    def discover_providers_sync(self) -> dict[str, DiscoveredProvider]:
         return self._discovery.discovered
 
     async def verify_model(
@@ -330,6 +344,14 @@ class ModelManager:
             self._selected_model = model_id or (
                 entry.model_id if entry else None
             )
+            # FASE Y: Keep the provider instance in sync so the instance
+            # actually uses the selected model (the discovered instance may
+            # still point at the startup default).
+            sel_model = self._selected_model
+            instance = self._provider_instances.get(provider_name)
+            if instance is not None and sel_model:
+                if hasattr(instance, "model"):
+                    instance.model = sel_model
             logger.info(
                 "Selected provider=%s model=%s",
                 self._selected_provider,
@@ -344,6 +366,14 @@ class ModelManager:
         instance: AIProvider | None = self._provider_instances.get(provider_name)
         if instance is not None:
             return instance
+        # FASE Y: MANUAL mode = no fallback. Return None to signal error.
+        if self._routing_mode == "manual":
+            logger.warning(
+                "MANUAL mode: provider '%s' not available, no fallback",
+                provider_name,
+            )
+            return None
+        # AUTOMATIC mode = fall back to auto-select
         return self._auto_select()
 
     def _auto_select(self) -> AIProvider | None:
@@ -356,14 +386,37 @@ class ModelManager:
                 inst: AIProvider | None = self._provider_instances.get(name)
                 if inst is not None:
                     return inst
+        if settings.ai_provider == "auto":
+            # FASE Y: Auto mode - prefer local, then cloud, then deterministic
+            # Priority: Ollama (local) > Gemini > NVIDIA > OpenCode > Deterministic
+            for auto_name in ("ollama", "gemini", "nvidia", "opencode"):
+                auto_inst: AIProvider | None = self._provider_instances.get(auto_name)
+                if auto_inst is not None:
+                    logger.info("Auto-select: using %s provider", auto_name)
+                    return auto_inst
+            # Last resort: deterministic
+            from personal_ai_secretary.providers.deterministic import DeterministicProvider
+            logger.warning("Auto-select: no providers available, using deterministic")
+            return DeterministicProvider()
         if settings.ai_provider == "deterministic":
             from personal_ai_secretary.providers.deterministic import DeterministicProvider
             return DeterministicProvider()
         return None
 
     def get_fallback_provider(
-        self, failed_provider: str, failed_model: str
+        self,
+        failed_provider: str,
+        failed_model: str,
+        blocked_providers: set[str] | None = None,
     ) -> tuple[str, str] | None:
+        """Pick a fallback (provider, model) for a failed provider.
+
+        FASE AB.4: ``blocked_providers`` carries every provider that failed at
+        the *provider level* during THIS request (connectivity/credentials).
+        They are excluded cumulatively so two dead providers cannot ping-pong
+        between each other forever. A model-level failure (bad response from an
+        otherwise reachable server) still allows other models of that provider.
+        """
         self._fallback_history.append(f"{failed_provider}:{failed_model}")
         if len(self._fallback_history) > _MAX_FALLBACK_ATTEMPTS * 10:
             self._fallback_history = self._fallback_history[-50:]
@@ -372,11 +425,15 @@ class ModelManager:
         candidates = self._get_candidates(
             is_online=self._connectivity.is_online, prefer_verified=True
         )
+        exact_failed = f"{failed_provider}:{failed_model}"
         for entry in candidates:
             key = f"{entry.provider_name}:{entry.model_id}"
-            if key in recent:
+            if key == exact_failed or key in recent:
                 continue
-            if entry.provider_name == failed_provider and entry.model_id == failed_model:
+            if blocked_providers and entry.provider_name in blocked_providers:
+                # FASE AB.4: a provider that failed at the provider level during
+                # this request is not a trustworthy fallback source — its other
+                # models share the same connectivity/credential status.
                 continue
             if entry.status in (ModelStatus.VERIFIED, ModelStatus.SLOW, ModelStatus.UNKNOWN):
                 return (entry.provider_name, entry.model_id)

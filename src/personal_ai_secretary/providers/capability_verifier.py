@@ -22,6 +22,12 @@ logger = logging.getLogger("personal_ai_secretary.providers.capability_verifier"
 
 _SANDBOX_PREFIX = "chiky_verify_"
 
+# FASE AB.3: Bound each capability test so Test Connection always terminates
+# in a real state (PASS / FAIL / TIMEOUT) instead of hanging indefinitely
+# behind a slow or non-performing model (e.g. a model that never produces a
+# tool call for the tool_calling test).
+_VERIFY_TEST_TIMEOUT_SECONDS = 45.0
+
 
 @dataclass
 class TestResult:
@@ -77,8 +83,18 @@ class CapabilityVerifier:
         for test_fn in tests:
             test_start = time.monotonic()
             try:
-                result = await test_fn(provider, model_id)
-            except Exception as exc:
+                result = await asyncio.wait_for(
+                    test_fn(provider, model_id),
+                    timeout=_VERIFY_TEST_TIMEOUT_SECONDS,
+                )
+            except TimeoutError:
+                result = TestResult(
+                    test_name=test_fn.__name__,
+                    passed=False,
+                    duration_seconds=_VERIFY_TEST_TIMEOUT_SECONDS,
+                    detail=f"Timed out after {_VERIFY_TEST_TIMEOUT_SECONDS:.0f}s",
+                )
+            except Exception as exc:  # noqa: BLE001
                 result = TestResult(
                     test_name=test_fn.__name__,
                     passed=False,
@@ -256,6 +272,7 @@ class CapabilityVerifier:
                     )
                 # Actually execute the tool call
                 from personal_ai_secretary.tools.builtin import default_tool_registry
+                from personal_ai_secretary.tools.filesystem import routing_workspace
 
                 registry = default_tool_registry()
                 tool_def = registry.get("create_file")
@@ -267,7 +284,8 @@ class CapabilityVerifier:
                     )
                 args = dict(tool_call.arguments)
                 args["path"] = target
-                result = await tool_def.handler(args)
+                with routing_workspace(tmpdir):
+                    result = await tool_def.handler(args)
                 if result.get("error"):
                     return TestResult(
                         test_name="file_creation",
@@ -343,6 +361,7 @@ class CapabilityVerifier:
                     )
                 # Execute the tool call
                 from personal_ai_secretary.tools.builtin import default_tool_registry
+                from personal_ai_secretary.tools.filesystem import routing_workspace
 
                 registry = default_tool_registry()
                 tool_def = registry.get("modify_file")
@@ -354,7 +373,8 @@ class CapabilityVerifier:
                     )
                 args = dict(tool_call.arguments)
                 args["path"] = target
-                result = await tool_def.handler(args)
+                with routing_workspace(tmpdir):
+                    result = await tool_def.handler(args)
                 if result.get("error"):
                     return TestResult(
                         test_name="file_modification",

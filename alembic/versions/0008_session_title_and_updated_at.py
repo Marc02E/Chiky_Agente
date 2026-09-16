@@ -1,6 +1,7 @@
 """Add session title and updated timestamp."""
 
 import sqlalchemy as sa
+
 from alembic import op
 
 revision = "0008_session_title_and_updated_at"

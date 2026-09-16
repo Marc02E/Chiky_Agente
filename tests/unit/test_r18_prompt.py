@@ -1,11 +1,11 @@
 """R.18 — System prompt validation."""
-from personal_ai_secretary.tools.prompt import build_system_prompt
-from personal_ai_secretary.tools.registry import ToolRegistry
-from personal_ai_secretary.tools.filesystem import register_filesystem_tools
-from personal_ai_secretary.tools.development import register_development_tools
 from personal_ai_secretary.tools.command import register_command_tools
 from personal_ai_secretary.tools.datetime_tool import register_datetime_tools
+from personal_ai_secretary.tools.development import register_development_tools
+from personal_ai_secretary.tools.filesystem import register_filesystem_tools
 from personal_ai_secretary.tools.project import register_project_tools
+from personal_ai_secretary.tools.prompt import build_system_prompt
+from personal_ai_secretary.tools.registry import ToolRegistry
 
 
 def main():
@@ -51,7 +51,7 @@ def main():
     missing_tools = [t for t in tool_names if t not in prompt]
     missing_rules = [n for n, p in checks if not p]
 
-    print(f"\n=== VERDICT ===")
+    print("\n=== VERDICT ===")
     if missing_tools:
         print(f"FAIL: {len(missing_tools)} tools missing from prompt: {missing_tools}")
     elif missing_rules:
@@ -59,7 +59,7 @@ def main():
     else:
         print("PASS: All tools present, all key rules present")
 
-    print(f"\n=== FIRST 1500 CHARS ===")
+    print("\n=== FIRST 1500 CHARS ===")
     print(prompt[:1500])
 
 
