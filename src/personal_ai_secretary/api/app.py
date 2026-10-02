@@ -279,7 +279,15 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
 
 
 settings = get_settings()
-app = FastAPI(title="Personal AI Secretary API", version="1.0.0", lifespan=lifespan)
+# The application owns sanitized tracing/metrics, not FastAPI's automatic
+# telemetry (which would duplicate spans and export unredacted errors).
+app = FastAPI(
+    title="Personal AI Secretary API", version="1.0.0", lifespan=lifespan,
+    telemetry={
+        "tracing": False, "metrics": False, "logs": False,
+        "operation_spans": False, "auto_configure": False,
+    },
+)
 
 # ─── UI: Mount static files and include UI routes ───
 _UI_STATIC_DIR = Path(__file__).resolve().parent.parent / "ui" / "static"

@@ -10,7 +10,7 @@ dependencies = [
   "uvicorn[standard]>=0.40,<1",
   "pydantic>=2.13,<3",
   "pydantic-settings>=2.12,<3",
-  "sqlalchemy>=2.0,<3",
+  "sqlalchemy[asyncio]>=2.0,<3",
   "alembic>=1.18,<2",
   "aiosqlite>=0.22,<1",
   # httpx is imported at runtime by providers/ollama.py and providers/remote.py.

@@ -55,6 +55,19 @@ async def test_sink_aggregates_counters_across_workers(db) -> None:
     assert durations == {}
 
 
+async def test_sink_repeated_flush_replaces_worker_snapshot(db) -> None:
+    _, factory = db
+    sink = PostgresMetricSink(factory, worker_id="repeat-worker")
+    metrics = Metrics.create()
+    metrics.inc("requests_total", amount=2)
+    await sink.flush(metrics)
+    await sink.flush(metrics)
+    metrics.inc("requests_total")
+    await sink.flush(metrics)
+    counters, _ = await sink.snapshot()
+    assert counters == {"requests_total": 3}
+
+
 async def test_sink_duration_gauge_keeps_latest_observation(db) -> None:
     _, factory = db
     clock = Clock(datetime(2026, 1, 1, tzinfo=UTC))

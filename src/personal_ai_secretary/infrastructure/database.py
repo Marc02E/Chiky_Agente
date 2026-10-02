@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
+from sqlalchemy.pool import NullPool
 
 from personal_ai_secretary.domain.models import Base
 from personal_ai_secretary.shared.config import get_settings
@@ -20,8 +21,13 @@ def get_engine() -> AsyncEngine:
         settings = get_settings()
         kwargs: dict[str, object] = {"pool_pre_ping": True}
         if not settings.database_url.startswith("sqlite"):
-            kwargs["pool_size"] = settings.db_pool_size
-            kwargs["max_overflow"] = settings.db_max_overflow
+            if settings.app_env == "test":
+                # TestClient runs on distinct event loops; asyncpg connections
+                # must not be reused across them. Keep production pooling.
+                kwargs["poolclass"] = NullPool
+            else:
+                kwargs["pool_size"] = settings.db_pool_size
+                kwargs["max_overflow"] = settings.db_max_overflow
         _engine = create_async_engine(settings.database_url, **kwargs)
     return _engine
 

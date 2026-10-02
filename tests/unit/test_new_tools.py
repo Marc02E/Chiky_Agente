@@ -46,12 +46,26 @@ async def test_format_date_invalid() -> None:
 
 
 @pytest.mark.asyncio
-async def test_get_directory_desktop() -> None:
+async def test_get_directory_desktop(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     from personal_ai_secretary.tools.path_helper import _get_directory
 
+    desktop = tmp_path / "Desktop"
+    desktop.mkdir()
+    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
     result = await _get_directory({"name": "desktop"})
-    assert "result" in result
-    assert Path(result["result"]).name == "Desktop"
+    assert result == {"result": str(desktop), "name": "desktop"}
+
+
+@pytest.mark.asyncio
+async def test_get_directory_desktop_missing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from personal_ai_secretary.tools.path_helper import _get_directory
+
+    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
+    result = await _get_directory({"name": "desktop"})
+    assert "error" in result
+    assert "does not exist" in result["error"]
 
 
 @pytest.mark.asyncio

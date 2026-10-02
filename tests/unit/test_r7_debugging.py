@@ -6,8 +6,7 @@ import time
 from pathlib import Path
 from uuid import uuid4
 
-os.environ["AI_PROVIDER"] = "local"
-os.environ.setdefault("OLLAMA_MODEL", "llama3.1:latest")
+import pytest
 
 from personal_ai_secretary.agents.builtin import ExecutionAgent
 from personal_ai_secretary.agents.contracts import AgentInput
@@ -20,9 +19,10 @@ from personal_ai_secretary.tools.filesystem import register_filesystem_tools
 from personal_ai_secretary.tools.registry import ToolRegistry
 
 
-async def test_r7_debugging():
+@pytest.mark.slow
+async def test_r7_debugging(tmp_path):
     model = os.environ.get("OLLAMA_MODEL", "llama3.1:latest")
-    ws = Path(os.environ.get("TEMP", ".")) / "chiky_r7_debug"
+    ws = tmp_path / "chiky_r7_debug"
     ws.mkdir(parents=True, exist_ok=True)
 
     buggy = ws / "calc.py"
@@ -86,5 +86,8 @@ async def test_r7_debugging():
 
 
 if __name__ == "__main__":
-    result = asyncio.run(test_r7_debugging())
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as directory:
+        result = asyncio.run(test_r7_debugging(Path(directory)))
     print(f"\nFinal: {result}")

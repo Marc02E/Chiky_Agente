@@ -1,7 +1,7 @@
 """FASE K.6 - Unit tests for secure command execution."""
 
 import json
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from unittest.mock import AsyncMock
 
 import pytest
@@ -44,8 +44,14 @@ class TestExtractExecutableName:
     def test_bare_name(self) -> None:
         assert _extract_executable_name("python --version") == "python"
 
-    def test_full_path_windows(self) -> None:
+    def test_full_path_windows(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        # Exercise Windows basename semantics without changing the host OS.
+        monkeypatch.setattr("personal_ai_secretary.tools.command.Path", PureWindowsPath)
         assert _extract_executable_name("C:\\Python313\\python.exe --version") == "python"
+
+    def test_full_path_posix(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setattr("personal_ai_secretary.tools.command.Path", PurePosixPath)
+        assert _extract_executable_name("/usr/bin/python3 --version") == "python3"
 
     def test_extension_stripped(self) -> None:
         assert _extract_executable_name("git.exe status") == "git"
@@ -206,9 +212,16 @@ class TestValidateCommand:
     def test_strip_whitespace(self) -> None:
         assert validate_command("  python --version  ") == "python --version"
 
-    def test_full_path_allowed(self) -> None:
-        result = validate_command("C:\\Python313\\python.exe --version")
-        assert result == "C:\\Python313\\python.exe --version"
+    @pytest.mark.parametrize(
+        ("path_type", "command"),
+        [
+            (PureWindowsPath, "C:\\Python313\\python.exe --version"),
+            (PurePosixPath, "/usr/bin/python3 --version"),
+        ],
+    )
+    def test_full_path_allowed(self, monkeypatch: pytest.MonkeyPatch, path_type, command) -> None:
+        monkeypatch.setattr("personal_ai_secretary.tools.command.Path", path_type)
+        assert validate_command(command) == command
 
 
 class TestValidateWorkingDirectory:
@@ -323,10 +336,10 @@ class TestExecuteCommand:
 
     @pytest.mark.asyncio
     async def test_output_truncation(self, tmp_path: Path) -> None:
-        script = tmp_path / "big.py"
+        script = tmp_path / "big output.py"
         script.write_text('print("x" * 50000)')
         result = await _execute_command(
-            {"command": f"python {script}", "working_directory": str(tmp_path)}
+            {"command": f'python "{script}"', "working_directory": str(tmp_path)}
         )
         assert result.get("success") is True
         assert result.get("output_truncated") is True
@@ -365,11 +378,11 @@ class TestExecuteCommand:
 
     @pytest.mark.asyncio
     async def test_timeout_exceeded(self, tmp_path: Path) -> None:
-        script = tmp_path / "slow.py"
+        script = tmp_path / "slow script.py"
         script.write_text("import time; time.sleep(10)")
         result = await _execute_command(
             {
-                "command": f"python {script}",
+                "command": f'python "{script}"',
                 "working_directory": str(tmp_path),
                 "timeout": 1,
             }

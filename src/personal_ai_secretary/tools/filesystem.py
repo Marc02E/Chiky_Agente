@@ -8,7 +8,7 @@ import contextvars
 import logging
 import os
 from collections.abc import Iterator
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from typing import Any
 
 from personal_ai_secretary.shared.config import get_settings
@@ -114,6 +114,11 @@ def _validate_path(
 
     # Resolve hallucinated paths first
     resolved_str = _resolve_hallucinated_path(path_str)
+
+    # POSIX treats drive-qualified/UNC Windows paths as relative filenames.
+    # Reject foreign roots rather than silently writing them in the workspace.
+    if os.name != "nt" and PureWindowsPath(resolved_str).drive:
+        raise ToolError(f"Access denied: Windows path '{path_str}' is outside allowed directories.")
 
     try:
         anchor = Path(roots[0]).resolve()

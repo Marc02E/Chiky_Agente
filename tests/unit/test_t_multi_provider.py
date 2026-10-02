@@ -12,6 +12,7 @@ Comprehensive test suite covering:
 """
 
 import asyncio
+import os
 import tempfile
 import time
 from pathlib import Path
@@ -556,14 +557,17 @@ class TestOpenCodeProvider:
             node_bin = base / "node_modules" / "opencode-ai" / "bin"
             node_bin.mkdir(parents=True, exist_ok=True)
             (node_bin / "opencode.exe").write_text("binary", encoding="utf-8")
+            # Use native separators so the actual host can stat the target;
+            # Windows still exercises the original backslash launcher layout.
+            target = str(Path("node_modules") / "opencode-ai" / "bin" / "opencode.exe")
             cmd = base / "opencode.cmd"
             cmd.write_text(
-                '@echo off\n"%dp0%\\node_modules\\opencode-ai\\bin\\opencode.exe" %*\n',
+                f'@echo off\n"%dp0%{os.sep}{target}" %*\n',
                 encoding="utf-8",
             )
             ps1 = base / "opencode.ps1"
             ps1.write_text(
-                '& "$basedir\\node_modules\\opencode-ai\\bin\\opencode.exe" @args\n',
+                f'& "$basedir{os.sep}{target}" @args\n',
                 encoding="utf-8",
             )
 
@@ -575,13 +579,17 @@ class TestOpenCodeProvider:
             resolved_ps1 = _resolve_launcher(str(ps1))
             assert resolved_ps1 is not None
             assert resolved_ps1.lower().endswith("opencode.exe")
+            assert Path(resolved_ps1).resolve() == (node_bin / "opencode.exe").resolve()
 
             resolved_exe = _resolve_launcher(str(node_bin / "opencode.exe"))
             assert resolved_exe == str(node_bin / "opencode.exe")
 
-        # Real environment sanity: if installed, find_binary must resolve to .exe.
-        if oc_server.find_binary() is not None:
-            assert find_binary().lower().endswith(".exe")
+            # Test find_binary itself deterministically, not the installed CLI.
+            for launcher in (cmd, ps1, node_bin / "opencode.exe"):
+                with patch.object(oc_server.shutil, "which", return_value=str(launcher)):
+                    found = find_binary()
+                    assert found is not None
+                    assert Path(found).resolve() == (node_bin / "opencode.exe").resolve()
 
 
 # ═══════════════════════════════════════════════════════════════════════════

@@ -4,6 +4,7 @@ Tests backend security controls directly (no LLM, no approval blocking).
 Verifies path traversal, sibling bypass, dangerous commands, protected files,
 prompt injection handling, and false completion prevention.
 """
+import os
 from pathlib import Path
 
 import pytest
@@ -92,8 +93,13 @@ async def test_sibling_bypass_blocked(narrow_registry, narrow_root):
 
 @pytest.mark.asyncio
 async def test_system32_creation_blocked(narrow_registry):
-    """R.11: Creating files in Windows System32 should be blocked."""
-    system32 = Path(r"C:\Windows\System32\chiky_test_adversarial.txt")
+    """R.11: Creating files in a native system directory should be blocked."""
+    # A Windows drive path is a relative filename on POSIX, not a system path.
+    system32 = (
+        Path(r"C:\Windows\System32\chiky_test_adversarial.txt")
+        if os.name == "nt"
+        else Path("/etc/chiky_test_adversarial.txt")
+    )
     with pytest.raises(ToolError, match="Access denied"):
         await narrow_registry.execute(
             "create_file",

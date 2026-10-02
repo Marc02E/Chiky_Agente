@@ -6,8 +6,8 @@ inference: ``/config`` health only) and then drives exactly that shutdown hook,
 proving the managed process is gone and the module global is cleared — i.e. a
 controlled Chiky shutdown leaves no orphaned OpenCode.
 
-Gated on CHIKY_ALLOW_LIVE_INTEGRATION (set in this module) so the unit suite
-never spawns processes.
+Marked slow and gated on CHIKY_ALLOW_LIVE_INTEGRATION so the offline suite
+never spawns processes or changes the live-integration setting at collection.
 """
 
 from __future__ import annotations
@@ -16,9 +16,17 @@ import asyncio
 import os
 import subprocess
 
-os.environ["CHIKY_ALLOW_LIVE_INTEGRATION"] = "1"
+import pytest
 
-from personal_ai_secretary.providers.opencode_provider import OpenCodeProvider  # noqa: E402
+from personal_ai_secretary.providers.opencode_provider import OpenCodeProvider
+
+pytestmark = [
+    pytest.mark.slow,
+    pytest.mark.skipif(
+        os.environ.get("CHIKY_ALLOW_LIVE_INTEGRATION") != "1" or os.name != "nt",
+        reason="Requires opt-in live integration and Windows tasklist",
+    ),
+]
 
 
 def _pid_alive(pid: int) -> bool:

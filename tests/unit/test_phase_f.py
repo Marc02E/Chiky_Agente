@@ -1,7 +1,7 @@
 """Tests for Phase F: Provider Resilience."""
 
 import json
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 from uuid import uuid4
 
 import httpx
@@ -52,13 +52,20 @@ async def test_ollama_provider_connection_error() -> None:
     from personal_ai_secretary.providers.ollama import OllamaProvider
 
     provider = OllamaProvider(model="nonexistent")
-    provider._base_url = "http://localhost:99999"
+    provider._base_url = "http://127.0.0.1:11434"
     envelope = RequestEnvelope(
         request_id=uuid4(), session_id=uuid4(), user_id="test",
         input="hello", risk_level=RiskLevel.LOW, correlation_id="test",
     )
-    with pytest.raises(ConnectionError, match="Cannot connect to Ollama"):
-        await provider.generate(envelope)
+    # Invalid port 99999 raises OS-dependent errors, not a connection refusal.
+    with patch.object(
+        httpx.AsyncClient, "post", new_callable=AsyncMock,
+        side_effect=httpx.ConnectError("connection refused"),
+    ) as post:
+        with pytest.raises(ConnectionError, match="Cannot connect to Ollama"):
+            await provider.generate(envelope)
+    post.assert_awaited_once()
+    assert post.call_args.args[0] == "http://127.0.0.1:11434/api/chat"
 
 
 @pytest.mark.asyncio
@@ -66,8 +73,13 @@ async def test_ollama_health_connection_error() -> None:
     from personal_ai_secretary.providers.ollama import OllamaProvider
 
     provider = OllamaProvider(model="nonexistent")
-    provider._base_url = "http://localhost:99999"
-    info = await provider.health()
+    provider._base_url = "http://127.0.0.1:11434"
+    with patch.object(
+        httpx.AsyncClient, "get", new_callable=AsyncMock,
+        side_effect=httpx.ConnectError("connection refused"),
+    ) as get:
+        info = await provider.health()
+    get.assert_awaited_once_with("http://127.0.0.1:11434/api/tags")
     assert info.available is False
     assert "not running" in info.detail.lower()
 

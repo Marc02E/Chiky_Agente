@@ -783,10 +783,9 @@ class TestUIRoutesK5:
                     ))
                     await session.commit()
 
-            import asyncio
-
-            asyncio.get_event_loop_policy()
-            asyncio.run(_seed())
+            # asyncpg connections belong to the app's event loop, not a new
+            # asyncio.run() loop in the test's thread.
+            client.portal.call(_seed)
             r = client.get("/api/v1/ui/sessions")
             assert r.status_code == 200
             titles = [s.get("title") for s in r.json()["sessions"]]

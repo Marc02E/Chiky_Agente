@@ -320,7 +320,7 @@ def extract_traceparent(header: str | None) -> Context | None:
     if not header:
         return None
     try:
-        context = _TRACEPARENT_PROPAGATOR.extract({"traceparent": header})
+        context = _TRACEPARENT_PROPAGATOR.extract({"traceparent": header}, context=Context())
     except Exception:
         return None
     if not context:

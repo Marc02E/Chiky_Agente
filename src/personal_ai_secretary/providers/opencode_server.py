@@ -294,7 +294,8 @@ class ManagedOpenCodeServer:
         from ctypes import wintypes
 
         try:
-            kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+            # WinDLL is absent on POSIX; the exception fallback below is intentional.
+            kernel32 = getattr(ctypes, "WinDLL")("kernel32", use_last_error=True)  # noqa: B009
 
             class JOBOBJECT_EXTENDED_LIMIT_INFORMATION(ctypes.Structure):
                 _fields_ = [

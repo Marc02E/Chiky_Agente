@@ -11,6 +11,8 @@ from hashlib import sha256
 from typing import cast
 
 from sqlalchemy import delete, select
+from sqlalchemy.dialects.postgresql import insert as postgres_insert
+from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from personal_ai_secretary.domain.models import (
@@ -359,15 +361,22 @@ class PostgresMetricSink:
     ) -> None:
         wid = worker_id or self._worker_id
         now = self._current_time()
-        record = MetricRecord(
-            worker_id=wid,
-            metric_name=metric_name,
-            metric_type=metric_type,
-            value=value,
-            updated_at=now,
-        )
         async with self._session_factory() as session:
-            session.add(record)
+            insert = (
+                postgres_insert if session.get_bind().dialect.name == "postgresql"
+                else sqlite_insert
+            )
+            statement = insert(MetricRecord).values(
+                worker_id=wid, metric_name=metric_name, metric_type=metric_type,
+                value=value, updated_at=now,
+            )
+            # Each worker publishes its latest cumulative snapshot, not a new
+            # row on every flush. Atomic upsert also handles concurrent flushes.
+            statement = statement.on_conflict_do_update(
+                index_elements=[MetricRecord.worker_id, MetricRecord.metric_name],
+                set_={"metric_type": metric_type, "value": value, "updated_at": now},
+            )
+            await session.execute(statement)
             await session.commit()
 
     async def flush(self, metrics: Metrics) -> None:
