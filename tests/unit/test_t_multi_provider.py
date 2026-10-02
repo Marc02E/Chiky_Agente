@@ -12,7 +12,9 @@ Comprehensive test suite covering:
 """
 
 import asyncio
+import tempfile
 import time
+from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -326,6 +328,51 @@ class TestModelManager:
         if fallback:
             assert fallback[0] != "gemini" or fallback[1] != "gemini-flash"
 
+    def test_get_fallback_provider_excludes_failed_provider(self) -> None:
+        """FASE AB.4 regression: a provider that failed at the provider level
+        must not be a fallback source — its other models share the same
+        connectivity/credential status. The exclusion is cumulative per request
+        so two dead providers cannot ping-pong between each other forever."""
+        manager = ModelManager()
+        # Same provider, different model (the previous silent-loop scenario).
+        manager.registry.register(
+            model_id="deepseek-coder-v2:latest", provider_name="ollama"
+        ).status = ModelStatus.VERIFIED
+        manager.registry.register(
+            model_id="llama3.1:latest", provider_name="ollama"
+        ).status = ModelStatus.VERIFIED
+        # Distinct working provider.
+        manager.registry.register(
+            model_id="big-pickle", provider_name="opencode"
+        ).status = ModelStatus.VERIFIED
+
+        fallback = manager.get_fallback_provider(
+            "ollama", "deepseek-coder-v2:latest",
+            blocked_providers={"ollama"},
+        )
+        assert fallback is not None
+        # Cross-provider only: never another ollama model.
+        assert fallback[0] == "opencode"
+        assert fallback[1] == "big-pickle"
+
+    def test_get_fallback_provider_model_level_retries_same_provider(self) -> None:
+        """FASE AB.4: a model-level failure (bad response from a reachable
+        server) must NOT blacklist the whole provider — its other models may
+        still work."""
+        manager = ModelManager()
+        manager.registry.register(
+            model_id="nemotron-3.5-lightning-free", provider_name="opencode"
+        ).status = ModelStatus.VERIFIED
+        manager.registry.register(
+            model_id="big-pickle", provider_name="opencode"
+        ).status = ModelStatus.VERIFIED
+
+        fallback = manager.get_fallback_provider(
+            "opencode", "nemotron-3.5-lightning-free",
+            blocked_providers=set(),
+        )
+        assert fallback == ("opencode", "big-pickle")
+
     def test_record_success(self) -> None:
         manager = ModelManager()
         manager.registry.register(model_id="llama3", provider_name="ollama")
@@ -489,6 +536,52 @@ class TestOpenCodeProvider:
             health = await provider.health()
         assert health.available is False
         assert "server is not running" in health.detail.lower()
+
+    def test_find_binary_resolves_real_exe_not_wrapper(self) -> None:
+        """FASE AB.7 lifecycle: find_binary() must return the real .exe, never a
+        .cmd/.ps1 launcher, so Chiky can own and cleanly stop a single process
+        (no orphaned grandchildren)."""
+        import personal_ai_secretary.providers.opencode_server as oc_server
+        from personal_ai_secretary.providers.opencode_server import (
+            _resolve_launcher,
+            find_binary,
+        )
+
+        with tempfile.TemporaryDirectory() as td:
+            base = Path(td)
+            fake_exe = base / "opencode.exe"
+            fake_exe.write_text("binary", encoding="utf-8")
+            # Simulate the npm/pi-node layout: a `.cmd` wrapper in `current/`
+            # that execs `<current>/node_modules/opencode-ai/bin/opencode.exe`.
+            node_bin = base / "node_modules" / "opencode-ai" / "bin"
+            node_bin.mkdir(parents=True, exist_ok=True)
+            (node_bin / "opencode.exe").write_text("binary", encoding="utf-8")
+            cmd = base / "opencode.cmd"
+            cmd.write_text(
+                '@echo off\n"%dp0%\\node_modules\\opencode-ai\\bin\\opencode.exe" %*\n',
+                encoding="utf-8",
+            )
+            ps1 = base / "opencode.ps1"
+            ps1.write_text(
+                '& "$basedir\\node_modules\\opencode-ai\\bin\\opencode.exe" @args\n',
+                encoding="utf-8",
+            )
+
+            resolved_cmd = _resolve_launcher(str(cmd))
+            assert resolved_cmd is not None
+            assert resolved_cmd.lower().endswith("opencode.exe")
+            assert (node_bin / "opencode.exe").resolve() == Path(resolved_cmd).resolve()
+
+            resolved_ps1 = _resolve_launcher(str(ps1))
+            assert resolved_ps1 is not None
+            assert resolved_ps1.lower().endswith("opencode.exe")
+
+            resolved_exe = _resolve_launcher(str(node_bin / "opencode.exe"))
+            assert resolved_exe == str(node_bin / "opencode.exe")
+
+        # Real environment sanity: if installed, find_binary must resolve to .exe.
+        if oc_server.find_binary() is not None:
+            assert find_binary().lower().endswith(".exe")
 
 
 # ═══════════════════════════════════════════════════════════════════════════

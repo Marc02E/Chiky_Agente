@@ -1,0 +1,13 @@
+{
+  "db_total_sessions_before": 370,
+  "delete_responses": [
+    [
+      "res",
+      "/api/v1/ui/sessions/19f42ff4-7309-4db2-b196-ed6b4374b994",
+      204,
+      "2026-09-10T20:09:33.902+00:00"
+    ]
+  ],
+  "session_items_after_delete": 50,
+  "db_total_sessions_after": 369
+}

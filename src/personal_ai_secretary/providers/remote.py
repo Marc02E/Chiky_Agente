@@ -11,13 +11,18 @@ from personal_ai_secretary.shared.config import get_settings
 class NVIDIAProvider(AIProvider):
     name = "nvidia"
 
+    def __init__(self, model: str | None = None) -> None:
+        # FASE AB.6: instance-level model so manual selection sticks and
+        # provenance can report the exact model that executed.
+        self.model = model or get_settings().nvidia_model
+
     async def generate(self, request: RequestEnvelope) -> ProviderResponse:
         settings = get_settings()
         if not settings.nvidia_api_key:
             raise RuntimeError("NVIDIA provider is not configured")
         messages = self._build_messages(request)
         payload: dict[str, Any] = {
-            "model": settings.nvidia_model,
+            "model": self.model,
             "messages": messages,
         }
         headers = {"Authorization": f"Bearer {settings.nvidia_api_key}"}
@@ -29,7 +34,7 @@ class NVIDIAProvider(AIProvider):
             response.raise_for_status()
             data = response.json()
         text = data["choices"][0]["message"]["content"]
-        return ProviderResponse(text=text, provider=self.name, model=settings.nvidia_model)
+        return ProviderResponse(text=text, provider=self.name, model=self.model)
 
     async def health(self) -> ProviderInfo:
         settings = get_settings()

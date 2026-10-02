@@ -1,0 +1,337 @@
+[
+  {
+    "label": "antes_arranque",
+    "at": "2026-09-10T16:51:45.932+00:00",
+    "processes": [
+      {
+        "pid": 19308,
+        "ppid": 18472,
+        "name": "opencode.exe",
+        "created": "/Date(1789056125802)/",
+        "cmd": "C:\\Users\\mriverab\\AppData\\Local\\pi-node\\current\\node_modules\\opencode-ai\\bin\\opencode.exe serve --port 51021 --hostname 127.0.0.1"
+      },
+      {
+        "pid": 17736,
+        "ppid": 9384,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058337843)/",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" "
+      },
+      {
+        "pid": 14688,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058338466)/",
+        "cmd": "C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe --type=crashpad-handler --user-data-dir=C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop /prefetch:4 --no-rate-limit --monitor-self-annotation=ptype=crashpad-handler --database=C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop\\Crashpad --annotation=_productName=OpenCode --annotation=_version=1.18.27 --annotation=plat=Win64 --annotation=prod=Electron --annotation=ver=42.3.3 --initial-client-data=0x4f4,0x4f8,0x4fc,0x4f0,0x500,0x7ff7e9c1dd88,0x7ff7e9c1dd98,0x7ff7e9c1dda8"
+      },
+      {
+        "pid": 9808,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058338534)/",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=gpu-process --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop\" --gpu-preferences=SAAAAAAAAADgAAAEAAAAAAAAAAAAAGAAAQAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAQAAAAAAAAABAAAAAAAAAACAAAAAAAAAAIAAAAAAAAAA== --field-trial-handle=1752,i,7441107466063872407,14145423635496362443,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,PdfUseShowSaveFilePicker --disable-features=DropInputEventsWhilePaintHolding,LocalNetworkAccessChecks,NetworkServiceSandbox,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --pseudonymization-salt-handle=1760,i,13642286413815268879,5589698243633576116,4 --trace-process-track-uuid=3190708988185955192 --mojo-platform-channel-handle=1748 /prefetch:2"
+      },
+      {
+        "pid": 11024,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058338537)/",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=es-419 --service-sandbox-type=none --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop\" --standard-schemes=oc --secure-schemes=oc --fetch-schemes=oc --streaming-schemes=oc --field-trial-handle=1752,i,7441107466063872407,14145423635496362443,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,PdfUseShowSaveFilePicker --disable-features=DropInputEventsWhilePaintHolding,LocalNetworkAccessChecks,NetworkServiceSandbox,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --pseudonymization-salt-handle=1760,i,13642286413815268879,5589698243633576116,4 --trace-process-track-uuid=3190708989122997041 --mojo-platform-channel-handle=1916 /prefetch:11"
+      },
+      {
+        "pid": 5036,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058338603)/",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=utility --utility-sub-type=node.mojom.NodeService --lang=es-419 --service-sandbox-type=none --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop\" --standard-schemes=oc --secure-schemes=oc --fetch-schemes=oc --streaming-schemes=oc --field-trial-handle=1752,i,7441107466063872407,14145423635496362443,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,PdfUseShowSaveFilePicker --disable-features=DropInputEventsWhilePaintHolding,LocalNetworkAccessChecks,NetworkServiceSandbox,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --pseudonymization-salt-handle=1760,i,13642286413815268879,5589698243633576116,4 --trace-process-track-uuid=3190708990060038890 --mojo-platform-channel-handle=2992 /prefetch:14"
+      },
+      {
+        "pid": 16700,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058339957)/",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=renderer --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop\" --standard-schemes=oc --secure-schemes=oc --fetch-schemes=oc --streaming-schemes=oc --app-user-model-id=ai.opencode.desktop --app-path=\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\resources\\app.asar\" --enable-sandbox --video-capture-use-gpu-memory-buffer --lang=es-419 --device-scale-factor=1.3958333730697632 --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=5 --time-ticks-at-unix-epoch=-1789056059134831 --launch-time-ticks=2280816280 --field-trial-handle=1752,i,7441107466063872407,14145423635496362443,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,PdfUseShowSaveFilePicker --disable-features=DropInputEventsWhilePaintHolding,LocalNetworkAccessChecks,NetworkServiceSandbox,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --pseudonymization-salt-handle=1760,i,13642286413815268879,5589698243633576116,4 --trace-process-track-uuid=3190708990997080739 --mojo-platform-channel-handle=3244 /prefetch:1"
+      },
+      {
+        "pid": 7504,
+        "ppid": 2552,
+        "name": "python.exe",
+        "created": "/Date(1789059102268)/",
+        "cmd": "\"C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe\" C:\\Users\\mriverab\\AppData\\Local\\Temp\\opencode\\chatyhang_repro.py"
+      },
+      {
+        "pid": 10372,
+        "ppid": 7504,
+        "name": "python.exe",
+        "created": "/Date(1789059102286)/",
+        "cmd": "\"C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe\" C:\\Users\\mriverab\\AppData\\Local\\Temp\\opencode\\chatyhang_repro.py"
+      }
+    ],
+    "ports_8000_4097_51021": [
+      "TCP    127.0.0.1:51021        0.0.0.0:0              LISTENING       19308"
+    ]
+  },
+  {
+    "label": "despues_listo",
+    "at": "2026-09-10T16:52:07.332+00:00",
+    "processes": [
+      {
+        "pid": 17736,
+        "ppid": 9384,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058337843)/",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" "
+      },
+      {
+        "pid": 14688,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058338466)/",
+        "cmd": "C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe --type=crashpad-handler --user-data-dir=C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop /prefetch:4 --no-rate-limit --monitor-self-annotation=ptype=crashpad-handler --database=C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop\\Crashpad --annotation=_productName=OpenCode --annotation=_version=1.18.27 --annotation=plat=Win64 --annotation=prod=Electron --annotation=ver=42.3.3 --initial-client-data=0x4f4,0x4f8,0x4fc,0x4f0,0x500,0x7ff7e9c1dd88,0x7ff7e9c1dd98,0x7ff7e9c1dda8"
+      },
+      {
+        "pid": 9808,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058338534)/",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=gpu-process --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop\" --gpu-preferences=SAAAAAAAAADgAAAEAAAAAAAAAAAAAGAAAQAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAQAAAAAAAAABAAAAAAAAAACAAAAAAAAAAIAAAAAAAAAA== --field-trial-handle=1752,i,7441107466063872407,14145423635496362443,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,PdfUseShowSaveFilePicker --disable-features=DropInputEventsWhilePaintHolding,LocalNetworkAccessChecks,NetworkServiceSandbox,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --pseudonymization-salt-handle=1760,i,13642286413815268879,5589698243633576116,4 --trace-process-track-uuid=3190708988185955192 --mojo-platform-channel-handle=1748 /prefetch:2"
+      },
+      {
+        "pid": 11024,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058338537)/",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=es-419 --service-sandbox-type=none --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop\" --standard-schemes=oc --secure-schemes=oc --fetch-schemes=oc --streaming-schemes=oc --field-trial-handle=1752,i,7441107466063872407,14145423635496362443,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,PdfUseShowSaveFilePicker --disable-features=DropInputEventsWhilePaintHolding,LocalNetworkAccessChecks,NetworkServiceSandbox,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --pseudonymization-salt-handle=1760,i,13642286413815268879,5589698243633576116,4 --trace-process-track-uuid=3190708989122997041 --mojo-platform-channel-handle=1916 /prefetch:11"
+      },
+      {
+        "pid": 5036,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058338603)/",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=utility --utility-sub-type=node.mojom.NodeService --lang=es-419 --service-sandbox-type=none --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop\" --standard-schemes=oc --secure-schemes=oc --fetch-schemes=oc --streaming-schemes=oc --field-trial-handle=1752,i,7441107466063872407,14145423635496362443,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,PdfUseShowSaveFilePicker --disable-features=DropInputEventsWhilePaintHolding,LocalNetworkAccessChecks,NetworkServiceSandbox,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --pseudonymization-salt-handle=1760,i,13642286413815268879,5589698243633576116,4 --trace-process-track-uuid=3190708990060038890 --mojo-platform-channel-handle=2992 /prefetch:14"
+      },
+      {
+        "pid": 16700,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058339957)/",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=renderer --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop\" --standard-schemes=oc --secure-schemes=oc --fetch-schemes=oc --streaming-schemes=oc --app-user-model-id=ai.opencode.desktop --app-path=\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\resources\\app.asar\" --enable-sandbox --video-capture-use-gpu-memory-buffer --lang=es-419 --device-scale-factor=1.3958333730697632 --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=5 --time-ticks-at-unix-epoch=-1789056059134831 --launch-time-ticks=2280816280 --field-trial-handle=1752,i,7441107466063872407,14145423635496362443,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,PdfUseShowSaveFilePicker --disable-features=DropInputEventsWhilePaintHolding,LocalNetworkAccessChecks,NetworkServiceSandbox,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --pseudonymization-salt-handle=1760,i,13642286413815268879,5589698243633576116,4 --trace-process-track-uuid=3190708990997080739 --mojo-platform-channel-handle=3244 /prefetch:1"
+      },
+      {
+        "pid": 7504,
+        "ppid": 2552,
+        "name": "python.exe",
+        "created": "/Date(1789059102268)/",
+        "cmd": "\"C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe\" C:\\Users\\mriverab\\AppData\\Local\\Temp\\opencode\\chatyhang_repro.py"
+      },
+      {
+        "pid": 10372,
+        "ppid": 7504,
+        "name": "python.exe",
+        "created": "/Date(1789059102286)/",
+        "cmd": "\"C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe\" C:\\Users\\mriverab\\AppData\\Local\\Temp\\opencode\\chatyhang_repro.py"
+      },
+      {
+        "pid": 18840,
+        "ppid": 10372,
+        "name": "python.exe",
+        "created": "/Date(1789059105933)/",
+        "cmd": "C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe -m uvicorn personal_ai_secretary.api.app:app --host 127.0.0.1 --port 8000 --log-level info"
+      },
+      {
+        "pid": 22736,
+        "ppid": 18840,
+        "name": "python.exe",
+        "created": "/Date(1789059105965)/",
+        "cmd": "C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe -m uvicorn personal_ai_secretary.api.app:app --host 127.0.0.1 --port 8000 --log-level info"
+      },
+      {
+        "pid": 16224,
+        "ppid": 22736,
+        "name": "opencode.exe",
+        "created": "/Date(1789059120901)/",
+        "cmd": "C:\\Users\\mriverab\\AppData\\Local\\pi-node\\current\\node_modules\\opencode-ai\\bin\\opencode.exe serve --port 58096 --hostname 127.0.0.1"
+      }
+    ],
+    "ports_8000_4097_51021": [
+      "TCP    127.0.0.1:8000         0.0.0.0:0              LISTENING       22736",
+      "TCP    127.0.0.1:58104        127.0.0.1:8000         TIME_WAIT       0"
+    ]
+  },
+  {
+    "label": "despues_request",
+    "at": "2026-09-10T16:52:19.237+00:00",
+    "processes": [
+      {
+        "pid": 17736,
+        "ppid": 9384,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058337843)/",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" "
+      },
+      {
+        "pid": 14688,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058338466)/",
+        "cmd": "C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe --type=crashpad-handler --user-data-dir=C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop /prefetch:4 --no-rate-limit --monitor-self-annotation=ptype=crashpad-handler --database=C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop\\Crashpad --annotation=_productName=OpenCode --annotation=_version=1.18.27 --annotation=plat=Win64 --annotation=prod=Electron --annotation=ver=42.3.3 --initial-client-data=0x4f4,0x4f8,0x4fc,0x4f0,0x500,0x7ff7e9c1dd88,0x7ff7e9c1dd98,0x7ff7e9c1dda8"
+      },
+      {
+        "pid": 9808,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058338534)/",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=gpu-process --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop\" --gpu-preferences=SAAAAAAAAADgAAAEAAAAAAAAAAAAAGAAAQAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAQAAAAAAAAABAAAAAAAAAACAAAAAAAAAAIAAAAAAAAAA== --field-trial-handle=1752,i,7441107466063872407,14145423635496362443,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,PdfUseShowSaveFilePicker --disable-features=DropInputEventsWhilePaintHolding,LocalNetworkAccessChecks,NetworkServiceSandbox,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --pseudonymization-salt-handle=1760,i,13642286413815268879,5589698243633576116,4 --trace-process-track-uuid=3190708988185955192 --mojo-platform-channel-handle=1748 /prefetch:2"
+      },
+      {
+        "pid": 11024,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058338537)/",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=es-419 --service-sandbox-type=none --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop\" --standard-schemes=oc --secure-schemes=oc --fetch-schemes=oc --streaming-schemes=oc --field-trial-handle=1752,i,7441107466063872407,14145423635496362443,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,PdfUseShowSaveFilePicker --disable-features=DropInputEventsWhilePaintHolding,LocalNetworkAccessChecks,NetworkServiceSandbox,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --pseudonymization-salt-handle=1760,i,13642286413815268879,5589698243633576116,4 --trace-process-track-uuid=3190708989122997041 --mojo-platform-channel-handle=1916 /prefetch:11"
+      },
+      {
+        "pid": 5036,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058338603)/",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=utility --utility-sub-type=node.mojom.NodeService --lang=es-419 --service-sandbox-type=none --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop\" --standard-schemes=oc --secure-schemes=oc --fetch-schemes=oc --streaming-schemes=oc --field-trial-handle=1752,i,7441107466063872407,14145423635496362443,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,PdfUseShowSaveFilePicker --disable-features=DropInputEventsWhilePaintHolding,LocalNetworkAccessChecks,NetworkServiceSandbox,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --pseudonymization-salt-handle=1760,i,13642286413815268879,5589698243633576116,4 --trace-process-track-uuid=3190708990060038890 --mojo-platform-channel-handle=2992 /prefetch:14"
+      },
+      {
+        "pid": 16700,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058339957)/",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=renderer --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop\" --standard-schemes=oc --secure-schemes=oc --fetch-schemes=oc --streaming-schemes=oc --app-user-model-id=ai.opencode.desktop --app-path=\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\resources\\app.asar\" --enable-sandbox --video-capture-use-gpu-memory-buffer --lang=es-419 --device-scale-factor=1.3958333730697632 --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=5 --time-ticks-at-unix-epoch=-1789056059134831 --launch-time-ticks=2280816280 --field-trial-handle=1752,i,7441107466063872407,14145423635496362443,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,PdfUseShowSaveFilePicker --disable-features=DropInputEventsWhilePaintHolding,LocalNetworkAccessChecks,NetworkServiceSandbox,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --pseudonymization-salt-handle=1760,i,13642286413815268879,5589698243633576116,4 --trace-process-track-uuid=3190708990997080739 --mojo-platform-channel-handle=3244 /prefetch:1"
+      },
+      {
+        "pid": 7504,
+        "ppid": 2552,
+        "name": "python.exe",
+        "created": "/Date(1789059102268)/",
+        "cmd": "\"C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe\" C:\\Users\\mriverab\\AppData\\Local\\Temp\\opencode\\chatyhang_repro.py"
+      },
+      {
+        "pid": 10372,
+        "ppid": 7504,
+        "name": "python.exe",
+        "created": "/Date(1789059102286)/",
+        "cmd": "\"C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe\" C:\\Users\\mriverab\\AppData\\Local\\Temp\\opencode\\chatyhang_repro.py"
+      },
+      {
+        "pid": 18840,
+        "ppid": 10372,
+        "name": "python.exe",
+        "created": "/Date(1789059105933)/",
+        "cmd": "C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe -m uvicorn personal_ai_secretary.api.app:app --host 127.0.0.1 --port 8000 --log-level info"
+      },
+      {
+        "pid": 22736,
+        "ppid": 18840,
+        "name": "python.exe",
+        "created": "/Date(1789059105965)/",
+        "cmd": "C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe -m uvicorn personal_ai_secretary.api.app:app --host 127.0.0.1 --port 8000 --log-level info"
+      },
+      {
+        "pid": 16224,
+        "ppid": 22736,
+        "name": "opencode.exe",
+        "created": "/Date(1789059120901)/",
+        "cmd": "C:\\Users\\mriverab\\AppData\\Local\\pi-node\\current\\node_modules\\opencode-ai\\bin\\opencode.exe serve --port 58096 --hostname 127.0.0.1"
+      }
+    ],
+    "ports_8000_4097_51021": [
+      "TCP    127.0.0.1:8000         0.0.0.0:0              LISTENING       22736",
+      "TCP    127.0.0.1:58104        127.0.0.1:8000         TIME_WAIT       0",
+      "TCP    127.0.0.1:58106        127.0.0.1:8000         TIME_WAIT       0"
+    ]
+  },
+  {
+    "label": "fin_recoleccion",
+    "at": "2026-09-10T16:52:20.834+00:00",
+    "processes": [
+      {
+        "pid": 17736,
+        "ppid": 9384,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058337843)/",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" "
+      },
+      {
+        "pid": 14688,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058338466)/",
+        "cmd": "C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe --type=crashpad-handler --user-data-dir=C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop /prefetch:4 --no-rate-limit --monitor-self-annotation=ptype=crashpad-handler --database=C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop\\Crashpad --annotation=_productName=OpenCode --annotation=_version=1.18.27 --annotation=plat=Win64 --annotation=prod=Electron --annotation=ver=42.3.3 --initial-client-data=0x4f4,0x4f8,0x4fc,0x4f0,0x500,0x7ff7e9c1dd88,0x7ff7e9c1dd98,0x7ff7e9c1dda8"
+      },
+      {
+        "pid": 9808,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058338534)/",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=gpu-process --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop\" --gpu-preferences=SAAAAAAAAADgAAAEAAAAAAAAAAAAAGAAAQAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAQAAAAAAAAABAAAAAAAAAACAAAAAAAAAAIAAAAAAAAAA== --field-trial-handle=1752,i,7441107466063872407,14145423635496362443,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,PdfUseShowSaveFilePicker --disable-features=DropInputEventsWhilePaintHolding,LocalNetworkAccessChecks,NetworkServiceSandbox,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --pseudonymization-salt-handle=1760,i,13642286413815268879,5589698243633576116,4 --trace-process-track-uuid=3190708988185955192 --mojo-platform-channel-handle=1748 /prefetch:2"
+      },
+      {
+        "pid": 11024,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058338537)/",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=es-419 --service-sandbox-type=none --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop\" --standard-schemes=oc --secure-schemes=oc --fetch-schemes=oc --streaming-schemes=oc --field-trial-handle=1752,i,7441107466063872407,14145423635496362443,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,PdfUseShowSaveFilePicker --disable-features=DropInputEventsWhilePaintHolding,LocalNetworkAccessChecks,NetworkServiceSandbox,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --pseudonymization-salt-handle=1760,i,13642286413815268879,5589698243633576116,4 --trace-process-track-uuid=3190708989122997041 --mojo-platform-channel-handle=1916 /prefetch:11"
+      },
+      {
+        "pid": 5036,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058338603)/",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=utility --utility-sub-type=node.mojom.NodeService --lang=es-419 --service-sandbox-type=none --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop\" --standard-schemes=oc --secure-schemes=oc --fetch-schemes=oc --streaming-schemes=oc --field-trial-handle=1752,i,7441107466063872407,14145423635496362443,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,PdfUseShowSaveFilePicker --disable-features=DropInputEventsWhilePaintHolding,LocalNetworkAccessChecks,NetworkServiceSandbox,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --pseudonymization-salt-handle=1760,i,13642286413815268879,5589698243633576116,4 --trace-process-track-uuid=3190708990060038890 --mojo-platform-channel-handle=2992 /prefetch:14"
+      },
+      {
+        "pid": 16700,
+        "ppid": 17736,
+        "name": "OpenCode.exe",
+        "created": "/Date(1789058339957)/",
+        "cmd": "\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\OpenCode.exe\" --type=renderer --user-data-dir=\"C:\\Users\\mriverab\\AppData\\Roaming\\ai.opencode.desktop\" --standard-schemes=oc --secure-schemes=oc --fetch-schemes=oc --streaming-schemes=oc --app-user-model-id=ai.opencode.desktop --app-path=\"C:\\Users\\mriverab\\AppData\\Local\\Programs\\@opencode-aidesktop\\resources\\app.asar\" --enable-sandbox --video-capture-use-gpu-memory-buffer --lang=es-419 --device-scale-factor=1.3958333730697632 --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=5 --time-ticks-at-unix-epoch=-1789056059134831 --launch-time-ticks=2280816280 --field-trial-handle=1752,i,7441107466063872407,14145423635496362443,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,PdfUseShowSaveFilePicker --disable-features=DropInputEventsWhilePaintHolding,LocalNetworkAccessChecks,NetworkServiceSandbox,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --pseudonymization-salt-handle=1760,i,13642286413815268879,5589698243633576116,4 --trace-process-track-uuid=3190708990997080739 --mojo-platform-channel-handle=3244 /prefetch:1"
+      },
+      {
+        "pid": 7504,
+        "ppid": 2552,
+        "name": "python.exe",
+        "created": "/Date(1789059102268)/",
+        "cmd": "\"C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe\" C:\\Users\\mriverab\\AppData\\Local\\Temp\\opencode\\chatyhang_repro.py"
+      },
+      {
+        "pid": 10372,
+        "ppid": 7504,
+        "name": "python.exe",
+        "created": "/Date(1789059102286)/",
+        "cmd": "\"C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe\" C:\\Users\\mriverab\\AppData\\Local\\Temp\\opencode\\chatyhang_repro.py"
+      },
+      {
+        "pid": 18840,
+        "ppid": 10372,
+        "name": "python.exe",
+        "created": "/Date(1789059105933)/",
+        "cmd": "C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe -m uvicorn personal_ai_secretary.api.app:app --host 127.0.0.1 --port 8000 --log-level info"
+      },
+      {
+        "pid": 22736,
+        "ppid": 18840,
+        "name": "python.exe",
+        "created": "/Date(1789059105965)/",
+        "cmd": "C:\\Users\\mriverab\\source\\repos\\Python\\personal_ai_secretary\\.venv\\Scripts\\python.exe -m uvicorn personal_ai_secretary.api.app:app --host 127.0.0.1 --port 8000 --log-level info"
+      },
+      {
+        "pid": 16224,
+        "ppid": 22736,
+        "name": "opencode.exe",
+        "created": "/Date(1789059120901)/",
+        "cmd": "C:\\Users\\mriverab\\AppData\\Local\\pi-node\\current\\node_modules\\opencode-ai\\bin\\opencode.exe serve --port 58096 --hostname 127.0.0.1"
+      }
+    ],
+    "ports_8000_4097_51021": [
+      "TCP    127.0.0.1:8000         0.0.0.0:0              LISTENING       22736",
+      "TCP    127.0.0.1:58104        127.0.0.1:8000         TIME_WAIT       0",
+      "TCP    127.0.0.1:58106        127.0.0.1:8000         TIME_WAIT       0"
+    ]
+  }
+]

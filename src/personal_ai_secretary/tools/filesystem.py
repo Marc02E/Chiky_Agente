@@ -3,21 +3,66 @@
 Provides controlled file and directory operations with security validation.
 """
 
+import contextlib
+import contextvars
+import logging
 import os
+from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
+from personal_ai_secretary.shared.config import get_settings
 from personal_ai_secretary.tools.registry import ToolDefinition, ToolError, ToolRegistry, ToolRisk
 
+logger = logging.getLogger("personal_ai_secretary.tools.filesystem")
+
 # ---------------------------------------------------------------------------
-# Security: allowed roots
+# Security: allowed roots + per-request workspace
 # ---------------------------------------------------------------------------
 
-_user_home = str(Path.home())
+# Tests pin this list to a temp dir before exercising the file tools. The
+# production default is the user's home directory (historical contract of the
+# personal assistant); path-traversal safety is enforced by anchoring relative
+# paths to the primary root below — a relative path can never silently escape
+# into the process CWD.
+DEFAULT_ALLOWED_ROOTS: list[str] = [str(Path.home())]
 
-DEFAULT_ALLOWED_ROOTS: list[str] = [
-    _user_home,
-]
+# Per-request workspace set by the agent before executing a tool. While set,
+# relative paths are anchored here and this becomes the containment root.
+_ACTIVE_WORKSPACE: contextvars.ContextVar[str | None] = contextvars.ContextVar(
+    "chiky_active_workspace", default=None
+)
+
+
+def _default_workspace_root() -> Path:
+    """Configured WORKSPACE_ROOT, or <home>/Chiky/workspace when unset."""
+    settings = get_settings()
+    configured = getattr(settings, "workspace_root", "") or ""
+    if configured:
+        return Path(configured).expanduser()
+    return Path.home() / "Chiky" / "workspace"
+
+
+def _workspace_roots() -> list[str]:
+    """Containment roots from the active per-request workspace, if any."""
+    active = _ACTIVE_WORKSPACE.get()
+    if active:
+        return [str(Path(active).expanduser())]
+    return []
+
+
+@contextlib.contextmanager
+def routing_workspace(workspace: str | None) -> Iterator[None]:
+    """Bind file-tool path resolution to a per-request workspace root.
+
+    While the context is active, file tools anchor relative paths to
+    ``workspace`` and reject any access outside it. Safe to nest.
+    """
+    token = _ACTIVE_WORKSPACE.set(workspace or None)
+    try:
+        yield
+    finally:
+        _ACTIVE_WORKSPACE.reset(token)
 
 
 def _resolve_hallucinated_path(path_str: str) -> str:
@@ -60,13 +105,26 @@ def _validate_path(
 
     Raises ToolError on security violations.
     """
-    roots = allowed_roots or DEFAULT_ALLOWED_ROOTS
+    # Precedence: explicit roots (capability tests, tool-level tests) →
+    # active per-request workspace (agent/real evidence sessions) → pinned
+    # DEFAULT_ALLOWED_ROOTS (test suites) → configured WORKSPACE_ROOT.
+    roots = allowed_roots or _workspace_roots() or DEFAULT_ALLOWED_ROOTS
+    if not roots:
+        roots = [str(_default_workspace_root())]
 
     # Resolve hallucinated paths first
     resolved_str = _resolve_hallucinated_path(path_str)
 
     try:
-        target = Path(resolved_str).resolve()
+        anchor = Path(roots[0]).resolve()
+        candidate = Path(resolved_str)
+        if not candidate.is_absolute():
+            # FASE AB.6: anchor relative paths to the workspace/primary root
+            # instead of the process CWD. Without this, a path like
+            # "../../ola.txt" resolves against wherever the server was
+            # launched and silently escapes the workspace.
+            candidate = anchor / candidate
+        target = candidate.resolve()
     except (OSError, ValueError) as exc:
         raise ToolError(f"Invalid path: {exc}") from exc
 
@@ -344,7 +402,8 @@ def register_filesystem_tools(
     async def _create(arguments: dict[str, Any]) -> dict[str, Any]:
         import personal_ai_secretary.tools.filesystem as _fs
         original = _fs.DEFAULT_ALLOWED_ROOTS[:]
-        _fs.DEFAULT_ALLOWED_ROOTS[:] = roots
+        if roots:
+            _fs.DEFAULT_ALLOWED_ROOTS[:] = roots
         try:
             return await _create_file(arguments)
         finally:
@@ -353,7 +412,8 @@ def register_filesystem_tools(
     async def _read(arguments: dict[str, Any]) -> dict[str, Any]:
         import personal_ai_secretary.tools.filesystem as _fs
         original = _fs.DEFAULT_ALLOWED_ROOTS[:]
-        _fs.DEFAULT_ALLOWED_ROOTS[:] = roots
+        if roots:
+            _fs.DEFAULT_ALLOWED_ROOTS[:] = roots
         try:
             return await _read_file(arguments)
         finally:
@@ -362,7 +422,8 @@ def register_filesystem_tools(
     async def _write(arguments: dict[str, Any]) -> dict[str, Any]:
         import personal_ai_secretary.tools.filesystem as _fs
         original = _fs.DEFAULT_ALLOWED_ROOTS[:]
-        _fs.DEFAULT_ALLOWED_ROOTS[:] = roots
+        if roots:
+            _fs.DEFAULT_ALLOWED_ROOTS[:] = roots
         try:
             return await _write_file(arguments)
         finally:
@@ -371,7 +432,8 @@ def register_filesystem_tools(
     async def _list(arguments: dict[str, Any]) -> dict[str, Any]:
         import personal_ai_secretary.tools.filesystem as _fs
         original = _fs.DEFAULT_ALLOWED_ROOTS[:]
-        _fs.DEFAULT_ALLOWED_ROOTS[:] = roots
+        if roots:
+            _fs.DEFAULT_ALLOWED_ROOTS[:] = roots
         try:
             return await _list_directory(arguments)
         finally:
@@ -380,7 +442,8 @@ def register_filesystem_tools(
     async def _mkdir(arguments: dict[str, Any]) -> dict[str, Any]:
         import personal_ai_secretary.tools.filesystem as _fs
         original = _fs.DEFAULT_ALLOWED_ROOTS[:]
-        _fs.DEFAULT_ALLOWED_ROOTS[:] = roots
+        if roots:
+            _fs.DEFAULT_ALLOWED_ROOTS[:] = roots
         try:
             return await _create_directory(arguments)
         finally:
@@ -389,7 +452,8 @@ def register_filesystem_tools(
     async def _exists(arguments: dict[str, Any]) -> dict[str, Any]:
         import personal_ai_secretary.tools.filesystem as _fs
         original = _fs.DEFAULT_ALLOWED_ROOTS[:]
-        _fs.DEFAULT_ALLOWED_ROOTS[:] = roots
+        if roots:
+            _fs.DEFAULT_ALLOWED_ROOTS[:] = roots
         try:
             return await _file_exists(arguments)
         finally:
@@ -472,7 +536,8 @@ def register_filesystem_tools(
     async def _delete(arguments: dict[str, Any]) -> dict[str, Any]:
         import personal_ai_secretary.tools.filesystem as _fs
         original = _fs.DEFAULT_ALLOWED_ROOTS[:]
-        _fs.DEFAULT_ALLOWED_ROOTS[:] = roots
+        if roots:
+            _fs.DEFAULT_ALLOWED_ROOTS[:] = roots
         try:
             return await _file_delete(arguments)
         finally:
@@ -481,7 +546,8 @@ def register_filesystem_tools(
     async def _copy(arguments: dict[str, Any]) -> dict[str, Any]:
         import personal_ai_secretary.tools.filesystem as _fs
         original = _fs.DEFAULT_ALLOWED_ROOTS[:]
-        _fs.DEFAULT_ALLOWED_ROOTS[:] = roots
+        if roots:
+            _fs.DEFAULT_ALLOWED_ROOTS[:] = roots
         try:
             return await _file_copy(arguments)
         finally:

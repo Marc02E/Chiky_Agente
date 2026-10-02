@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from time import perf_counter
+from typing import Any
 from uuid import UUID
 
 from personal_ai_secretary.agents.builtin import (
@@ -49,6 +50,8 @@ class WorkflowResult:
     blocked_reason: str | None = None
     rejected_reason: str | None = None
     evaluation: EvaluationOutcome | None = None
+    # FASE AB.4: honest execution chain surfaced from the execution agent.
+    fallback: dict[str, Any] | None = None
 
 
 class GovernedWorkflow:
@@ -274,6 +277,30 @@ class GovernedWorkflow:
                 session_id=session_id,
                 outcome="blocked" if execution.blocked else "ok",
             )
+        execution_meta = dict(execution.metadata)
+        fallback_info: dict[str, Any] | None = None
+        # FASE AB.6: surface provenance for EVERY executed message so the UI
+        # can show exactly which provider/model ran (not just fallback events).
+        if execution_meta.get("executed_provider"):
+            fallback_info = {
+                "fallback_active": bool(execution_meta.get("fallback_active")),
+                "requested_provider": execution_meta.get("requested_provider"),
+                "requested_model": execution_meta.get("requested_model"),
+                "selected_provider": execution_meta.get("selected_provider"),
+                "selected_model": execution_meta.get("selected_model"),
+                "attempted_provider": execution_meta.get("attempted_provider"),
+                "attempted_model": execution_meta.get("attempted_model"),
+                "fallback_from": execution_meta.get("fallback_from_provider"),
+                "fallback_from_provider": execution_meta.get("fallback_from_provider"),
+                "fallback_from_model": execution_meta.get("fallback_from_model"),
+                "fallback_model": execution_meta.get("fallback_model"),
+                "fallback_chain": execution_meta.get("fallback_chain", []),
+                "routing_reason": execution_meta.get("routing_reason", ""),
+                "status": execution_meta.get("status", "ok"),
+                "latency_ms": execution_meta.get("latency_ms", 0),
+                "executed_provider": execution_meta.get("executed_provider"),
+                "executed_model": execution_meta.get("executed_model"),
+            }
         if execution.blocked:
             return await self._blocked(
                 observation,
@@ -357,6 +384,7 @@ class GovernedWorkflow:
                 list(artifacts),
                 rejected_reason=evaluation.rejection_reason(),
                 evaluation=evaluation,
+                fallback=fallback_info,
             )
 
         compliance_context = {
@@ -402,6 +430,7 @@ class GovernedWorkflow:
                 list(artifacts),
                 blocked_reason=compliance.content,
                 evaluation=evaluation,
+                fallback=fallback_info,
             )
 
         with start_span("completion") as completion_span:
@@ -422,6 +451,7 @@ class GovernedWorkflow:
             execution.content,
             list(artifacts),
             evaluation=evaluation,
+            fallback=fallback_info,
         )
 
     async def _blocked(

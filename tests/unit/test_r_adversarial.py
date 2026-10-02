@@ -4,24 +4,21 @@ Tests backend security controls directly (no LLM, no approval blocking).
 Verifies path traversal, sibling bypass, dangerous commands, protected files,
 prompt injection handling, and false completion prevention.
 """
-import os
 from pathlib import Path
 
 import pytest
 
-from personal_ai_secretary.tools import filesystem as _fs
-from personal_ai_secretary.tools.registry import (
-    ToolRegistry,
-    ToolError,
-    ToolRisk,
-)
-from personal_ai_secretary.tools.filesystem import (
-    register_filesystem_tools,
-    PROTECTED_FILES,
-    DEFAULT_ALLOWED_ROOTS,
-)
 from personal_ai_secretary.tools.command import register_command_tools
 from personal_ai_secretary.tools.development import register_development_tools
+from personal_ai_secretary.tools.filesystem import (
+    DEFAULT_ALLOWED_ROOTS,
+    PROTECTED_FILES,
+    register_filesystem_tools,
+)
+from personal_ai_secretary.tools.registry import (
+    ToolError,
+    ToolRegistry,
+)
 
 
 @pytest.fixture

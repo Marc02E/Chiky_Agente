@@ -106,7 +106,15 @@ _PATTERNS: list[tuple[TaskType, re.Pattern[str]]] = [
         re.IGNORECASE,
     )),
     (TaskType.FILE_CREATE, re.compile(
+        r"\b(crea|crear|escribe|escribir|guarda|guardar|haz|genera|creación)\b.*\b(file|archivo|fichero|documento)\b",
+        re.IGNORECASE,
+    )),
+    (TaskType.FILE_CREATE, re.compile(
         r"\b(create|write|save)\b.*\w+\.\w{1,5}\b",
+        re.IGNORECASE,
+    )),
+    (TaskType.FILE_CREATE, re.compile(
+        r"\b(crea|escribe|guarda)\b.*\w+\.\w{1,5}\b",
         re.IGNORECASE,
     )),
     # File read — "read/open/show/cat" + filename or path

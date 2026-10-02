@@ -116,8 +116,9 @@ async def main() -> None:
     ))
     print(f"L3 file exists: {ds_target.exists()}", flush=True)
 
-    with open(WORKSPACE.parent / "q_live_results.json", "w", encoding="utf-8") as f:
-        json.dump(results, f, indent=2)
+    out_path = WORKSPACE.parent / "q_live_results.json"
+    payload = json.dumps(results, indent=2)
+    await asyncio.to_thread(out_path.write_text, payload, encoding="utf-8")
 
 
 if __name__ == "__main__":

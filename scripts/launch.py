@@ -42,8 +42,8 @@ def _is_port_open(port: int) -> bool:
 
 def _wait_for_readiness(port: int, timeout: float) -> bool:
     """Poll /health/live until the server responds or timeout."""
-    import urllib.request
     import urllib.error
+    import urllib.request
 
     url = f"http://127.0.0.1:{port}/api/v1/health/live"
     deadline = time.monotonic() + timeout
@@ -63,6 +63,18 @@ def _open_browser(port: int) -> None:
     url = f"http://127.0.0.1:{port}"
     log.info("Opening browser at %s", url)
     webbrowser.open(url)
+
+
+def _open_server_log(project_root: Path):
+    """Open an append-only file for the server's stdout/stderr.
+
+    Writes to a real file instead of an undrained pipe: a pipe whose buffer
+    fills would block the uvicorn process writing its logs, leaving the API
+    unresponsive (UI hangs, messages never answered).
+    """
+    log_dir = project_root / "logs"
+    log_dir.mkdir(exist_ok=True)
+    return open(log_dir / "backend.log", "ab")
 
 
 def main() -> int:
@@ -113,7 +125,7 @@ def main() -> int:
         ],
         cwd=str(project_root),
         env={**{"PYTHONPATH": str(src_dir)}, **{k: v for k, v in __import__("os").environ.items()}},
-        stdout=subprocess.PIPE,
+        stdout=_open_server_log(project_root),
         stderr=subprocess.STDOUT,
     )
 

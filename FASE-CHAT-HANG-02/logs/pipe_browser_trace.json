@@ -1,0 +1,116 @@
+{
+  "backend_pid": 8060,
+  "ts": "2026-09-10T20:09:52.658+00:00",
+  "colgado_durante_boot": false,
+  "boot_api": [
+    [
+      "req",
+      "GET /api/v1/providers/config",
+      null,
+      "2026-09-10T20:09:52.683+00:00"
+    ],
+    [
+      "req",
+      "GET /api/v1/providers/config",
+      null,
+      "2026-09-10T20:09:52.684+00:00"
+    ],
+    [
+      "req",
+      "GET /api/v1/ui/sessions",
+      null,
+      "2026-09-10T20:09:52.684+00:00"
+    ],
+    [
+      "req",
+      "GET /api/v1/providers/transparency",
+      null,
+      "2026-09-10T20:09:52.685+00:00"
+    ],
+    [
+      "req",
+      "GET /api/v1/providers/models",
+      null,
+      "2026-09-10T20:09:52.685+00:00"
+    ],
+    [
+      "res",
+      "/api/v1/providers/models",
+      200,
+      "2026-09-10T20:09:52.864+00:00"
+    ],
+    [
+      "res",
+      "/api/v1/providers/config",
+      200,
+      "2026-09-10T20:09:52.868+00:00"
+    ],
+    [
+      "res",
+      "/api/v1/providers/config",
+      200,
+      "2026-09-10T20:09:52.876+00:00"
+    ],
+    [
+      "res",
+      "/api/v1/providers/transparency",
+      200,
+      "2026-09-10T20:09:52.879+00:00"
+    ],
+    [
+      "res",
+      "/api/v1/ui/sessions",
+      200,
+      "2026-09-10T20:09:52.881+00:00"
+    ],
+    [
+      "req",
+      "GET /api/v1/setup/status",
+      null,
+      "2026-09-10T20:09:52.884+00:00"
+    ],
+    [
+      "req",
+      "GET /api/v1/sessions/49696003-7819-460b-ae34-6b94889e8e56/messages",
+      null,
+      "2026-09-10T20:09:52.934+00:00"
+    ]
+  ],
+  "intentos": [
+    {
+      "i": 1,
+      "t_sent": "2026-09-10T20:09:52.999+00:00",
+      "res": [
+        "res",
+        "/api/v1/sessions/49696003-7819-460b-ae34-6b94889e8e56/messages",
+        200,
+        "2026-09-10T20:09:53.401+00:00"
+      ],
+      "ok": true,
+      "respondio_en_ms": 609
+    },
+    {
+      "i": 2,
+      "t_sent": "2026-09-10T20:09:57.304+00:00",
+      "ok": false,
+      "respondio_en_ms": 6235
+    }
+  ],
+  "n_intentos": 2,
+  "hang_en_intento": 2,
+  "requests_net_total": 2,
+  "colgado_confirmado": true,
+  "pipe_read_bytes": 0,
+  "respuesta_tras_drenar": [
+    "res",
+    "/api/v1/sessions/49696003-7819-460b-ae34-6b94889e8e56/messages",
+    200,
+    "2026-09-10T20:10:10.702+00:00"
+  ],
+  "respuesta_tras_drenar_ok": true,
+  "latencia_drenar_a_respuesta_ms": 0,
+  "health_tras_drenar": [
+    "200",
+    387
+  ]
+}

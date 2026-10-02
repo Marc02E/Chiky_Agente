@@ -4,7 +4,7 @@ from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager, suppress
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal, cast
 from uuid import UUID, uuid4
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, status
@@ -58,6 +58,7 @@ from personal_ai_secretary.observability.tracing import (
     shutdown_tracing,
     start_span,
 )
+from personal_ai_secretary.providers.base import AIProvider
 from personal_ai_secretary.providers.factory import (
     AVAILABLE_PROVIDER_MODES,
     get_current_model,
@@ -123,30 +124,116 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     init_memory_store()
     init_observability()
     init_retriever()
+    # FASE X: Load persisted provider settings from database
+    try:
+        from personal_ai_secretary.shared.settings_store import SettingsStore
+        _settings_store = SettingsStore()
+        async with get_session_factory()() as session:
+            _loaded = await _settings_store.load(session)
+            _s = get_settings()
+            if _loaded.gemini_api_key:
+                _s.gemini_api_key = _loaded.gemini_api_key
+            if _loaded.nvidia_api_key:
+                _s.nvidia_api_key = _loaded.nvidia_api_key
+            if _loaded.ai_provider:
+                if _loaded.ai_provider in ("auto", "deterministic", "local", "remote"):
+                    _s.ai_provider = cast(
+                        Literal["auto", "deterministic", "local", "remote"],
+                        _loaded.ai_provider,
+                    )
+                else:
+                    logging.getLogger("personal_ai_secretary.startup").warning(
+                        "Ignoring invalid ai_provider '%s' from database",
+                        _loaded.ai_provider,
+                    )
+            if _loaded.ollama_model:
+                _s.ollama_model = _loaded.ollama_model
+            if _loaded.gemini_model:
+                _s.gemini_model = _loaded.gemini_model
+            # FASE Y: Also load routing_mode and selected provider/model
+            _loaded_routing_mode = _loaded.routing_mode
+            _loaded_selected_provider = _loaded.selected_provider
+            _loaded_selected_model = _loaded.selected_model
+            logging.getLogger("personal_ai_secretary.startup").info(
+                "Loaded persisted provider settings from database"
+            )
+    except Exception as exc:
+        logging.getLogger("personal_ai_secretary.startup").warning(
+            "Could not load persisted settings: %s", exc,
+        )
+        _loaded_routing_mode = "automatic"
+        _loaded_selected_provider = ""
+        _loaded_selected_model = ""
     # K2: Auto-select a valid Ollama model if the configured default is unavailable
-    if settings.ai_provider == "local":
-        _ollama_provider = get_provider()
-        if hasattr(_ollama_provider, "list_models"):
-            _available_models = await _ollama_provider.list_models()
-            _configured = settings.ollama_model
-            if _available_models and _configured not in _available_models:
-                _selected = _available_models[0]
-                set_current_model(_selected)
-                logging.getLogger("personal_ai_secretary.startup").warning(
-                    "Configured Ollama model '%s' not available. Auto-selected '%s'. "
-                    "Available models: %s",
-                    _configured,
-                    _selected,
-                    ", ".join(_available_models),
-                )
-            elif _available_models and _configured in _available_models:
-                set_current_model(_configured)
-        # Pre-warm model to eliminate cold start latency (non-blocking)
-        if hasattr(_ollama_provider, "warmup"):
-            asyncio.create_task(_ollama_provider.warmup())
+    # FASE Y: Also handle "auto" mode by detecting available providers
+    if settings.ai_provider in ("local", "auto"):
+        try:
+            _ollama_provider = get_provider()
+            if hasattr(_ollama_provider, "list_models"):
+                _available_models = await _ollama_provider.list_models()
+                _configured = settings.ollama_model
+                if _available_models and _configured not in _available_models:
+                    _selected = _available_models[0]
+                    set_current_model(_selected)
+                    logging.getLogger("personal_ai_secretary.startup").warning(
+                        "Configured Ollama model '%s' not available. Auto-selected '%s'. "
+                        "Available models: %s",
+                        _configured,
+                        _selected,
+                        ", ".join(_available_models),
+                    )
+                elif _available_models and _configured in _available_models:
+                    set_current_model(_configured)
+                elif _available_models:
+                    set_current_model(_available_models[0])
+                    logging.getLogger("personal_ai_secretary.startup").info(
+                        "Auto mode: set Ollama model to '%s'", _available_models[0],
+                    )
+            # Pre-warm model to eliminate cold start latency (non-blocking)
+            # Update the provider's model to the selected one before warmup
+            _selected_model = get_current_model()
+            if _selected_model and hasattr(_ollama_provider, "model"):
+                _ollama_provider.model = _selected_model
+            if hasattr(_ollama_provider, "warmup"):
+                asyncio.create_task(_ollama_provider.warmup())
+        except Exception as exc:
+            logging.getLogger("personal_ai_secretary.startup").warning(
+                "Could not initialize Ollama provider: %s", exc,
+            )
     init_tracing(get_settings().otel_enabled, get_settings().otel_exporter_endpoint)
     # FASE T: Initialize multi-provider model manager
     await initialize_model_manager()
+    # FASE Y: Update ModelManager's Ollama provider with correct model.
+    # Discovered provider has model=None; _current_ollama_model is valid.
+    try:
+        from personal_ai_secretary.providers.model_manager import ModelManager
+        _mgr = get_model_manager()
+        if isinstance(_mgr, ModelManager) and "ollama" in _mgr._provider_instances:
+            _correct_model = get_current_model()
+            if _correct_model:
+                _mgr._provider_instances["ollama"].model = _correct_model
+                logging.getLogger("personal_ai_secretary.startup").info(
+                    "Updated ModelManager Ollama instance to model '%s'",
+                    _correct_model,
+                )
+        # FASE Y: Restore persisted routing mode and provider selection
+        if isinstance(_mgr, ModelManager):
+            _mgr.set_routing_mode(_loaded_routing_mode)
+            if _loaded_selected_provider:
+                _mgr.select_provider(
+                    _loaded_selected_provider,
+                    _loaded_selected_model or None,
+                )
+            logging.getLogger("personal_ai_secretary.startup").info(
+                "Restored routing_mode=%s provider=%s model=%s",
+                _loaded_routing_mode,
+                _loaded_selected_provider or "(auto)",
+                _loaded_selected_model or "(auto)",
+            )
+    except Exception as exc:
+        logging.getLogger("personal_ai_secretary.startup").warning(
+            "Could not update ModelManager Ollama model: %s", exc,
+        )
     observability = get_observability()
     async with get_session_factory()() as session:
         await RequestService(session, get_provider()).recover_stale_running()
@@ -166,6 +253,19 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     try:
         yield
     finally:
+        # FASE RELEASE lifecycle: tear down the Chiky-managed OpenCode server
+        # FIRST so a later cleanup failure can never leave an orphaned
+        # `opencode serve` process behind on a controlled shutdown.
+        try:
+            from personal_ai_secretary.providers.opencode_server import (
+                stop_managed_server,
+            )
+
+            stop_managed_server()
+        except Exception as exc:  # pragma: no cover - lifecycle only
+            logging.getLogger("personal_ai_secretary.startup").warning(
+                "Could not stop managed OpenCode server: %s", exc,
+            )
         if sweep_task is not None:
             sweep_task.cancel()
             with suppress(asyncio.CancelledError):
@@ -259,12 +359,41 @@ def _service(db: AsyncSession) -> RequestService:
 
     manager = get_model_manager()
     # If ModelManager is initialized and has providers, use its selected provider
-    provider = get_provider()
+    # FASE RELEASE: provider may be None in MANUAL mode when the selected
+    # instance is unavailable (no silent fallback to another provider).
+    provider: AIProvider | None = get_provider()
     if isinstance(manager, ModelManager) and manager._initialized:
         instance = manager.get_provider_instance()
         if instance is not None:
+            # FASE Y: Ensure Ollama provider instance uses the SELECTED model,
+            # not the startup default (get_current_model). The selected model
+            # lives in the ModelManager; the discovered instance defaults to
+            # the factory's current model which may differ.
+            from personal_ai_secretary.providers.ollama import OllamaProvider
+            if isinstance(instance, OllamaProvider):
+                _selected_model = manager.selected_model
+                if _selected_model:
+                    instance.model = _selected_model
             provider = instance
-    return RequestService(
+        elif manager.routing_mode == "manual":
+            # FASE RELEASE: MANUAL mode with an unavailable provider must not
+            # silently fall back to another provider. provider is left as None
+            # so RequestService surfaces an explicit, provenance-tagged error
+            # instead of executing the request with the wrong provider.
+            _logger.warning(
+                "Provider '%s' is unavailable in MANUAL mode. "
+                "Refusing silent fallback.",
+                manager.selected_provider,
+            )
+            provider = None
+        else:
+            # AUTOMATIC (or uninitialized) mode: keep the configured provider
+            # as a defensive fallback; automatic routing tolerates this.
+            _logger.warning(
+                "Selected provider unavailable in %s mode; keeping configured provider.",
+                manager.routing_mode,
+            )
+    service = RequestService(
         db,
         provider,
         memory=get_memory_store(),
@@ -272,6 +401,35 @@ def _service(db: AsyncSession) -> RequestService:
         tools=default_tool_registry(),
         observability=get_observability(),
     )
+    if provider is None and isinstance(manager, ModelManager):
+        # FASE RELEASE: pre-set an explicit "unavailable" provenance so the
+        # refused MANUAL execution surfaces exactly why nothing ran.
+        service._last_fallback = {
+            "fallback_active": False,
+            "requested_provider": manager.selected_provider,
+            "requested_model": manager.selected_model,
+            "selected_provider": manager.selected_provider,
+            "selected_model": manager.selected_model,
+            "attempted_provider": manager.selected_provider,
+            "attempted_model": manager.selected_model,
+            "executed_provider": None,
+            "executed_model": None,
+            "fallback_from": None,
+            "fallback_from_provider": None,
+            "fallback_from_model": None,
+            "fallback_model": None,
+            "fallback_chain": [],
+            "routing_reason": (
+                "MANUAL mode: selected provider unavailable; no automatic fallback allowed"
+            ),
+            "status": "unavailable",
+            "latency_ms": 0,
+        }
+        _logger.warning(
+            "Pre-set unavailable provenance for MANUAL provider '%s'.",
+            manager.selected_provider,
+        )
+    return service
 
 
 @app.get(f"{settings.api_v1_prefix}/health/live")
@@ -352,6 +510,98 @@ async def set_local_model(
     return {"model": model, "status": "selected"}
 
 
+# ── FASE AB.6: First-Run Setup Endpoints ────────────────────────────────
+
+
+@app.get(f"{settings.api_v1_prefix}/providers/status")
+async def get_provider_statuses() -> list[dict[str, Any]]:
+    """Real, live status for every provider (never inferred from local config)."""
+    from personal_ai_secretary.providers.setup import provider_statuses
+
+    statuses = await provider_statuses()
+    return [s.__dict__ for s in statuses]
+
+
+@app.get(f"{settings.api_v1_prefix}/providers/{{provider_name}}/models")
+async def get_provider_models(provider_name: str) -> dict[str, Any]:
+    """Real model discovery for a single provider (no static lists)."""
+    from personal_ai_secretary.providers.setup import discover_models
+
+    if provider_name not in ("ollama", "opencode", "gemini", "nvidia"):
+        raise HTTPException(status_code=400, detail=f"Unknown provider: {provider_name}")
+    try:
+        return await discover_models(provider_name)
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail=f"Model discovery failed: {exc}") from exc
+
+
+@app.post(f"{settings.api_v1_prefix}/providers/test-connection")
+async def test_provider_connection(
+    payload: dict[str, Any],
+    claims: dict[str, Any] = Depends(require_bearer_token),
+) -> dict[str, Any]:
+    """Real end-to-end connection test (actual model inference round-trip)."""
+    from personal_ai_secretary.providers.setup import test_connection
+
+    provider_name = str(payload.get("provider", "")).lower()
+    if provider_name not in ("ollama", "opencode", "gemini", "nvidia"):
+        raise HTTPException(
+            status_code=400,
+            detail="provider must be ollama, opencode, gemini, or nvidia",
+        )
+    try:
+        result = await test_connection(provider_name)
+    except Exception as exc:
+        return {
+            "provider": provider_name,
+            "status": "ERROR",
+            "detail": str(exc),
+        }
+    return result.__dict__
+
+
+@app.get(f"{settings.api_v1_prefix}/setup/status")
+async def get_setup_status() -> dict[str, Any]:
+    """First-run detection for the onboarding wizard.
+
+    ``setup_required`` is True while no API key has ever been persisted and no
+    local provider is verified available; the UI then launches the wizard.
+    """
+    from personal_ai_secretary.providers.setup import provider_statuses
+
+    statuses = await provider_statuses()
+    by_name = {s.provider: s for s in statuses}
+    has_configured_cloud = (
+        by_name.get("gemini", None) is not None
+        and by_name["gemini"].status not in ("NOT_CONFIGURED",)
+    ) or (
+        by_name.get("nvidia", None) is not None
+        and by_name["nvidia"].status not in ("NOT_CONFIGURED",)
+    )
+    ollama_ok = by_name.get("ollama", None) is not None and by_name["ollama"].status == "AVAILABLE"
+    opencode_ok = (
+        by_name.get("opencode", None) is not None and by_name["opencode"].status == "AVAILABLE"
+    )
+    setup_required = not (has_configured_cloud or ollama_ok or opencode_ok)
+    # The wizard also runs on a true first-run where the user has not yet
+    # chosen a routing mode, even if a local provider is already reachable.
+    routing_configured = False
+    try:
+        from personal_ai_secretary.shared.settings_store import SettingsStore
+
+        store = SettingsStore()
+        async with get_session_factory()() as session:
+            loaded = await store.load(session)
+            routing_configured = bool(loaded.to_dict().get("routing_mode"))
+    except Exception:
+        pass
+    return {
+        "setup_required": setup_required,
+        "routing_configured": routing_configured,
+        "providers": {s.provider: {"status": s.status, "detail": s.detail} for s in statuses},
+    }
+
+
 # ── FASE T: Multi-Provider Intelligence Endpoints ──────────────────────
 
 
@@ -396,6 +646,17 @@ async def select_provider_model(
             status_code=400,
             detail=f"Provider '{provider_name}' is not available",
         )
+    # FASE Y: Persist the selection to database
+    try:
+        from personal_ai_secretary.shared.settings_store import SettingsStore
+        _store = SettingsStore()
+        async with get_session_factory()() as session:
+            await _store.save(session, {
+                "selected_provider": provider_name,
+                "selected_model": model_id or "",
+            })
+    except Exception as exc:
+        _logger.warning("Failed to persist provider selection: %s", exc)
     return {
         "provider": provider_name,
         "model": model_id,
@@ -512,6 +773,7 @@ async def get_provider_transparency() -> dict[str, object]:
         "model": None,
         "status": "unknown",
         "mode": get_settings().ai_provider,
+        "routing_mode": "automatic",
         "connectivity": {"online": True, "latency_ms": 0.0},
         "auto_selected": False,
         "fallback_active": False,
@@ -525,6 +787,7 @@ async def get_provider_transparency() -> dict[str, object]:
     if isinstance(manager, ModelManager) and manager._initialized:
         result["provider"] = manager.selected_provider
         result["model"] = manager.selected_model
+        result["routing_mode"] = manager.routing_mode
         result["connectivity"] = {
             "online": manager.connectivity.is_online,
             "latency_ms": round(manager.connectivity._status.latency_ms, 1),
@@ -564,9 +827,14 @@ async def get_provider_transparency() -> dict[str, object]:
             except Exception:
                 result["provider_health"] = {"available": False}
 
-        # All discovered providers summary
-        all_providers = []
+        # All discovered providers summary. Always include every discovered
+        # provider — even those that were found but could not serve models —
+        # so the UI can render them (e.g. "OpenCode — unavailable") instead of
+        # silently dropping them from the registry.
+        all_providers: list[dict[str, object]] = []
+        seen: set[str] = set()
         for entry in manager.registry.all_models():
+            seen.add(entry.provider_name)
             all_providers.append({
                 "provider": entry.provider_name,
                 "model": entry.model_id,
@@ -578,6 +846,24 @@ async def get_provider_transparency() -> dict[str, object]:
                 "failure_count": entry.failure_count,
                 "verified_capabilities_score": entry.verified_capabilities.score,
             })
+        discovered = manager.discover_providers_sync()
+        for name, dp in discovered.items():
+            if name in seen:
+                continue
+            all_providers.append({
+                "provider": dp.name,
+                "model": None,
+                "display_name": dp.display_name,
+                "status": "available" if dp.available else "unavailable",
+                "latency_ms": 0.0,
+                "reliability": 0.0,
+                "success_count": 0,
+                "failure_count": 0,
+                "verified_capabilities_score": 0.0,
+                "available": dp.available,
+                "detail": dp.detail,
+            })
+            seen.add(dp.name)
         result["all_providers"] = all_providers
     else:
         # Fallback to factory-based provider
@@ -696,18 +982,36 @@ async def record_provider_feedback(
 
 @app.get(f"{settings.api_v1_prefix}/providers/config")
 async def get_provider_config() -> dict[str, object]:
-    """Get provider configuration (keys masked)."""
+    """Get provider configuration (keys masked). FASE X: loads from DB."""
     s = get_settings()
+    # FASE X: Try to load persisted settings from database
+    persisted: dict[str, str] = {}
+    try:
+        from personal_ai_secretary.shared.settings_store import SettingsStore
+        store = SettingsStore()
+        async with get_session_factory()() as session:
+            loaded = await store.load(session)
+            persisted = loaded.to_dict()
+    except Exception:
+        pass
+
+    gemini_key = persisted.get("gemini_api_key", "") or s.gemini_api_key or ""
+    nvidia_key = persisted.get("nvidia_api_key", "") or s.nvidia_api_key or ""
+    oc_username = persisted.get("opencode_server_username", "") or s.opencode_server_username or ""
+    oc_password = persisted.get("opencode_server_password", "") or s.opencode_server_password or ""
     return {
         "ollama_base_url": s.ollama_base_url,
-        "ollama_model": s.ollama_model,
-        "gemini_model": s.gemini_model,
+        "ollama_model": persisted.get("ollama_model", "") or s.ollama_model,
+        "gemini_model": persisted.get("gemini_model", "") or s.gemini_model,
         "gemini_base_url": s.gemini_base_url,
-        "gemini_configured": bool(s.gemini_api_key),
-        "nvidia_configured": bool(s.nvidia_api_key),
+        "gemini_configured": bool(gemini_key),
+        "nvidia_configured": bool(nvidia_key),
         "opencode_base_url": s.opencode_base_url,
         "opencode_model": s.opencode_model,
-        "ai_provider": s.ai_provider,
+        "opencode_username_configured": bool(oc_username),
+        "opencode_password_configured": bool(oc_password),
+        "ai_provider": persisted.get("ai_provider", "") or s.ai_provider,
+        "routing_mode": persisted.get("routing_mode", "") or "automatic",
     }
 
 
@@ -716,14 +1020,13 @@ async def update_provider_config(
     payload: dict[str, Any],
     claims: dict[str, Any] = Depends(require_bearer_token),
 ) -> dict[str, str]:
-    """Update provider configuration (API keys, models).
-
-    API keys are stored in the in-memory settings and environment.
-    They are NEVER logged or returned in responses.
-    """
+    """Update provider configuration. FASE X: persists to database."""
     from personal_ai_secretary.shared.config import get_settings
+    from personal_ai_secretary.shared.settings_store import SettingsStore
 
     s = get_settings()
+    store = SettingsStore()
+    db_settings: dict[str, str] = {}
     updated: list[str] = []
     # Gemini API key
     gemini_key = payload.get("gemini_api_key")
@@ -734,6 +1037,7 @@ async def update_provider_config(
                 detail="Invalid Gemini API key",
             )
         s.gemini_api_key = gemini_key
+        db_settings["gemini_api_key"] = gemini_key
         updated.append("gemini_api_key")
     # NVIDIA API key
     nvidia_key = payload.get("nvidia_api_key")
@@ -744,32 +1048,75 @@ async def update_provider_config(
                 detail="Invalid NVIDIA API key",
             )
         s.nvidia_api_key = nvidia_key
+        db_settings["nvidia_api_key"] = nvidia_key
         updated.append("nvidia_api_key")
     # Gemini model
     gemini_model = payload.get("gemini_model")
     if gemini_model is not None:
         s.gemini_model = str(gemini_model)
+        db_settings["gemini_model"] = str(gemini_model)
         updated.append("gemini_model")
+    # OpenCode server credentials (FASE AB.6 first-run wizard)
+    opencode_username = payload.get("opencode_server_username")
+    if opencode_username is not None:
+        if not isinstance(opencode_username, str):
+            raise HTTPException(status_code=400, detail="Invalid OpenCode username")
+        s.opencode_server_username = opencode_username or None
+        if opencode_username:
+            db_settings["opencode_server_username"] = opencode_username
+        updated.append("opencode_server_username")
+    opencode_password = payload.get("opencode_server_password")
+    if opencode_password is not None:
+        if not isinstance(opencode_password, str):
+            raise HTTPException(status_code=400, detail="Invalid OpenCode password")
+        s.opencode_server_password = opencode_password or None
+        if opencode_password:
+            db_settings["opencode_server_password"] = opencode_password
+        updated.append("opencode_server_password")
     # Ollama model
     ollama_model = payload.get("ollama_model")
     if ollama_model is not None:
         s.ollama_model = str(ollama_model)
+        db_settings["ollama_model"] = str(ollama_model)
         updated.append("ollama_model")
     # AI provider mode
     ai_provider = payload.get("ai_provider")
     if ai_provider is not None:
-        if ai_provider not in ("deterministic", "local", "remote"):
+        if ai_provider not in ("auto", "deterministic", "local", "remote"):
             raise HTTPException(
                 status_code=400,
-                detail="ai_provider must be deterministic, local, or remote",
+                detail="ai_provider must be auto, deterministic, local, or remote",
             )
         s.ai_provider = ai_provider
+        db_settings["ai_provider"] = ai_provider
         updated.append("ai_provider")
+    # Routing mode (FASE X)
+    routing_mode = payload.get("routing_mode")
+    if routing_mode is not None:
+        if routing_mode not in ("automatic", "manual"):
+            raise HTTPException(
+                status_code=400,
+                detail="routing_mode must be automatic or manual",
+            )
+        db_settings["routing_mode"] = routing_mode
+        # FASE Y: Also set routing mode in ModelManager for backend enforcement
+        from personal_ai_secretary.providers.model_manager import ModelManager
+        _mgr = get_model_manager()
+        if isinstance(_mgr, ModelManager):
+            _mgr.set_routing_mode(routing_mode)
+        updated.append("routing_mode")
     if not updated:
         raise HTTPException(
             status_code=400,
             detail="No valid configuration fields provided",
         )
+    # FASE X: Persist to database
+    if db_settings:
+        try:
+            async with get_session_factory()() as session:
+                await store.save(session, db_settings)
+        except Exception as exc:
+            _logger.warning("Failed to persist config to database: %s", exc)
     return {"status": "updated", "fields": ", ".join(updated)}
 
 
@@ -880,12 +1227,24 @@ async def send_session_message(
         raise HTTPException(status_code=400, detail="Payload session_id does not match path")
     # K8/K5: attached files are formatted within the context budget; the user
     # message itself is never truncated.
-    if payload.attached_files:
+    text_files: list[Any] = []
+    image_attachments: list[str] = []
+    for _attached in payload.attached_files or []:
+        if getattr(_attached, "is_base64", False) or str(
+            getattr(_attached, "mime_type", "")
+        ).startswith("image/"):
+            # FASE AB.6: real images go to the vision provider as base64 bytes,
+            # never embedded into the prompt text as gibberish.
+            if getattr(_attached, "content", ""):
+                image_attachments.append(str(_attached.content))
+        else:
+            text_files.append(_attached)
+    if text_files:
         from personal_ai_secretary.context.files import (  # noqa: PLC0415
             build_message_with_attachments,
         )
 
-        _augmented = build_message_with_attachments(payload.input, payload.attached_files)
+        _augmented = build_message_with_attachments(payload.input, text_files)
         message_payload = payload.model_copy(
             update={"session_id": session_id, "input": _augmented, "attached_files": []}
         )
@@ -899,6 +1258,7 @@ async def send_session_message(
             correlation_id_var.get(),
             idempotency_key,
             approval_granted,
+            image_attachments,
         )
     except PermissionError as exc:
         raise HTTPException(status_code=403, detail=str(exc)) from exc

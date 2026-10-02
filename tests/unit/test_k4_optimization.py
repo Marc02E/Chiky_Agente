@@ -499,7 +499,7 @@ async def test_metrics_recorded_during_loop() -> None:
 
 
 @pytest.mark.asyncio
-async def test_metrics_on_provider_error() -> None:
+async def test_metrics_on_provider_error(manual_routing_manager) -> None:
     """Metrics still finish on provider error."""
     from personal_ai_secretary.agents.builtin import ExecutionAgent
 

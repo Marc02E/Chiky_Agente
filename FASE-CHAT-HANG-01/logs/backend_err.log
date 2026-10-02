@@ -1,0 +1,30 @@
+INFO:     Started server process [22736]
+INFO:     Waiting for application startup.
+2026-09-10 10:51:47,603 INFO personal_ai_secretary.shared.settings_store correlation_id=- Loaded 7 provider settings from database
+2026-09-10 10:51:47,604 INFO personal_ai_secretary.startup correlation_id=- Loaded persisted provider settings from database
+2026-09-10 10:51:47,604 INFO personal_ai_secretary.providers.factory correlation_id=- Auto mode: returning OllamaProvider for local inference
+2026-09-10 10:51:49,868 INFO personal_ai_secretary.providers.model_manager correlation_id=- ModelManager: initializing provider discovery...
+2026-09-10 10:51:53,160 WARNING personal_ai_secretary.providers.ollama correlation_id=- Ollama warmup failed (non-fatal): All connection attempts failed
+2026-09-10 10:52:00,886 WARNING personal_ai_secretary.providers.opencode_server correlation_id=- Reaped orphaned managed OpenCode serve (pid 19308, ppid 18472)
+2026-09-10 10:52:00,915 INFO personal_ai_secretary.providers.opencode_server correlation_id=- Managed OpenCode server launching on port 58096 (pid 16224)
+2026-09-10 10:52:02,374 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:58096/config "HTTP/1.1 200 OK"
+2026-09-10 10:52:02,993 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:58096/config "HTTP/1.1 200 OK"
+2026-09-10 10:52:03,611 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:58096/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 10:52:05,225 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:58096/config/providers "HTTP/1.1 200 OK"
+2026-09-10 10:52:05,231 INFO personal_ai_secretary.providers.model_manager correlation_id=- ModelManager: discovered 4 providers, 8 models
+2026-09-10 10:52:05,231 INFO personal_ai_secretary.providers.factory correlation_id=- ModelManager initialized: 8 models across providers
+2026-09-10 10:52:05,232 INFO personal_ai_secretary.providers.model_manager correlation_id=- Routing mode set to automatic
+2026-09-10 10:52:05,232 INFO personal_ai_secretary.providers.model_manager correlation_id=- Selected provider=opencode model=big-pickle
+2026-09-10 10:52:05,232 INFO personal_ai_secretary.startup correlation_id=- Restored routing_mode=automatic provider=opencode model=big-pickle
+2026-09-10 10:52:05,232 INFO personal_ai_secretary.providers.factory correlation_id=- Auto mode: returning OllamaProvider for local inference
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+2026-09-10 10:52:06,144 INFO httpx correlation_id=- HTTP Request: GET https://dns.google/resolve?name=google.com "HTTP/1.1 200 OK"
+2026-09-10 10:52:07,737 INFO personal_ai_secretary.providers.factory correlation_id=b5053f07-9852-4cf7-a753-20181d67b8e4 Auto mode: returning OllamaProvider for local inference
+2026-09-10 10:52:07,807 INFO personal_ai_secretary.agents correlation_id=b5053f07-9852-4cf7-a753-20181d67b8e4 Task classified: chat (goal: Conversational response, no file or tool operations needed.)
+2026-09-10 10:52:08,341 INFO httpx correlation_id=b5053f07-9852-4cf7-a753-20181d67b8e4 HTTP Request: GET http://127.0.0.1:58096/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 10:52:08,925 INFO httpx correlation_id=b5053f07-9852-4cf7-a753-20181d67b8e4 HTTP Request: POST http://127.0.0.1:58096/session "HTTP/1.1 200 OK"
+2026-09-10 10:52:09,549 INFO httpx correlation_id=b5053f07-9852-4cf7-a753-20181d67b8e4 HTTP Request: GET http://127.0.0.1:58096/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 10:52:10,102 INFO httpx correlation_id=b5053f07-9852-4cf7-a753-20181d67b8e4 HTTP Request: GET http://127.0.0.1:58096/config/providers "HTTP/1.1 200 OK"
+2026-09-10 10:52:18,002 INFO httpx correlation_id=b5053f07-9852-4cf7-a753-20181d67b8e4 HTTP Request: POST http://127.0.0.1:58096/session/ses_f73c421b9ffep72Wyu0QzHRaU5/message "HTTP/1.1 200 OK"
+2026-09-10 10:52:18,008 INFO personal_ai_secretary.agents correlation_id=b5053f07-9852-4cf7-a753-20181d67b8e4 Agentic loop completed: rounds=1 tool_calls=0 dedup=0 elapsed=10.20s metrics={'provider': 'opencode', 'model': 'big-pickle', 'llm_calls': 1, 'tool_calls': 0, 'deduplicated_calls': 0, 'rounds': 1, 'total_time_s': 10.201, 'avg_llm_time_s': 10.199, 'context_build_time_s': 2.2e-05, 'context_chars_max': 4420, 'estimated_context_tokens': 1105, 'response_chars_total': 80, 'system_prompt_chars': 4420, 'history_chars': 0, 'tool_results_chars': 0, 'attached_file_chars': 0, 'project_context_chars': 0, 'truncation_applied': False, 'history_truncated_turns': 0, 'summary_used': False, 'command_count': 0, 'command_avg_duration_s': 0.0, 'command_timeout_count': 0, 'command_exit_codes': [], 'command_output_chars': 0, 'command_output_truncated_count': 0, 'workflow_stages': ['completed'], 'workflow_stage_times': [], 'project_discovery_time_s': 0.0, 'project_technologies_detected': [], 'project_files_discovered': 0, 'project_entry_points': 0, 'project_test_locations': 0, 'progressive_read_level': 0, 'progressive_read_time_s': 0.0, 'task_inspection_time_s': 0.0, 'correction_attempts': 0, 'correction_tools_used': [], 'final_outcome': 'chat', 'verification_status': 'pending', 'max_corrections_reached': False, 'state_transitions': ['idle>understanding', 'understanding>planning', 'planning>reading', 'reading>completed'], 'final_task_state': 'completed', 'unproductive_loop_detections': 0, 'backend_directives': 0, 'consecutive_tool_failures': 0, 'duration_budget_exceeded': False, 'latency_classification': 'llm_bound'}

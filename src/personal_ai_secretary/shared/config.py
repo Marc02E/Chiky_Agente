@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     app_name: str = "personal-ai-secretary"
     app_env: Literal["development", "test", "production"] = "development"
     api_v1_prefix: str = "/api/v1"
-    ai_provider: Literal["deterministic", "local", "remote"] = "deterministic"
+    ai_provider: Literal["auto", "deterministic", "local", "remote"] = "auto"
     ollama_base_url: str = "http://127.0.0.1:11434"
     ollama_model: str = "llama3.2"
     database_url: str = "sqlite+aiosqlite:///./personal_ai_secretary.db"
@@ -54,16 +54,23 @@ class Settings(BaseSettings):
     otel_service_version: str = "1.0.0"
     otel_worker_id: str | None = None
     nvidia_base_url: str = "https://integrate.api.nvidia.com/v1/chat/completions"
-    nvidia_model: str = "meta/llama-3.1-8b-instruct"
+    nvidia_model: str = "meta/llama-3.2-11b-vision-instruct"
+    # FASE AB.6: workspace root where the agent is allowed to create/write
+    # files. When unset it defaults to <home>/Chiky/workspace. File-tool
+    # relative paths are anchored here (never to the process CWD) and
+    # absolute paths outside this root are rejected by the tool layer.
+    workspace_root: str = ""
     nvidia_api_key: str | None = None
     provider_timeout_seconds: float = 30.0
     # FASE T: Gemini cloud provider
     gemini_api_key: str | None = None
     gemini_model: str = "gemini-2.0-flash"
     gemini_base_url: str = "https://generativelanguage.googleapis.com/v1beta/openai"
-    # FASE T: OpenCode provider
-    opencode_base_url: str = "http://127.0.0.1:4096"
+    # FASE T: OpenCode provider (port 4097 to avoid conflict with Chiky on 4096)
+    opencode_base_url: str = "http://127.0.0.1:4097"
     opencode_model: str = "default"
+    opencode_server_username: str | None = None
+    opencode_server_password: str | None = None
     # FASE T: Model manager auto-verify on startup
     auto_verify_models: bool = False
     # FASE 13A compliance governance. COMPLIANCE_ENABLED toggles the policy
@@ -109,6 +116,15 @@ class Settings(BaseSettings):
             raise ValueError(
                 "NVIDIA_API_KEY must be set when AI_PROVIDER=remote in production"
             )
+        if (
+            self.app_env == "production"
+            and self.ai_provider == "auto"
+            and not self.nvidia_api_key
+            and not self.gemini_api_key
+        ):
+            # Auto mode in production needs at least one cloud provider
+            # Local Ollama is acceptable as fallback
+            pass  # Allow auto mode - it will fall back to Ollama or deterministic
         return self
 
 

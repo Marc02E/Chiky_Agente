@@ -137,7 +137,7 @@ async def test_repeated_tool_call_breaks_loop() -> None:
 
 
 @pytest.mark.asyncio
-async def test_connection_error_returns_user_message() -> None:
+async def test_connection_error_returns_user_message(manual_routing_manager) -> None:
     mock = MockProvider(fail_with=ConnectionError("Cannot connect to Ollama"))
     agent = ExecutionAgent(provider=mock)
     data = AgentInput(
@@ -150,7 +150,7 @@ async def test_connection_error_returns_user_message() -> None:
 
 
 @pytest.mark.asyncio
-async def test_timeout_returns_user_message() -> None:
+async def test_timeout_returns_user_message(manual_routing_manager) -> None:
     mock = MockProvider(fail_with=TimeoutError("timeout"))
     agent = ExecutionAgent(provider=mock)
     data = AgentInput(
@@ -162,7 +162,7 @@ async def test_timeout_returns_user_message() -> None:
 
 
 @pytest.mark.asyncio
-async def test_value_error_returns_user_message() -> None:
+async def test_value_error_returns_user_message(manual_routing_manager) -> None:
     mock = MockProvider(fail_with=ValueError("Model not found"))
     agent = ExecutionAgent(provider=mock)
     data = AgentInput(
@@ -174,7 +174,7 @@ async def test_value_error_returns_user_message() -> None:
 
 
 @pytest.mark.asyncio
-async def test_unexpected_error_returns_user_message() -> None:
+async def test_unexpected_error_returns_user_message(manual_routing_manager) -> None:
     mock = MockProvider(fail_with=RuntimeError("something broke"))
     agent = ExecutionAgent(provider=mock)
     data = AgentInput(
@@ -266,6 +266,42 @@ def test_extract_all_invalid_then_valid() -> None:
     calls = agent._extract_all_tool_calls(text)
     assert len(calls) == 1
     assert calls[0][0] == "calc"
+
+
+def test_extract_openai_style_parameters() -> None:
+    agent = ExecutionAgent()
+    text = '{"name": "create_file", "parameters": {"path": "/p/a.py", "content": "x"}}'
+    calls = agent._extract_all_tool_calls(text)
+    assert len(calls) == 1
+    assert calls[0][0] == "create_file"
+    assert calls[0][1]["path"] == "/p/a.py"
+
+
+def test_extract_openai_style_arguments() -> None:
+    agent = ExecutionAgent()
+    text = '{"name": "calculator", "arguments": {"expression": "1+1"}}'
+    calls = agent._extract_all_tool_calls(text)
+    assert len(calls) == 1
+    assert calls[0][0] == "calculator"
+    assert calls[0][1]["expression"] == "1+1"
+
+
+def test_extract_function_wrapper_with_json_string() -> None:
+    agent = ExecutionAgent()
+    text = (
+        '{"function": {"name": "create_directory", '
+        '"arguments": "{\\"path\\": \\"/p\\"}"}}'
+    )
+    calls = agent._extract_all_tool_calls(text)
+    assert len(calls) == 1
+    assert calls[0][0] == "create_directory"
+    assert calls[0][1]["path"] == "/p"
+
+
+def test_extract_openai_plain_name_only_is_ignored() -> None:
+    agent = ExecutionAgent()
+    text = '{"name": "create_file"}'
+    assert agent._extract_all_tool_calls(text) == []
 
 
 def test_balanced_json_valid() -> None:

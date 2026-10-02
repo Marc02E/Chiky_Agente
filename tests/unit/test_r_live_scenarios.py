@@ -1,8 +1,8 @@
 """FASE R — Live scenario tests: R.1 (file creation), R.5 (project analysis), R.8 (model switching)."""
 import asyncio
 import os
-import time
 import shutil
+import time
 from pathlib import Path
 from uuid import uuid4
 
@@ -12,12 +12,12 @@ os.environ.setdefault("OLLAMA_MODEL", "llama3.1:latest")
 from personal_ai_secretary.agents.builtin import ExecutionAgent
 from personal_ai_secretary.agents.contracts import AgentInput
 from personal_ai_secretary.domain.contracts import RiskLevel
-from personal_ai_secretary.tools.registry import ToolRegistry
-from personal_ai_secretary.tools.filesystem import register_filesystem_tools
-from personal_ai_secretary.tools.development import register_development_tools
+from personal_ai_secretary.providers.ollama import OllamaProvider
 from personal_ai_secretary.tools.command import register_command_tools
 from personal_ai_secretary.tools.datetime_tool import register_datetime_tools
-from personal_ai_secretary.providers.ollama import OllamaProvider
+from personal_ai_secretary.tools.development import register_development_tools
+from personal_ai_secretary.tools.filesystem import register_filesystem_tools
+from personal_ai_secretary.tools.registry import ToolRegistry
 
 
 def make_agent(model: str):
@@ -46,13 +46,13 @@ def make_input(text: str, ws: Path, user_id: str = "r_test", risk: RiskLevel = R
     )
 
 
-async def run_scenario(name: str, model: str, text: str, ws: Path, timeout: int = 360):
+async def run_scenario(name: str, model: str, text: str, ws: Path, timeout_s: int = 360):
     agent = make_agent(model)
     data = make_input(text, ws, user_id=name.lower().replace(" ", "_"))
 
     start = time.monotonic()
     try:
-        artifact = await asyncio.wait_for(agent.run(data), timeout=timeout)
+        artifact = await asyncio.wait_for(agent.run(data), timeout=timeout_s)
         elapsed = time.monotonic() - start
         return {
             "scenario": name,
@@ -61,7 +61,7 @@ async def run_scenario(name: str, model: str, text: str, ws: Path, timeout: int 
             "result": "PASS",
             "response": artifact.content[:300],
         }
-    except asyncio.TimeoutError:
+    except TimeoutError:
         elapsed = time.monotonic() - start
         return {
             "scenario": name,
@@ -132,7 +132,7 @@ async def r8_model_switching(model):
             "R8_ModelSwitch", model,
             "What is 2 + 2? Reply with just the number.",
             ws,
-            timeout=180,
+            timeout_s=180,
         )
     finally:
         shutil.rmtree(ws, ignore_errors=True)

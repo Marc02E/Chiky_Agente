@@ -1,0 +1,70 @@
+{
+  "fase": "CHAT-HANG-01",
+  "fecha_repro": "2026-09-10T16:52:20.834+00:00",
+  "mensaje": "hola, mi nombre es esteban",
+  "session_id": "108c9b3a-4cfb-4dce-a393-260a8925cc42",
+  "params": {
+    "port": 8000,
+    "client_cap_s": 360,
+    "startup_deadline_s": 150,
+    "backend": "uvicorn real (run_local.ps1 equivalente)",
+    "provider_mode": "automatic (opencode/big-pickle)"
+  },
+  "trace": [
+    {
+      "t": "T-2_mint_jwt",
+      "ts_ms": 1789059104493,
+      "iso": "2026-09-10T16:51:44.493+00:00"
+    },
+    {
+      "t": "T-1_uvicorn_lanzado",
+      "ts_ms": 1789059105942,
+      "iso": "2026-09-10T16:51:45.942+00:00",
+      "pid": 18840
+    },
+    {
+      "t": "T0_backend_listo",
+      "ts_ms": 1789059126041,
+      "iso": "2026-09-10T16:52:06.041+00:00",
+      "ready": true,
+      "last_health_err": "[WinError 10061] No connection could be made because the target machine actively refused it"
+    },
+    {
+      "t": "T1_request_envio",
+      "ts_ms": 1789059127332,
+      "iso": "2026-09-10T16:52:07.332+00:00"
+    },
+    {
+      "t": "T10_respuesta_completa",
+      "ts_ms": 1789059138049,
+      "iso": "2026-09-10T16:52:18.049+00:00",
+      "status": 200,
+      "body": "{\"session_id\":\"108c9b3a-4cfb-4dce-a393-260a8925cc42\",\"request_id\":\"cb96b975-40b4-4e33-afe2-cc9161e5fc95\",\"status\":\"completed\",\"user_message\":{\"message_id\":\"cb96b975-40b4-4e33-afe2-cc9161e5fc95\",\"request_id\":\"cb96b975-40b4-4e33-afe2-cc9161e5fc95\",\"role\":\"user\",\"content\":\"hola, mi nombre es esteban\",\"status\":\"completed\",\"created_at\":\"2026-09-10T16:52:07.762893\"},\"assistant_message\":{\"message_id\":\"8e",
+      "ms_total": 10717
+    },
+    {
+      "t": "T11_db_rows",
+      "ts_ms": 1789059139239,
+      "iso": "2026-09-10T16:52:19.239+00:00",
+      "count": 1
+    },
+    {
+      "t": "T12_db_row",
+      "ts_ms": 1789059139239,
+      "iso": "2026-09-10T16:52:19.239+00:00",
+      "request_id": "cb96b97540b44e33afe2cc9161e5fc95",
+      "session_id": "108c9b3a4cfb4dcea393260a8925cc42",
+      "input": "hola, mi nombre es esteban",
+      "status": "completed",
+      "created_at": "2026-09-10 16:52:07.762893",
+      "updated_at": "2026-09-10 16:52:18.020757",
+      "result": "Hola Esteban! Soy Chiky, tu asistente de desarrollo. ¿En qué puedo ayudarte hoy?"
+    },
+    {
+      "t": "T13_opencode_log",
+      "ts_ms": 1789059139706,
+      "iso": "2026-09-10T16:52:19.706+00:00",
+      "entries_after": 0
+    }
+  ]
+}

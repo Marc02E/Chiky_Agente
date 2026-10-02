@@ -23,6 +23,12 @@ from typing import Any
 from personal_ai_secretary.tools.filesystem import DEFAULT_ALLOWED_ROOTS
 from personal_ai_secretary.tools.registry import ToolDefinition, ToolError, ToolRegistry, ToolRisk
 
+# FASE AB.6: the command tool keeps its historical home-bounded containment
+# when no explicit roots are pinned (the file tools have their own, stricter
+# WORKSPACE_ROOT enforcement). Commands are additionally gated by the command
+# allowlist and explicit approval — they are not the file-write path.
+_COMMAND_FALLBACK_ROOTS: list[str] = [str(Path.home())]
+
 # ---------------------------------------------------------------------------
 # Command allowlist
 # ---------------------------------------------------------------------------
@@ -250,7 +256,7 @@ def validate_working_directory(
         raise ToolError(f"Working directory is not a directory: {working_directory}")
 
     # Now validate against allowed roots (after confirming it exists as a dir).
-    roots = allowed_roots or DEFAULT_ALLOWED_ROOTS
+    roots = allowed_roots or DEFAULT_ALLOWED_ROOTS or _COMMAND_FALLBACK_ROOTS
     target_str = str(target)
     for root in roots:
         root_resolved = str(Path(root).resolve())

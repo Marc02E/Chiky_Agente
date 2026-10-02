@@ -103,12 +103,23 @@ class RequestMetrics:
     tests_passed: int = 0
     tests_failed: int = 0
     model_failures: int = 0
+    # FASE AB.4: full execution chain for honest routing transparency.
+    requested_provider: str = ""
+    requested_model: str = ""
     fallback_suggested: bool = False
+    fallback_executed: bool = False
     fallback_model: str = ""
     fallback_from_provider: str = ""
     fallback_from_model: str = ""
     llm_duration: float = 0.0
     tool_duration: float = 0.0
+    # FASE AB.6: enriched provenance and routing transparency.
+    selected_provider: str = ""   # what routing mode chose before execution
+    selected_model: str = ""      # what routing mode chose before execution
+    routing_reason: str = ""      # e.g. "best verified model for coding"
+    fallback_chain: list[str] = field(default_factory=list)
+    status: str = "ok"            # ok|failed|timeout|unauthorized|connection_error|unknown
+    latency_ms: int = 0           # total wall-clock time of the request in ms
     command_duration: float = 0.0
 
     # FASE L.7-L.9 — document and vision observability.

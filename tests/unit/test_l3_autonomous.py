@@ -419,7 +419,7 @@ class TestExecutionAgentWorkflowStages:
 
 class TestExecutionAgentProviderFailure:
     @pytest.mark.asyncio
-    async def test_connection_error_returns_error(self) -> None:
+    async def test_connection_error_returns_error(self, manual_routing_manager) -> None:
         from uuid import uuid4
 
         from personal_ai_secretary.agents.builtin import ExecutionAgent

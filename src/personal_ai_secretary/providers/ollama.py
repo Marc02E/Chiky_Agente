@@ -1,3 +1,4 @@
+import json
 import logging
 from typing import Any
 
@@ -29,6 +30,16 @@ class OllamaProvider:
         self.model: str = model or settings.ollama_model
         self._base_url: str = settings.ollama_base_url
 
+    def _supports_tools(self) -> bool:
+        """Whether the selected Ollama model supports native function calling."""
+        try:
+            from personal_ai_secretary.providers.model_intelligence import (
+                get_model_capabilities,
+            )
+            return get_model_capabilities(self.model).tool_calling
+        except Exception:  # noqa: BLE001
+            return False
+
     async def health(self) -> ProviderInfo:
         try:
             async with httpx.AsyncClient(timeout=_CONNECT_TIMEOUT) as client:
@@ -50,7 +61,7 @@ class OllamaProvider:
             return ProviderInfo(
                 name=self.name,
                 mode="local",
-                available=has_any_model,
+                available=available,
                 is_ai=True,
                 detail=detail,
             )
@@ -92,12 +103,23 @@ class OllamaProvider:
 
     async def generate(self, request: RequestEnvelope) -> ProviderResponse:
         messages = self._build_messages(request)
+        logger.debug(
+            "Ollama generate: model=%s msgs=%d input_len=%d images=%d",
+            self.model, len(messages), len(request.input), len(request.images or []),
+        )
         payload: dict[str, Any] = {
             "model": self.model,
             "messages": messages,
             "stream": False,
             "think": False,
         }
+        # FASE AB.6: vision — attach real image bytes to the last user message.
+        if getattr(request, "images", None) and messages:
+            messages[-1]["images"] = list(request.images)
+        # FASE Y: native tool calling for tool-capable models.
+        tool_schemas = getattr(request, "tool_schemas", None) or []
+        if tool_schemas and self._supports_tools():
+            payload["tools"] = tool_schemas
         try:
             async with httpx.AsyncClient(
                 timeout=httpx.Timeout(_CONNECT_TIMEOUT, read=_READ_TIMEOUT),
@@ -143,6 +165,27 @@ class OllamaProvider:
             ) from exc
 
         reply = data.get("message", {}).get("content", "")
+        # FASE Y: native tool calls -> rendered as ```tool blocks so the
+        # agent's text-based extraction pipeline stays the source of truth.
+        native_calls = data.get("message", {}).get("tool_calls") or []
+        if not reply and native_calls:
+            parts = [reply] if reply else []
+            for call in native_calls:
+                fn = call.get("function", {})
+                name = fn.get("name", "")
+                args = fn.get("arguments", {})
+                if name:
+                    parts.append(
+                        "```tool\n"
+                        + json.dumps({"tool": name, "args": args})
+                        + "\n```"
+                    )
+            reply = "\n\n".join(p for p in parts if p)
+        logger.debug(
+            "[OLLAMA-DEBUG] reply_len=%d reply_preview=%.120s",
+            len(reply) if reply else 0,
+            reply[:120] if reply else "<empty>",
+        )
         if not reply:
             logger.warning("Ollama returned empty response for model %s", self.model)
             raise RuntimeError(
@@ -173,9 +216,14 @@ class OllamaProvider:
             logger.warning("Ollama warmup failed (non-fatal): %s", exc)
 
     @staticmethod
-    def _build_messages(request: RequestEnvelope) -> list[dict[str, str]]:
+    def _build_messages(request: RequestEnvelope) -> list[dict[str, Any]]:
         messages: list[dict[str, str]] = []
         if request.context_summary:
+            logger.debug(
+                "[OLLAMA-DEBUG] context_summary (system prompt) len=%d preview=%.200s",
+                len(request.context_summary),
+                request.context_summary[:200],
+            )
             messages.append({"role": "system", "content": request.context_summary})
         for turn in request.messages:
             messages.append({"role": turn.role, "content": turn.content})

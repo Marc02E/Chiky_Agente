@@ -1,0 +1,1298 @@
+INFO:     Started server process [2352]
+INFO:     Waiting for application startup.
+2026-09-10 14:13:52,044 INFO personal_ai_secretary.shared.settings_store correlation_id=- Loaded 7 provider settings from database
+2026-09-10 14:13:52,045 INFO personal_ai_secretary.startup correlation_id=- Loaded persisted provider settings from database
+2026-09-10 14:13:52,045 INFO personal_ai_secretary.providers.factory correlation_id=- Auto mode: returning OllamaProvider for local inference
+2026-09-10 14:13:54,368 INFO personal_ai_secretary.providers.model_manager correlation_id=- ModelManager: initializing provider discovery...
+2026-09-10 14:13:57,027 WARNING personal_ai_secretary.providers.ollama correlation_id=- Ollama warmup failed (non-fatal): All connection attempts failed
+2026-09-10 14:14:02,227 INFO personal_ai_secretary.providers.opencode_server correlation_id=- Managed OpenCode server launching on port 65320 (pid 19576)
+2026-09-10 14:14:03,867 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:65320/config "HTTP/1.1 200 OK"
+2026-09-10 14:14:04,128 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:65320/config "HTTP/1.1 200 OK"
+2026-09-10 14:14:04,386 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:65320/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 14:14:05,106 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:65320/config/providers "HTTP/1.1 200 OK"
+2026-09-10 14:14:05,108 INFO personal_ai_secretary.providers.model_manager correlation_id=- ModelManager: discovered 4 providers, 8 models
+2026-09-10 14:14:05,108 INFO personal_ai_secretary.providers.factory correlation_id=- ModelManager initialized: 8 models across providers
+2026-09-10 14:14:05,108 INFO personal_ai_secretary.providers.model_manager correlation_id=- Routing mode set to automatic
+2026-09-10 14:14:05,108 INFO personal_ai_secretary.providers.model_manager correlation_id=- Selected provider=opencode model=big-pickle
+2026-09-10 14:14:05,108 INFO personal_ai_secretary.startup correlation_id=- Restored routing_mode=automatic provider=opencode model=big-pickle
+2026-09-10 14:14:05,109 INFO personal_ai_secretary.providers.factory correlation_id=- Auto mode: returning OllamaProvider for local inference
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+2026-09-10 14:14:05,636 INFO httpx correlation_id=- HTTP Request: GET https://dns.google/resolve?name=google.com "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:65413 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52925 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50893 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52105 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52105 - "GET /static/css/style.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56678 - "GET /static/js/app.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54750 - "GET /api/v1/providers/models HTTP/1.1" 200 OK
+2026-09-10 14:14:08,081 INFO httpx correlation_id=d65ace60-7cb7-4217-be69-54fa09843ddb HTTP Request: GET http://127.0.0.1:65320/config "HTTP/1.1 200 OK"
+2026-09-10 14:14:08,084 INFO personal_ai_secretary.shared.settings_store correlation_id=cba05bde-e619-4dfa-9a8d-f23e3fef7dcb Loaded 7 provider settings from database
+INFO:     127.0.0.1:58701 - "GET /api/v1/providers/transparency HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56678 - "GET /api/v1/providers/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52105 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 14:14:08,124 INFO personal_ai_secretary.shared.settings_store correlation_id=1eb95f44-3117-462c-a952-0ad6f49102fa Loaded 7 provider settings from database
+INFO:     127.0.0.1:58701 - "GET /api/v1/providers/config HTTP/1.1" 200 OK
+2026-09-10 14:14:08,143 INFO personal_ai_secretary.shared.settings_store correlation_id=fdd14573-78d5-4355-8711-a50c376149f9 Loaded 7 provider settings from database
+2026-09-10 14:14:08,932 INFO personal_ai_secretary.providers.factory correlation_id=5eabb8c8-c432-4df2-914e-0769079fb91d Auto mode: returning OllamaProvider for local inference
+2026-09-10 14:14:08,964 INFO personal_ai_secretary.agents correlation_id=5eabb8c8-c432-4df2-914e-0769079fb91d Task classified: chat (goal: Conversational response, no file or tool operations needed.)
+2026-09-10 14:14:09,129 INFO httpx correlation_id=5eabb8c8-c432-4df2-914e-0769079fb91d HTTP Request: GET http://127.0.0.1:65320/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 14:14:09,366 INFO httpx correlation_id=5eabb8c8-c432-4df2-914e-0769079fb91d HTTP Request: POST http://127.0.0.1:65320/session "HTTP/1.1 200 OK"
+2026-09-10 14:14:09,569 INFO httpx correlation_id=5eabb8c8-c432-4df2-914e-0769079fb91d HTTP Request: GET http://127.0.0.1:65320/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 14:14:09,749 INFO httpx correlation_id=fdd14573-78d5-4355-8711-a50c376149f9 HTTP Request: GET https://integrate.api.nvidia.com/v1/models "HTTP/1.1 200 OK"
+2026-09-10 14:14:09,950 INFO httpx correlation_id=5eabb8c8-c432-4df2-914e-0769079fb91d HTTP Request: GET http://127.0.0.1:65320/config/providers "HTTP/1.1 200 OK"
+2026-09-10 14:14:10,186 INFO httpx correlation_id=fdd14573-78d5-4355-8711-a50c376149f9 HTTP Request: GET https://integrate.api.nvidia.com/v1/models "HTTP/1.1 200 OK"
+2026-09-10 14:14:11,936 INFO httpx correlation_id=fdd14573-78d5-4355-8711-a50c376149f9 HTTP Request: GET http://127.0.0.1:65320/config "HTTP/1.1 200 OK"
+2026-09-10 14:14:12,203 INFO httpx correlation_id=fdd14573-78d5-4355-8711-a50c376149f9 HTTP Request: GET http://127.0.0.1:65320/config "HTTP/1.1 200 OK"
+2026-09-10 14:14:12,210 INFO personal_ai_secretary.shared.settings_store correlation_id=fdd14573-78d5-4355-8711-a50c376149f9 Loaded 7 provider settings from database
+INFO:     127.0.0.1:58701 - "GET /api/v1/setup/status HTTP/1.1" 200 OK
+2026-09-10 14:14:15,494 INFO httpx correlation_id=5eabb8c8-c432-4df2-914e-0769079fb91d HTTP Request: POST http://127.0.0.1:65320/session/ses_f730b3031ffeOu8Uk0QJ2L1jJm/message "HTTP/1.1 200 OK"
+2026-09-10 14:14:15,497 INFO personal_ai_secretary.agents correlation_id=5eabb8c8-c432-4df2-914e-0769079fb91d Agentic loop completed: rounds=1 tool_calls=0 dedup=0 elapsed=6.53s metrics={'provider': 'opencode', 'model': 'big-pickle', 'llm_calls': 1, 'tool_calls': 0, 'deduplicated_calls': 0, 'rounds': 1, 'total_time_s': 6.534, 'avg_llm_time_s': 6.532, 'context_build_time_s': 2.7e-05, 'context_chars_max': 4420, 'estimated_context_tokens': 1105, 'response_chars_total': 42, 'system_prompt_chars': 4420, 'history_chars': 0, 'tool_results_chars': 0, 'attached_file_chars': 0, 'project_context_chars': 0, 'truncation_applied': False, 'history_truncated_turns': 0, 'summary_used': False, 'command_count': 0, 'command_avg_duration_s': 0.0, 'command_timeout_count': 0, 'command_exit_codes': [], 'command_output_chars': 0, 'command_output_truncated_count': 0, 'workflow_stages': ['completed'], 'workflow_stage_times': [], 'project_discovery_time_s': 0.0, 'project_technologies_detected': [], 'project_files_discovered': 0, 'project_entry_points': 0, 'project_test_locations': 0, 'progressive_read_level': 0, 'progressive_read_time_s': 0.0, 'task_inspection_time_s': 0.0, 'correction_attempts': 0, 'correction_tools_used': [], 'final_outcome': 'chat', 'verification_status': 'pending', 'max_corrections_reached': False, 'state_transitions': ['idle>understanding', 'understanding>planning', 'planning>reading', 'reading>completed'], 'final_task_state': 'completed', 'unproductive_loop_detections': 0, 'backend_directives': 0, 'consecutive_tool_failures': 0, 'duration_budget_exceeded': False, 'latency_classification': 'llm_bound'}
+INFO:     127.0.0.1:52105 - "POST /api/v1/sessions/b6da50f0-b854-4ded-94ba-7a8e59070d80/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52105 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52105 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 14:14:17,030 INFO httpx correlation_id=97d86394-4083-4e02-b4ce-8bbdece826f2 HTTP Request: GET http://127.0.0.1:65320/config "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:61024 - "GET /api/v1/providers/transparency HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52105 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50294 - "GET /api/v1/providers/models HTTP/1.1" 200 OK
+2026-09-10 14:14:17,225 INFO personal_ai_secretary.shared.settings_store correlation_id=00b377c2-4ee2-4893-983d-6936b8946069 Loaded 7 provider settings from database
+2026-09-10 14:14:17,236 INFO httpx correlation_id=0a6db381-979a-4411-96d2-763831955c90 HTTP Request: GET http://127.0.0.1:65320/config "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:52105 - "GET /api/v1/providers/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57601 - "GET /api/v1/providers/transparency HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58701 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 14:14:17,266 INFO personal_ai_secretary.shared.settings_store correlation_id=f6d8dfa2-7af2-4842-bec5-73338bc52bc7 Loaded 7 provider settings from database
+INFO:     127.0.0.1:50294 - "GET /api/v1/providers/config HTTP/1.1" 200 OK
+2026-09-10 14:14:17,274 INFO personal_ai_secretary.shared.settings_store correlation_id=0e0c3ab5-c42a-4bad-bdad-ae89f32ef22f Loaded 7 provider settings from database
+2026-09-10 14:14:17,963 INFO httpx correlation_id=0e0c3ab5-c42a-4bad-bdad-ae89f32ef22f HTTP Request: GET https://integrate.api.nvidia.com/v1/models "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:50300 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+2026-09-10 14:14:18,417 INFO personal_ai_secretary.providers.factory correlation_id=ae4e9642-0695-431e-8900-253b7292f4fa Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:50294 - "GET /api/v1/sessions/b6da50f0-b854-4ded-94ba-7a8e59070d80/messages HTTP/1.1" 200 OK
+2026-09-10 14:14:18,493 INFO personal_ai_secretary.providers.factory correlation_id=ef4b278d-3056-40a5-be15-c6d03bb303b8 Auto mode: returning OllamaProvider for local inference
+2026-09-10 14:14:18,508 INFO httpx correlation_id=0e0c3ab5-c42a-4bad-bdad-ae89f32ef22f HTTP Request: GET https://integrate.api.nvidia.com/v1/models "HTTP/1.1 200 OK"
+2026-09-10 14:14:18,523 INFO personal_ai_secretary.agents correlation_id=ef4b278d-3056-40a5-be15-c6d03bb303b8 Task classified: chat (goal: Conversational response, no file or tool operations needed.)
+2026-09-10 14:14:18,762 INFO httpx correlation_id=ef4b278d-3056-40a5-be15-c6d03bb303b8 HTTP Request: GET http://127.0.0.1:65320/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 14:14:19,008 INFO httpx correlation_id=ef4b278d-3056-40a5-be15-c6d03bb303b8 HTTP Request: POST http://127.0.0.1:65320/session "HTTP/1.1 200 OK"
+2026-09-10 14:14:19,276 INFO httpx correlation_id=ef4b278d-3056-40a5-be15-c6d03bb303b8 HTTP Request: GET http://127.0.0.1:65320/config "HTTP/1.1 401 Unauthorized"
+INFO:     127.0.0.1:57601 - "DELETE /api/v1/ui/sessions/b6da50f0-b854-4ded-94ba-7a8e59070d80 HTTP/1.1" 204 No Content
+2026-09-10 14:14:19,447 INFO httpx correlation_id=ef4b278d-3056-40a5-be15-c6d03bb303b8 HTTP Request: GET http://127.0.0.1:65320/config/providers "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:57601 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 14:14:20,628 INFO httpx correlation_id=0e0c3ab5-c42a-4bad-bdad-ae89f32ef22f HTTP Request: GET http://127.0.0.1:65320/config "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+2026-09-10 14:14:20,804 INFO httpx correlation_id=0e0c3ab5-c42a-4bad-bdad-ae89f32ef22f HTTP Request: GET http://127.0.0.1:65320/config "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+2026-09-10 14:14:20,815 INFO personal_ai_secretary.shared.settings_store correlation_id=0e0c3ab5-c42a-4bad-bdad-ae89f32ef22f Loaded 7 provider settings from database
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65341 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+2026-09-10 14:14:21,996 INFO httpx correlation_id=ef4b278d-3056-40a5-be15-c6d03bb303b8 HTTP Request: POST http://127.0.0.1:65320/session/ses_f730b0a84ffe5DaVte2IZQlx5A/message "HTTP/1.1 200 OK"
+2026-09-10 14:14:21,998 INFO personal_ai_secretary.agents correlation_id=ef4b278d-3056-40a5-be15-c6d03bb303b8 Agentic loop completed: rounds=1 tool_calls=0 dedup=0 elapsed=3.48s metrics={'provider': 'opencode', 'model': 'big-pickle', 'llm_calls': 1, 'tool_calls': 0, 'deduplicated_calls': 0, 'rounds': 1, 'total_time_s': 3.476, 'avg_llm_time_s': 3.475, 'context_build_time_s': 6e-05, 'context_chars_max': 4587, 'estimated_context_tokens': 1146, 'response_chars_total': 43, 'system_prompt_chars': 4519, 'history_chars': 68, 'tool_results_chars': 0, 'attached_file_chars': 0, 'project_context_chars': 0, 'truncation_applied': False, 'history_truncated_turns': 0, 'summary_used': False, 'command_count': 0, 'command_avg_duration_s': 0.0, 'command_timeout_count': 0, 'command_exit_codes': [], 'command_output_chars': 0, 'command_output_truncated_count': 0, 'workflow_stages': ['completed'], 'workflow_stage_times': [], 'project_discovery_time_s': 0.0, 'project_technologies_detected': [], 'project_files_discovered': 0, 'project_entry_points': 0, 'project_test_locations': 0, 'progressive_read_level': 0, 'progressive_read_time_s': 0.0, 'task_inspection_time_s': 0.0, 'correction_attempts': 0, 'correction_tools_used': [], 'final_outcome': 'chat', 'verification_status': 'pending', 'max_corrections_reached': False, 'state_transitions': ['idle>understanding', 'understanding>planning', 'planning>reading', 'reading>completed'], 'final_task_state': 'completed', 'unproductive_loop_detections': 0, 'backend_directives': 0, 'consecutive_tool_failures': 0, 'duration_budget_exceeded': False, 'latency_classification': 'llm_bound'}
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 422, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 63, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\fastapi\applications.py", line 1163, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\starlette\applications.py", line 96, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\src\personal_ai_secretary\api\app.py", line 323, in correlation_middleware
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\fastapi\routing.py", line 1281, in handle
+    await super().handle(scope, receive, send)
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\starlette\routing.py", line 280, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\fastapi\routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\fastapi\routing.py", line 352, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\src\personal_ai_secretary\api\app.py", line 1255, in send_session_message
+    result = await service.send_message(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\src\personal_ai_secretary\application\service.py", line 431, in send_message
+    result = await self.execute(
+             ^^^^^^^^^^^^^^^^^^^
+        accepted.request_id, user_id, approval_granted, image_attachments or []
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\src\personal_ai_secretary\application\service.py", line 331, in execute
+    await self.session.commit()
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 999, in commit
+    await greenlet_spawn(self.sync_session.commit)
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 203, in greenlet_spawn
+    result = context.switch(value)
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2035, in commit
+    trans.commit(_to_root=True)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "<string>", line 2, in commit
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1316, in commit
+    self._prepare_impl()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "<string>", line 2, in _prepare_impl
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1290, in _prepare_impl
+    self.session.flush()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4353, in flush
+    self._flush(objects)
+    ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4488, in _flush
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4449, in _flush
+    flush_context.execute()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 465, in execute
+    rec.execute(self)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 641, in execute
+    util.preloaded.orm_persistence.save_obj(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.mapper,
+        ^^^^^^^^^^^^
+        uow.states_for_mapper_hierarchy(self.mapper, False, False),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        uow,
+        ^^^^
+    )
+    ^
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 86, in save_obj
+    _emit_update_statements(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        base_mapper,
+        ^^^^^^^^^^^^
+    ...<3 lines>...
+        update,
+        ^^^^^^^
+    )
+    ^
+  File "C:\Users\mriverab\source\repos\Python\personal_ai_secretary\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 949, in _emit_update_statements
+    raise orm_exc.StaleDataError(
+    ...<3 lines>...
+    )
+sqlalchemy.orm.exc.StaleDataError: UPDATE statement on table 'requests' expected to update 1 row(s); 0 were matched.
+INFO:     Started server process [14744]
+INFO:     Waiting for application startup.
+2026-09-10 14:19:41,652 INFO personal_ai_secretary.shared.settings_store correlation_id=- Loaded 7 provider settings from database
+2026-09-10 14:19:41,652 INFO personal_ai_secretary.startup correlation_id=- Loaded persisted provider settings from database
+2026-09-10 14:19:41,653 INFO personal_ai_secretary.providers.factory correlation_id=- Auto mode: returning OllamaProvider for local inference
+2026-09-10 14:19:43,909 INFO personal_ai_secretary.providers.model_manager correlation_id=- ModelManager: initializing provider discovery...
+2026-09-10 14:19:46,249 WARNING personal_ai_secretary.providers.ollama correlation_id=- Ollama warmup failed (non-fatal): All connection attempts failed
+2026-09-10 14:19:51,601 INFO personal_ai_secretary.providers.opencode_server correlation_id=- Managed OpenCode server launching on port 63011 (pid 11060)
+2026-09-10 14:19:53,121 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 200 OK"
+2026-09-10 14:19:53,272 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 200 OK"
+2026-09-10 14:19:53,434 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 14:19:53,929 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:63011/config/providers "HTTP/1.1 200 OK"
+2026-09-10 14:19:53,930 INFO personal_ai_secretary.providers.model_manager correlation_id=- ModelManager: discovered 4 providers, 8 models
+2026-09-10 14:19:53,930 INFO personal_ai_secretary.providers.factory correlation_id=- ModelManager initialized: 8 models across providers
+2026-09-10 14:19:53,930 INFO personal_ai_secretary.providers.model_manager correlation_id=- Routing mode set to automatic
+2026-09-10 14:19:53,930 INFO personal_ai_secretary.providers.model_manager correlation_id=- Selected provider=opencode model=big-pickle
+2026-09-10 14:19:53,930 INFO personal_ai_secretary.startup correlation_id=- Restored routing_mode=automatic provider=opencode model=big-pickle
+2026-09-10 14:19:53,931 INFO personal_ai_secretary.providers.factory correlation_id=- Auto mode: returning OllamaProvider for local inference
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:63016 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+2026-09-10 14:19:54,343 INFO httpx correlation_id=- HTTP Request: GET https://dns.google/resolve?name=google.com "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:63265 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63265 - "GET /static/js/app.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:57917 - "GET /api/v1/providers/models HTTP/1.1" 200 OK
+2026-09-10 14:19:55,046 INFO httpx correlation_id=0fece037-7684-4b6e-af8e-fc0a5e289422 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 200 OK"
+2026-09-10 14:19:55,052 INFO personal_ai_secretary.shared.settings_store correlation_id=720f19f1-5738-4f88-b72a-63c0d85367ac Loaded 7 provider settings from database
+INFO:     127.0.0.1:63265 - "GET /api/v1/providers/transparency HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63016 - "GET /api/v1/providers/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55995 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 14:19:55,085 INFO personal_ai_secretary.shared.settings_store correlation_id=bdd91df7-c67a-4fa3-aed4-f72cb5775f43 Loaded 7 provider settings from database
+INFO:     127.0.0.1:63016 - "GET /api/v1/providers/config HTTP/1.1" 200 OK
+2026-09-10 14:19:55,122 INFO personal_ai_secretary.shared.settings_store correlation_id=79e7cab7-8389-40c4-8761-73a57dfd1392 Loaded 7 provider settings from database
+2026-09-10 14:19:56,782 INFO httpx correlation_id=79e7cab7-8389-40c4-8761-73a57dfd1392 HTTP Request: GET https://integrate.api.nvidia.com/v1/models "HTTP/1.1 200 OK"
+2026-09-10 14:19:57,636 INFO httpx correlation_id=79e7cab7-8389-40c4-8761-73a57dfd1392 HTTP Request: GET https://integrate.api.nvidia.com/v1/models "HTTP/1.1 200 OK"
+2026-09-10 14:19:59,743 INFO httpx correlation_id=79e7cab7-8389-40c4-8761-73a57dfd1392 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 200 OK"
+2026-09-10 14:20:00,366 INFO httpx correlation_id=79e7cab7-8389-40c4-8761-73a57dfd1392 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:55995 - "DELETE /api/v1/ui/sessions/a5f736e0-ab09-45d2-b9d3-0111fd13d879 HTTP/1.1" 204 No Content
+2026-09-10 14:20:00,386 INFO personal_ai_secretary.shared.settings_store correlation_id=79e7cab7-8389-40c4-8761-73a57dfd1392 Loaded 7 provider settings from database
+INFO:     127.0.0.1:63016 - "GET /api/v1/setup/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55995 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55995 - "DELETE /api/v1/ui/sessions/49696003-7819-460b-ae34-6b94889e8e56 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55995 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55995 - "DELETE /api/v1/ui/sessions/108c9b3a-4cfb-4dce-a393-260a8925cc42 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55995 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 14:20:19,467 INFO personal_ai_secretary.providers.factory correlation_id=5e394b50-de30-47c0-b3d4-4e15bf268f90 Auto mode: returning OllamaProvider for local inference
+2026-09-10 14:20:19,533 INFO personal_ai_secretary.agents correlation_id=5e394b50-de30-47c0-b3d4-4e15bf268f90 Task classified: chat (goal: Conversational response, no file or tool operations needed.)
+2026-09-10 14:20:20,100 INFO httpx correlation_id=5e394b50-de30-47c0-b3d4-4e15bf268f90 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 14:20:20,498 INFO httpx correlation_id=5e394b50-de30-47c0-b3d4-4e15bf268f90 HTTP Request: POST http://127.0.0.1:63011/session "HTTP/1.1 200 OK"
+2026-09-10 14:20:20,939 INFO httpx correlation_id=5e394b50-de30-47c0-b3d4-4e15bf268f90 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 14:20:21,623 INFO httpx correlation_id=5e394b50-de30-47c0-b3d4-4e15bf268f90 HTTP Request: GET http://127.0.0.1:63011/config/providers "HTTP/1.1 200 OK"
+2026-09-10 14:20:27,840 INFO httpx correlation_id=5e394b50-de30-47c0-b3d4-4e15bf268f90 HTTP Request: POST http://127.0.0.1:63011/session/ses_f73058678ffexaySjASr1qWYwN/message "HTTP/1.1 200 OK"
+2026-09-10 14:20:27,846 INFO personal_ai_secretary.agents correlation_id=5e394b50-de30-47c0-b3d4-4e15bf268f90 Agentic loop completed: rounds=1 tool_calls=0 dedup=0 elapsed=8.31s metrics={'provider': 'opencode', 'model': 'big-pickle', 'llm_calls': 1, 'tool_calls': 0, 'deduplicated_calls': 0, 'rounds': 1, 'total_time_s': 8.314, 'avg_llm_time_s': 8.311, 'context_build_time_s': 4.5e-05, 'context_chars_max': 4420, 'estimated_context_tokens': 1105, 'response_chars_total': 53, 'system_prompt_chars': 4420, 'history_chars': 0, 'tool_results_chars': 0, 'attached_file_chars': 0, 'project_context_chars': 0, 'truncation_applied': False, 'history_truncated_turns': 0, 'summary_used': False, 'command_count': 0, 'command_avg_duration_s': 0.0, 'command_timeout_count': 0, 'command_exit_codes': [], 'command_output_chars': 0, 'command_output_truncated_count': 0, 'workflow_stages': ['completed'], 'workflow_stage_times': [], 'project_discovery_time_s': 0.0, 'project_technologies_detected': [], 'project_files_discovered': 0, 'project_entry_points': 0, 'project_test_locations': 0, 'progressive_read_level': 0, 'progressive_read_time_s': 0.0, 'task_inspection_time_s': 0.0, 'correction_attempts': 0, 'correction_tools_used': [], 'final_outcome': 'chat', 'verification_status': 'pending', 'max_corrections_reached': False, 'state_transitions': ['idle>understanding', 'understanding>planning', 'planning>reading', 'reading>completed'], 'final_task_state': 'completed', 'unproductive_loop_detections': 0, 'backend_directives': 0, 'consecutive_tool_failures': 0, 'duration_budget_exceeded': False, 'latency_classification': 'llm_bound'}
+INFO:     127.0.0.1:59056 - "POST /api/v1/sessions/7b578a8d-585b-4c1d-9d67-1f7362f83d43/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59056 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59056 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 14:20:40,053 INFO personal_ai_secretary.providers.factory correlation_id=6eea370f-97f4-44e1-81ff-8140ca7a3e2d Auto mode: returning OllamaProvider for local inference
+2026-09-10 14:20:40,087 INFO personal_ai_secretary.agents correlation_id=6eea370f-97f4-44e1-81ff-8140ca7a3e2d Task classified: chat (goal: Conversational response, no file or tool operations needed.)
+2026-09-10 14:20:40,521 INFO httpx correlation_id=6eea370f-97f4-44e1-81ff-8140ca7a3e2d HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 14:20:41,078 INFO httpx correlation_id=6eea370f-97f4-44e1-81ff-8140ca7a3e2d HTTP Request: POST http://127.0.0.1:63011/session "HTTP/1.1 200 OK"
+2026-09-10 14:20:41,703 INFO httpx correlation_id=6eea370f-97f4-44e1-81ff-8140ca7a3e2d HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 14:20:42,228 INFO httpx correlation_id=6eea370f-97f4-44e1-81ff-8140ca7a3e2d HTTP Request: GET http://127.0.0.1:63011/config/providers "HTTP/1.1 200 OK"
+2026-09-10 14:20:48,194 INFO httpx correlation_id=6eea370f-97f4-44e1-81ff-8140ca7a3e2d HTTP Request: POST http://127.0.0.1:63011/session/ses_f73053610ffeZZbw1pPG79Rlo5/message "HTTP/1.1 200 OK"
+2026-09-10 14:20:48,198 INFO personal_ai_secretary.agents correlation_id=6eea370f-97f4-44e1-81ff-8140ca7a3e2d Agentic loop completed: rounds=1 tool_calls=0 dedup=0 elapsed=8.11s metrics={'provider': 'opencode', 'model': 'big-pickle', 'llm_calls': 1, 'tool_calls': 0, 'deduplicated_calls': 0, 'rounds': 1, 'total_time_s': 8.111, 'avg_llm_time_s': 8.11, 'context_build_time_s': 6e-05, 'context_chars_max': 4609, 'estimated_context_tokens': 1152, 'response_chars_total': 532, 'system_prompt_chars': 4530, 'history_chars': 79, 'tool_results_chars': 0, 'attached_file_chars': 0, 'project_context_chars': 0, 'truncation_applied': False, 'history_truncated_turns': 0, 'summary_used': False, 'command_count': 0, 'command_avg_duration_s': 0.0, 'command_timeout_count': 0, 'command_exit_codes': [], 'command_output_chars': 0, 'command_output_truncated_count': 0, 'workflow_stages': ['completed'], 'workflow_stage_times': [], 'project_discovery_time_s': 0.0, 'project_technologies_detected': [], 'project_files_discovered': 0, 'project_entry_points': 0, 'project_test_locations': 0, 'progressive_read_level': 0, 'progressive_read_time_s': 0.0, 'task_inspection_time_s': 0.0, 'correction_attempts': 0, 'correction_tools_used': [], 'final_outcome': 'chat', 'verification_status': 'pending', 'max_corrections_reached': False, 'state_transitions': ['idle>understanding', 'understanding>planning', 'planning>reading', 'reading>completed'], 'final_task_state': 'completed', 'unproductive_loop_detections': 0, 'backend_directives': 0, 'consecutive_tool_failures': 0, 'duration_budget_exceeded': False, 'latency_classification': 'llm_bound'}
+INFO:     127.0.0.1:58609 - "POST /api/v1/sessions/7b578a8d-585b-4c1d-9d67-1f7362f83d43/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58609 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 14:21:01,537 INFO personal_ai_secretary.providers.factory correlation_id=d6544607-f3d0-475b-9e14-678e44c856b8 Auto mode: returning OllamaProvider for local inference
+2026-09-10 14:21:01,576 INFO personal_ai_secretary.agents correlation_id=d6544607-f3d0-475b-9e14-678e44c856b8 Task classified: chat (goal: Conversational response, no file or tool operations needed.)
+2026-09-10 14:21:01,983 INFO httpx correlation_id=d6544607-f3d0-475b-9e14-678e44c856b8 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 14:21:02,567 INFO httpx correlation_id=d6544607-f3d0-475b-9e14-678e44c856b8 HTTP Request: POST http://127.0.0.1:63011/session "HTTP/1.1 200 OK"
+2026-09-10 14:21:03,147 INFO httpx correlation_id=d6544607-f3d0-475b-9e14-678e44c856b8 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 14:21:03,730 INFO httpx correlation_id=d6544607-f3d0-475b-9e14-678e44c856b8 HTTP Request: GET http://127.0.0.1:63011/config/providers "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/10ce54b6-96c9-4a53-9537-dc2d5f27b663 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/fb3c58a4-f31a-470a-ac80-6f312c4170c3 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/3039aafa-c3e0-43b1-a234-a2609554857f HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 14:21:50,337 INFO httpx correlation_id=d6544607-f3d0-475b-9e14-678e44c856b8 HTTP Request: POST http://127.0.0.1:63011/session/ses_f7304e21fffe7KIe0po4wutgVi/message "HTTP/1.1 200 OK"
+2026-09-10 14:21:50,342 INFO personal_ai_secretary.agents correlation_id=d6544607-f3d0-475b-9e14-678e44c856b8 Agentic loop completed: rounds=1 tool_calls=0 dedup=0 elapsed=48.77s metrics={'provider': 'opencode', 'model': 'big-pickle', 'llm_calls': 1, 'tool_calls': 0, 'deduplicated_calls': 0, 'rounds': 1, 'total_time_s': 48.767, 'avg_llm_time_s': 48.765, 'context_build_time_s': 0.000103, 'context_chars_max': 5729, 'estimated_context_tokens': 1432, 'response_chars_total': 44, 'system_prompt_chars': 5100, 'history_chars': 629, 'tool_results_chars': 0, 'attached_file_chars': 0, 'project_context_chars': 0, 'truncation_applied': False, 'history_truncated_turns': 0, 'summary_used': False, 'command_count': 0, 'command_avg_duration_s': 0.0, 'command_timeout_count': 0, 'command_exit_codes': [], 'command_output_chars': 0, 'command_output_truncated_count': 0, 'workflow_stages': ['completed'], 'workflow_stage_times': [], 'project_discovery_time_s': 0.0, 'project_technologies_detected': [], 'project_files_discovered': 0, 'project_entry_points': 0, 'project_test_locations': 0, 'progressive_read_level': 0, 'progressive_read_time_s': 0.0, 'task_inspection_time_s': 0.0, 'correction_attempts': 0, 'correction_tools_used': [], 'final_outcome': 'chat', 'verification_status': 'pending', 'max_corrections_reached': False, 'state_transitions': ['idle>understanding', 'understanding>planning', 'planning>reading', 'reading>completed'], 'final_task_state': 'completed', 'unproductive_loop_detections': 0, 'backend_directives': 0, 'consecutive_tool_failures': 0, 'duration_budget_exceeded': False, 'latency_classification': 'llm_bound'}
+INFO:     127.0.0.1:64507 - "POST /api/v1/sessions/7b578a8d-585b-4c1d-9d67-1f7362f83d43/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64507 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64507 - "DELETE /api/v1/ui/sessions/00000000-0000-0000-0000-000000000002 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:64507 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54895 - "GET /static/js/app.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:63007 - "GET /api/v1/providers/models HTTP/1.1" 200 OK
+2026-09-10 14:51:35,924 INFO personal_ai_secretary.shared.settings_store correlation_id=e06890b5-2cc7-4227-ac28-9522050f9f27 Loaded 7 provider settings from database
+INFO:     127.0.0.1:54895 - "GET /api/v1/providers/config HTTP/1.1" 200 OK
+2026-09-10 14:51:35,931 INFO httpx correlation_id=2b6d8f45-1f62-443e-973b-5bafb7689d9b HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:52481 - "GET /api/v1/providers/transparency HTTP/1.1" 200 OK
+2026-09-10 14:51:35,941 INFO personal_ai_secretary.shared.settings_store correlation_id=83419776-369e-4200-95e9-c61bdf127f3c Loaded 7 provider settings from database
+INFO:     127.0.0.1:63004 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54895 - "GET /api/v1/providers/config HTTP/1.1" 200 OK
+2026-09-10 14:51:36,005 INFO personal_ai_secretary.shared.settings_store correlation_id=a8b53899-2e4a-458b-a2fa-7c0040c43baf Loaded 7 provider settings from database
+2026-09-10 14:51:37,839 INFO httpx correlation_id=a8b53899-2e4a-458b-a2fa-7c0040c43baf HTTP Request: GET https://integrate.api.nvidia.com/v1/models "HTTP/1.1 200 OK"
+2026-09-10 14:51:38,602 INFO httpx correlation_id=a8b53899-2e4a-458b-a2fa-7c0040c43baf HTTP Request: GET https://integrate.api.nvidia.com/v1/models "HTTP/1.1 200 OK"
+2026-09-10 14:51:40,812 INFO httpx correlation_id=a8b53899-2e4a-458b-a2fa-7c0040c43baf HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 200 OK"
+2026-09-10 14:51:41,343 INFO httpx correlation_id=a8b53899-2e4a-458b-a2fa-7c0040c43baf HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 200 OK"
+2026-09-10 14:51:41,355 INFO personal_ai_secretary.shared.settings_store correlation_id=a8b53899-2e4a-458b-a2fa-7c0040c43baf Loaded 7 provider settings from database
+INFO:     127.0.0.1:54895 - "GET /api/v1/setup/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60434 - "DELETE /api/v1/ui/sessions/a87e64e0-e179-4f96-9413-edda65629663 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:60434 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60434 - "DELETE /api/v1/ui/sessions/1b019c1e-7e65-46eb-9979-24be0c3c4017 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:60434 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60434 - "DELETE /api/v1/ui/sessions/00000000-0000-0000-0000-000000000001 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:60434 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60434 - "DELETE /api/v1/ui/sessions/00000000-0000-0000-0000-00000000aa01 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:60434 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60434 - "DELETE /api/v1/ui/sessions/de7b67fb-6c58-4d41-a87b-3d124a4ddfce HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:60434 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60434 - "DELETE /api/v1/ui/sessions/c8d8209a-a4b4-409d-8fbe-8157fb70c53c HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:60434 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60434 - "DELETE /api/v1/ui/sessions/c228e10d-4b96-4376-b687-eb3004f3f85d HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:60434 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 14:53:55,436 INFO personal_ai_secretary.providers.factory correlation_id=c6e65c48-d6b4-4c21-b63f-60a28b2994ad Auto mode: returning OllamaProvider for local inference
+2026-09-10 14:53:55,475 INFO personal_ai_secretary.agents correlation_id=c6e65c48-d6b4-4c21-b63f-60a28b2994ad Task classified: chat (goal: Conversational response, no file or tool operations needed.)
+2026-09-10 14:53:55,871 INFO httpx correlation_id=c6e65c48-d6b4-4c21-b63f-60a28b2994ad HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 14:53:56,331 INFO httpx correlation_id=c6e65c48-d6b4-4c21-b63f-60a28b2994ad HTTP Request: POST http://127.0.0.1:63011/session "HTTP/1.1 200 OK"
+2026-09-10 14:53:56,748 INFO httpx correlation_id=c6e65c48-d6b4-4c21-b63f-60a28b2994ad HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 14:53:57,214 INFO httpx correlation_id=c6e65c48-d6b4-4c21-b63f-60a28b2994ad HTTP Request: GET http://127.0.0.1:63011/config/providers "HTTP/1.1 200 OK"
+2026-09-10 14:54:02,789 INFO httpx correlation_id=c6e65c48-d6b4-4c21-b63f-60a28b2994ad HTTP Request: POST http://127.0.0.1:63011/session/ses_f72e6c422ffeKXMIokPmhd90C2/message "HTTP/1.1 200 OK"
+2026-09-10 14:54:02,791 INFO personal_ai_secretary.agents correlation_id=c6e65c48-d6b4-4c21-b63f-60a28b2994ad Agentic loop completed: rounds=1 tool_calls=0 dedup=0 elapsed=7.32s metrics={'provider': 'opencode', 'model': 'big-pickle', 'llm_calls': 1, 'tool_calls': 0, 'deduplicated_calls': 0, 'rounds': 1, 'total_time_s': 7.318, 'avg_llm_time_s': 7.316, 'context_build_time_s': 2.2e-05, 'context_chars_max': 5180, 'estimated_context_tokens': 1295, 'response_chars_total': 434, 'system_prompt_chars': 5180, 'history_chars': 0, 'tool_results_chars': 0, 'attached_file_chars': 0, 'project_context_chars': 0, 'truncation_applied': False, 'history_truncated_turns': 0, 'summary_used': False, 'command_count': 0, 'command_avg_duration_s': 0.0, 'command_timeout_count': 0, 'command_exit_codes': [], 'command_output_chars': 0, 'command_output_truncated_count': 0, 'workflow_stages': ['completed'], 'workflow_stage_times': [], 'project_discovery_time_s': 0.0, 'project_technologies_detected': [], 'project_files_discovered': 0, 'project_entry_points': 0, 'project_test_locations': 0, 'progressive_read_level': 0, 'progressive_read_time_s': 0.0, 'task_inspection_time_s': 0.0, 'correction_attempts': 0, 'correction_tools_used': [], 'final_outcome': 'chat', 'verification_status': 'pending', 'max_corrections_reached': False, 'state_transitions': ['idle>understanding', 'understanding>planning', 'planning>reading', 'reading>completed'], 'final_task_state': 'completed', 'unproductive_loop_detections': 0, 'backend_directives': 0, 'consecutive_tool_failures': 0, 'duration_budget_exceeded': False, 'latency_classification': 'llm_bound'}
+INFO:     127.0.0.1:60422 - "POST /api/v1/sessions/452f325b-4133-4d13-81f2-ec56426cd121/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60422 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60422 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51684 - "GET /api/v1/providers/models HTTP/1.1" 200 OK
+2026-09-10 15:00:43,293 INFO personal_ai_secretary.shared.settings_store correlation_id=b1ff08a6-ab43-4d93-94d1-a14009c8937e Loaded 7 provider settings from database
+INFO:     127.0.0.1:54785 - "GET /api/v1/providers/config HTTP/1.1" 200 OK
+2026-09-10 15:00:43,298 INFO httpx correlation_id=1d6a9528-3639-445d-8f66-52660a887608 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:51207 - "GET /api/v1/providers/transparency HTTP/1.1" 200 OK
+2026-09-10 15:00:43,303 INFO personal_ai_secretary.shared.settings_store correlation_id=b3728c80-ec73-422e-9469-551f07dd4cac Loaded 7 provider settings from database
+INFO:     127.0.0.1:54785 - "GET /api/v1/providers/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64496 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:00:43,353 INFO personal_ai_secretary.shared.settings_store correlation_id=921c802b-c963-484a-8fad-0340e8062b91 Loaded 7 provider settings from database
+2026-09-10 15:00:44,914 INFO httpx correlation_id=921c802b-c963-484a-8fad-0340e8062b91 HTTP Request: GET https://integrate.api.nvidia.com/v1/models "HTTP/1.1 200 OK"
+2026-09-10 15:00:45,638 INFO httpx correlation_id=921c802b-c963-484a-8fad-0340e8062b91 HTTP Request: GET https://integrate.api.nvidia.com/v1/models "HTTP/1.1 200 OK"
+2026-09-10 15:00:47,720 INFO httpx correlation_id=921c802b-c963-484a-8fad-0340e8062b91 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 200 OK"
+2026-09-10 15:00:48,234 INFO httpx correlation_id=921c802b-c963-484a-8fad-0340e8062b91 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 200 OK"
+2026-09-10 15:00:48,240 INFO personal_ai_secretary.shared.settings_store correlation_id=921c802b-c963-484a-8fad-0340e8062b91 Loaded 7 provider settings from database
+INFO:     127.0.0.1:64496 - "GET /api/v1/setup/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64496 - "DELETE /api/v1/ui/sessions/b9842cd0-6677-43c1-bdc3-74fce3d03537 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:64496 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64496 - "DELETE /api/v1/ui/sessions/25a867f1-4248-43bc-a4a1-b3d5e0c5cbf4 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:64496 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56423 - "DELETE /api/v1/ui/sessions/d98f6632-2c65-4f52-ab03-2f045570f3f8 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56423 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56423 - "DELETE /api/v1/ui/sessions/ec7135df-13e1-4203-af62-07aa8d1da60b HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56423 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56423 - "DELETE /api/v1/ui/sessions/3d3575f7-41cd-41c7-b0f8-ced89a936954 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56423 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56423 - "DELETE /api/v1/ui/sessions/977139e0-41b4-4c83-b093-7e0a125f1891 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56423 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56423 - "DELETE /api/v1/ui/sessions/b1877303-d56f-493a-a2da-d4c2eb93f111 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56423 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56423 - "DELETE /api/v1/ui/sessions/bbd569e5-b107-4271-82ab-1e85d20a0c67 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56423 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56423 - "DELETE /api/v1/ui/sessions/47062e7f-8da7-4b23-936e-68e6ace785a9 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56423 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56423 - "DELETE /api/v1/ui/sessions/06e65d31-248f-45e4-bbcf-d6f61f7aaf7c HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56423 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56423 - "DELETE /api/v1/ui/sessions/ce992a36-d3f7-41fc-8004-01fb1e9547c2 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56423 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56423 - "DELETE /api/v1/ui/sessions/8e6bdd13-0a2d-41e0-ab52-d3ce55038144 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56423 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56423 - "DELETE /api/v1/ui/sessions/ad31112b-a23a-40fa-ae47-bb8009096e20 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56423 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56423 - "DELETE /api/v1/ui/sessions/e3b1acfa-81b0-4723-9275-1e1c0f30de03 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56423 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56423 - "DELETE /api/v1/ui/sessions/d13ab804-f082-4c53-ba5e-fa80d2089f77 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56423 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56423 - "DELETE /api/v1/ui/sessions/f465ebaa-08e0-43bc-bcc5-d2879977bca6 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56423 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56423 - "DELETE /api/v1/ui/sessions/d0531bc4-51de-46d2-bf41-949cf42f1d62 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56423 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56423 - "DELETE /api/v1/ui/sessions/a5898222-ec1d-48fe-b00d-01d17a08f1ed HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56423 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56423 - "DELETE /api/v1/ui/sessions/4aaec39a-12b9-47e2-bc85-51f6910a8267 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56423 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56423 - "DELETE /api/v1/ui/sessions/d8dd474b-b93d-424f-b56d-3240d9fc9287 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56423 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:03:33,068 INFO personal_ai_secretary.providers.factory correlation_id=5328e76a-5a07-4c53-abfc-c881781d0c53 Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:56423 - "GET /api/v1/sessions/89dc1ea2-54cc-4fcc-a15d-c2e9cbd907ab/messages HTTP/1.1" 200 OK
+2026-09-10 15:03:41,802 INFO personal_ai_secretary.providers.factory correlation_id=5b5adda2-8890-4f49-b76a-174aa5ca9613 Auto mode: returning OllamaProvider for local inference
+2026-09-10 15:03:41,841 INFO personal_ai_secretary.agents correlation_id=5b5adda2-8890-4f49-b76a-174aa5ca9613 Task classified: chat (goal: Conversational response, no file or tool operations needed.)
+2026-09-10 15:03:42,332 INFO httpx correlation_id=5b5adda2-8890-4f49-b76a-174aa5ca9613 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:03:43,008 INFO httpx correlation_id=5b5adda2-8890-4f49-b76a-174aa5ca9613 HTTP Request: POST http://127.0.0.1:63011/session "HTTP/1.1 200 OK"
+2026-09-10 15:03:43,633 INFO httpx correlation_id=5b5adda2-8890-4f49-b76a-174aa5ca9613 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:03:44,278 INFO httpx correlation_id=5b5adda2-8890-4f49-b76a-174aa5ca9613 HTTP Request: GET http://127.0.0.1:63011/config/providers "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:57019 - "DELETE /api/v1/ui/sessions/f0341c72-f6f5-4c91-bfa4-e68879d31ac4 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57019 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:03:53,834 INFO httpx correlation_id=5b5adda2-8890-4f49-b76a-174aa5ca9613 HTTP Request: POST http://127.0.0.1:63011/session/ses_f72ddd06cffealNevgr7RhuTzK/message "HTTP/1.1 200 OK"
+2026-09-10 15:03:53,840 INFO personal_ai_secretary.agents correlation_id=5b5adda2-8890-4f49-b76a-174aa5ca9613 Agentic loop completed: rounds=1 tool_calls=0 dedup=0 elapsed=12.00s metrics={'provider': 'opencode', 'model': 'big-pickle', 'llm_calls': 1, 'tool_calls': 0, 'deduplicated_calls': 0, 'rounds': 1, 'total_time_s': 11.999, 'avg_llm_time_s': 11.998, 'context_build_time_s': 6.7e-05, 'context_chars_max': 6508, 'estimated_context_tokens': 1627, 'response_chars_total': 2, 'system_prompt_chars': 6228, 'history_chars': 280, 'tool_results_chars': 0, 'attached_file_chars': 0, 'project_context_chars': 0, 'truncation_applied': False, 'history_truncated_turns': 0, 'summary_used': False, 'command_count': 0, 'command_avg_duration_s': 0.0, 'command_timeout_count': 0, 'command_exit_codes': [], 'command_output_chars': 0, 'command_output_truncated_count': 0, 'workflow_stages': ['completed'], 'workflow_stage_times': [], 'project_discovery_time_s': 0.0, 'project_technologies_detected': [], 'project_files_discovered': 0, 'project_entry_points': 0, 'project_test_locations': 0, 'progressive_read_level': 0, 'progressive_read_time_s': 0.0, 'task_inspection_time_s': 0.0, 'correction_attempts': 0, 'correction_tools_used': [], 'final_outcome': 'chat', 'verification_status': 'pending', 'max_corrections_reached': False, 'state_transitions': ['idle>understanding', 'understanding>planning', 'planning>reading', 'reading>completed'], 'final_task_state': 'completed', 'unproductive_loop_detections': 0, 'backend_directives': 0, 'consecutive_tool_failures': 0, 'duration_budget_exceeded': False, 'latency_classification': 'llm_bound'}
+INFO:     127.0.0.1:56219 - "POST /api/v1/sessions/89dc1ea2-54cc-4fcc-a15d-c2e9cbd907ab/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56219 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:04:25,515 INFO personal_ai_secretary.providers.factory correlation_id=e2cd98fa-e32c-4e82-a2dc-064c1c5e1579 Auto mode: returning OllamaProvider for local inference
+2026-09-10 15:04:25,603 INFO personal_ai_secretary.agents correlation_id=e2cd98fa-e32c-4e82-a2dc-064c1c5e1579 Task classified: chat (goal: Conversational response, no file or tool operations needed.)
+2026-09-10 15:04:26,521 INFO httpx correlation_id=e2cd98fa-e32c-4e82-a2dc-064c1c5e1579 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:04:27,432 INFO httpx correlation_id=e2cd98fa-e32c-4e82-a2dc-064c1c5e1579 HTTP Request: POST http://127.0.0.1:63011/session "HTTP/1.1 200 OK"
+2026-09-10 15:04:28,284 INFO httpx correlation_id=e2cd98fa-e32c-4e82-a2dc-064c1c5e1579 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:04:29,196 INFO httpx correlation_id=e2cd98fa-e32c-4e82-a2dc-064c1c5e1579 HTTP Request: GET http://127.0.0.1:63011/config/providers "HTTP/1.1 200 OK"
+2026-09-10 15:04:36,469 INFO httpx correlation_id=e2cd98fa-e32c-4e82-a2dc-064c1c5e1579 HTTP Request: POST http://127.0.0.1:63011/session/ses_f72dd22e4ffe3nLE2dNKHiP267/message "HTTP/1.1 200 OK"
+2026-09-10 15:04:36,475 INFO personal_ai_secretary.agents correlation_id=e2cd98fa-e32c-4e82-a2dc-064c1c5e1579 Agentic loop completed: rounds=1 tool_calls=0 dedup=0 elapsed=10.87s metrics={'provider': 'opencode', 'model': 'big-pickle', 'llm_calls': 1, 'tool_calls': 0, 'deduplicated_calls': 0, 'rounds': 1, 'total_time_s': 10.873, 'avg_llm_time_s': 10.87, 'context_build_time_s': 0.000165, 'context_chars_max': 6582, 'estimated_context_tokens': 1645, 'response_chars_total': 6, 'system_prompt_chars': 6275, 'history_chars': 307, 'tool_results_chars': 0, 'attached_file_chars': 0, 'project_context_chars': 0, 'truncation_applied': False, 'history_truncated_turns': 0, 'summary_used': False, 'command_count': 0, 'command_avg_duration_s': 0.0, 'command_timeout_count': 0, 'command_exit_codes': [], 'command_output_chars': 0, 'command_output_truncated_count': 0, 'workflow_stages': ['completed'], 'workflow_stage_times': [], 'project_discovery_time_s': 0.0, 'project_technologies_detected': [], 'project_files_discovered': 0, 'project_entry_points': 0, 'project_test_locations': 0, 'progressive_read_level': 0, 'progressive_read_time_s': 0.0, 'task_inspection_time_s': 0.0, 'correction_attempts': 0, 'correction_tools_used': [], 'final_outcome': 'chat', 'verification_status': 'pending', 'max_corrections_reached': False, 'state_transitions': ['idle>understanding', 'understanding>planning', 'planning>reading', 'reading>completed'], 'final_task_state': 'completed', 'unproductive_loop_detections': 0, 'backend_directives': 0, 'consecutive_tool_failures': 0, 'duration_budget_exceeded': False, 'latency_classification': 'llm_bound'}
+INFO:     127.0.0.1:58500 - "POST /api/v1/sessions/89dc1ea2-54cc-4fcc-a15d-c2e9cbd907ab/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58500 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58307 - "DELETE /api/v1/ui/sessions/d0498b78-6f31-4352-999d-49ea668dc514 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:58307 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58307 - "DELETE /api/v1/ui/sessions/779e13b0-dd4d-42c8-b573-3634ca804078 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:58307 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58307 - "DELETE /api/v1/ui/sessions/c8838f41-5e4f-4c22-917b-d1b6405e840d HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:58307 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:06:09,834 INFO personal_ai_secretary.providers.factory correlation_id=e730bc8d-6215-4251-a702-10901d3f89e8 Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:58307 - "GET /api/v1/sessions/8e6fddf0-1c46-4a1c-9770-426e24f6e328/messages HTTP/1.1" 200 OK
+2026-09-10 15:06:12,888 INFO personal_ai_secretary.providers.factory correlation_id=65b3cbec-51ed-4718-8be0-4189f34e6c94 Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:58307 - "GET /api/v1/sessions/c0e7914d-c445-4567-a3eb-baa80f1ef630/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63004 - "DELETE /api/v1/ui/sessions/232d9552-26d9-4bd4-a7b2-8888004b88f9 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63004 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63004 - "DELETE /api/v1/ui/sessions/6f1a0b6e-ff83-4049-bec3-9b072b3fbf9f HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63004 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63004 - "DELETE /api/v1/ui/sessions/acfaac9a-8a98-4c93-8480-9ee1bfcc3d9e HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63004 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63004 - "DELETE /api/v1/ui/sessions/16b66b37-c1d6-4de6-8a03-2e47b37799ad HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63004 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63004 - "DELETE /api/v1/ui/sessions/a9332115-fdc4-4390-9321-0f92af9ea2ba HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63004 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:06:31,898 INFO personal_ai_secretary.providers.factory correlation_id=fe46d996-4391-430e-abaf-c30f36679f69 Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:63004 - "GET /api/v1/sessions/e3a355b2-e681-4346-8383-4799918a3f4d/messages HTTP/1.1" 200 OK
+2026-09-10 15:06:56,556 INFO personal_ai_secretary.providers.factory correlation_id=0d02f966-9fd5-4f4e-8f51-2b73f0767ccf Auto mode: returning OllamaProvider for local inference
+2026-09-10 15:06:56,595 INFO personal_ai_secretary.agents correlation_id=0d02f966-9fd5-4f4e-8f51-2b73f0767ccf Task classified: chat (goal: Conversational response, no file or tool operations needed.)
+2026-09-10 15:06:56,878 INFO httpx correlation_id=0d02f966-9fd5-4f4e-8f51-2b73f0767ccf HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:06:57,313 INFO httpx correlation_id=0d02f966-9fd5-4f4e-8f51-2b73f0767ccf HTTP Request: POST http://127.0.0.1:63011/session "HTTP/1.1 200 OK"
+2026-09-10 15:06:58,162 INFO httpx correlation_id=0d02f966-9fd5-4f4e-8f51-2b73f0767ccf HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:06:58,939 INFO httpx correlation_id=0d02f966-9fd5-4f4e-8f51-2b73f0767ccf HTTP Request: GET http://127.0.0.1:63011/config/providers "HTTP/1.1 200 OK"
+2026-09-10 15:07:07,552 INFO httpx correlation_id=0d02f966-9fd5-4f4e-8f51-2b73f0767ccf HTTP Request: POST http://127.0.0.1:63011/session/ses_f72dad966ffet1ilMOyJ3UHXNX/message "HTTP/1.1 200 OK"
+2026-09-10 15:07:07,557 INFO personal_ai_secretary.agents correlation_id=0d02f966-9fd5-4f4e-8f51-2b73f0767ccf Agentic loop completed: rounds=1 tool_calls=0 dedup=0 elapsed=10.96s metrics={'provider': 'opencode', 'model': 'big-pickle', 'llm_calls': 1, 'tool_calls': 0, 'deduplicated_calls': 0, 'rounds': 1, 'total_time_s': 10.963, 'avg_llm_time_s': 10.961, 'context_build_time_s': 7.2e-05, 'context_chars_max': 6423, 'estimated_context_tokens': 1605, 'response_chars_total': 69, 'system_prompt_chars': 6239, 'history_chars': 184, 'tool_results_chars': 0, 'attached_file_chars': 0, 'project_context_chars': 0, 'truncation_applied': False, 'history_truncated_turns': 0, 'summary_used': False, 'command_count': 0, 'command_avg_duration_s': 0.0, 'command_timeout_count': 0, 'command_exit_codes': [], 'command_output_chars': 0, 'command_output_truncated_count': 0, 'workflow_stages': ['completed'], 'workflow_stage_times': [], 'project_discovery_time_s': 0.0, 'project_technologies_detected': [], 'project_files_discovered': 0, 'project_entry_points': 0, 'project_test_locations': 0, 'progressive_read_level': 0, 'progressive_read_time_s': 0.0, 'task_inspection_time_s': 0.0, 'correction_attempts': 0, 'correction_tools_used': [], 'final_outcome': 'chat', 'verification_status': 'pending', 'max_corrections_reached': False, 'state_transitions': ['idle>understanding', 'understanding>planning', 'planning>reading', 'reading>completed'], 'final_task_state': 'completed', 'unproductive_loop_detections': 0, 'backend_directives': 0, 'consecutive_tool_failures': 0, 'duration_budget_exceeded': False, 'latency_classification': 'llm_bound'}
+INFO:     127.0.0.1:58766 - "POST /api/v1/sessions/e3a355b2-e681-4346-8383-4799918a3f4d/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58766 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:07:52,123 INFO personal_ai_secretary.providers.factory correlation_id=d5df4428-7b8f-406c-b144-fe2a0303fefd Auto mode: returning OllamaProvider for local inference
+2026-09-10 15:07:52,225 INFO personal_ai_secretary.agents correlation_id=d5df4428-7b8f-406c-b144-fe2a0303fefd Task classified: chat (goal: Conversational response, no file or tool operations needed.)
+2026-09-10 15:07:53,109 INFO httpx correlation_id=d5df4428-7b8f-406c-b144-fe2a0303fefd HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:07:53,991 INFO httpx correlation_id=d5df4428-7b8f-406c-b144-fe2a0303fefd HTTP Request: POST http://127.0.0.1:63011/session "HTTP/1.1 200 OK"
+2026-09-10 15:07:54,917 INFO httpx correlation_id=d5df4428-7b8f-406c-b144-fe2a0303fefd HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:07:55,798 INFO httpx correlation_id=d5df4428-7b8f-406c-b144-fe2a0303fefd HTTP Request: GET http://127.0.0.1:63011/config/providers "HTTP/1.1 200 OK"
+2026-09-10 15:08:18,537 INFO httpx correlation_id=d5df4428-7b8f-406c-b144-fe2a0303fefd HTTP Request: POST http://127.0.0.1:63011/session/ses_f72d9fc02ffeNm0PU2bbOOOdUg/message "HTTP/1.1 200 OK"
+2026-09-10 15:08:18,544 INFO personal_ai_secretary.agents correlation_id=d5df4428-7b8f-406c-b144-fe2a0303fefd Agentic loop completed: rounds=1 tool_calls=0 dedup=0 elapsed=26.32s metrics={'provider': 'opencode', 'model': 'big-pickle', 'llm_calls': 1, 'tool_calls': 0, 'deduplicated_calls': 0, 'rounds': 1, 'total_time_s': 26.321, 'avg_llm_time_s': 26.317, 'context_build_time_s': 0.000151, 'context_chars_max': 6055, 'estimated_context_tokens': 1513, 'response_chars_total': 645, 'system_prompt_chars': 5780, 'history_chars': 275, 'tool_results_chars': 0, 'attached_file_chars': 0, 'project_context_chars': 0, 'truncation_applied': False, 'history_truncated_turns': 0, 'summary_used': False, 'command_count': 0, 'command_avg_duration_s': 0.0, 'command_timeout_count': 0, 'command_exit_codes': [], 'command_output_chars': 0, 'command_output_truncated_count': 0, 'workflow_stages': ['completed'], 'workflow_stage_times': [], 'project_discovery_time_s': 0.0, 'project_technologies_detected': [], 'project_files_discovered': 0, 'project_entry_points': 0, 'project_test_locations': 0, 'progressive_read_level': 0, 'progressive_read_time_s': 0.0, 'task_inspection_time_s': 0.0, 'correction_attempts': 0, 'correction_tools_used': [], 'final_outcome': 'chat', 'verification_status': 'pending', 'max_corrections_reached': False, 'state_transitions': ['idle>understanding', 'understanding>planning', 'planning>reading', 'reading>completed'], 'final_task_state': 'completed', 'unproductive_loop_detections': 0, 'backend_directives': 0, 'consecutive_tool_failures': 0, 'duration_budget_exceeded': False, 'latency_classification': 'llm_bound'}
+INFO:     127.0.0.1:53628 - "POST /api/v1/sessions/e3a355b2-e681-4346-8383-4799918a3f4d/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53628 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:09:08,766 INFO personal_ai_secretary.providers.factory correlation_id=2aa15052-7c86-4443-97d5-e007ba0b8b6c Auto mode: returning OllamaProvider for local inference
+2026-09-10 15:09:08,878 INFO personal_ai_secretary.agents correlation_id=2aa15052-7c86-4443-97d5-e007ba0b8b6c Task classified: chat (goal: Conversational response, no file or tool operations needed.)
+2026-09-10 15:09:09,779 INFO httpx correlation_id=2aa15052-7c86-4443-97d5-e007ba0b8b6c HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:09:10,672 INFO httpx correlation_id=2aa15052-7c86-4443-97d5-e007ba0b8b6c HTTP Request: POST http://127.0.0.1:63011/session "HTTP/1.1 200 OK"
+2026-09-10 15:09:11,547 INFO httpx correlation_id=2aa15052-7c86-4443-97d5-e007ba0b8b6c HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:09:12,473 INFO httpx correlation_id=2aa15052-7c86-4443-97d5-e007ba0b8b6c HTTP Request: GET http://127.0.0.1:63011/config/providers "HTTP/1.1 200 OK"
+2026-09-10 15:09:19,994 INFO httpx correlation_id=2aa15052-7c86-4443-97d5-e007ba0b8b6c HTTP Request: POST http://127.0.0.1:63011/session/ses_f72d8d083ffeSlyqwCWSvpbsPa/message "HTTP/1.1 200 OK"
+2026-09-10 15:09:20,000 INFO personal_ai_secretary.agents correlation_id=2aa15052-7c86-4443-97d5-e007ba0b8b6c Agentic loop completed: rounds=1 tool_calls=0 dedup=0 elapsed=11.12s metrics={'provider': 'opencode', 'model': 'big-pickle', 'llm_calls': 1, 'tool_calls': 0, 'deduplicated_calls': 0, 'rounds': 1, 'total_time_s': 11.123, 'avg_llm_time_s': 11.12, 'context_build_time_s': 0.000222, 'context_chars_max': 7433, 'estimated_context_tokens': 1858, 'response_chars_total': 444, 'system_prompt_chars': 6439, 'history_chars': 994, 'tool_results_chars': 0, 'attached_file_chars': 0, 'project_context_chars': 0, 'truncation_applied': False, 'history_truncated_turns': 0, 'summary_used': False, 'command_count': 0, 'command_avg_duration_s': 0.0, 'command_timeout_count': 0, 'command_exit_codes': [], 'command_output_chars': 0, 'command_output_truncated_count': 0, 'workflow_stages': ['completed'], 'workflow_stage_times': [], 'project_discovery_time_s': 0.0, 'project_technologies_detected': [], 'project_files_discovered': 0, 'project_entry_points': 0, 'project_test_locations': 0, 'progressive_read_level': 0, 'progressive_read_time_s': 0.0, 'task_inspection_time_s': 0.0, 'correction_attempts': 0, 'correction_tools_used': [], 'final_outcome': 'chat', 'verification_status': 'pending', 'max_corrections_reached': False, 'state_transitions': ['idle>understanding', 'understanding>planning', 'planning>reading', 'reading>completed'], 'final_task_state': 'completed', 'unproductive_loop_detections': 0, 'backend_directives': 0, 'consecutive_tool_failures': 0, 'duration_budget_exceeded': False, 'latency_classification': 'llm_bound'}
+INFO:     127.0.0.1:63003 - "POST /api/v1/sessions/e3a355b2-e681-4346-8383-4799918a3f4d/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/c0e7914d-c445-4567-a3eb-baa80f1ef630 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/750c26b5-f0ba-4784-877d-044b712ac59f HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/7169fced-fdd7-4734-940a-8627310ed398 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/8e6fddf0-1c46-4a1c-9770-426e24f6e328 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/2b6b514e-bcd8-4b04-b60d-25219de83ec6 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/698ca26b-12fe-4e0c-b7fa-5dc56c09c055 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/81f3b233-60db-4833-ae37-6630198d34d5 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/4acec1c3-b9b2-4189-8e53-2f1377c79f20 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/062d398e-8442-4742-8cac-624a56430ba8 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/84f83a06-c35b-4e95-bb30-4f8614034546 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/43fd122a-9750-48d3-ab74-6e19675ae317 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/69c1065a-c839-49ed-bda7-789f11cefeb1 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/78a24610-3688-4380-8fc3-a8ef79e3f758 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/cdd73e89-d6be-4d40-b92e-a3f2ff7d393d HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/5ad96fa2-6776-491e-b5c7-578be0bfda36 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/ff20cc47-ae57-4e8d-9ef4-c4aaf0836dd1 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/a1e677c2-1de8-4306-b847-e77180a90c58 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/40820d45-ce9e-4047-bea0-af5b73edf8b6 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/76d7cbf2-4fbe-4bae-bdd0-036309f7175d HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/bfccc40c-9113-4785-a307-bf2ad51847bf HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/9fab3b82-9993-4d10-bea1-17ebb21128ed HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/ad608025-4758-466c-bdda-ec807cb946cf HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/45f2d3b1-dbd5-47bc-a01b-b0cbb65c9a48 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/bb39bc0b-84d4-4ab0-a069-03fb4ae26f65 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/f4d9cc25-b5a6-45c9-ba32-1fbc39954392 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/275b0379-e422-45ef-835f-ab78d665e07c HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/09e6ba51-3e87-4896-af93-96ace4ea3f79 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/576b3882-4c07-40d5-880a-9383df15d6f0 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52460 - "DELETE /api/v1/ui/sessions/f79f162d-5afb-4e88-8811-90d6b929f206 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:52460 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:11:52,761 INFO personal_ai_secretary.providers.factory correlation_id=fd565180-8fff-43ed-b3ca-364da7c78b53 Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:52460 - "GET /api/v1/sessions/8ba29382-134f-4aa5-86b4-64534c88d697/messages HTTP/1.1" 200 OK
+2026-09-10 15:12:09,391 INFO personal_ai_secretary.providers.factory correlation_id=c1da1d8c-fbc9-4e06-8206-1818f9029057 Auto mode: returning OllamaProvider for local inference
+2026-09-10 15:12:09,433 INFO personal_ai_secretary.agents correlation_id=c1da1d8c-fbc9-4e06-8206-1818f9029057 Task classified: chat (goal: Conversational response, no file or tool operations needed.)
+2026-09-10 15:12:09,857 INFO httpx correlation_id=c1da1d8c-fbc9-4e06-8206-1818f9029057 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:12:10,575 INFO httpx correlation_id=c1da1d8c-fbc9-4e06-8206-1818f9029057 HTTP Request: POST http://127.0.0.1:63011/session "HTTP/1.1 200 OK"
+2026-09-10 15:12:11,246 INFO httpx correlation_id=c1da1d8c-fbc9-4e06-8206-1818f9029057 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:12:11,936 INFO httpx correlation_id=c1da1d8c-fbc9-4e06-8206-1818f9029057 HTTP Request: GET http://127.0.0.1:63011/config/providers "HTTP/1.1 200 OK"
+2026-09-10 15:12:16,344 INFO httpx correlation_id=c1da1d8c-fbc9-4e06-8206-1818f9029057 HTTP Request: POST http://127.0.0.1:63011/session/ses_f72d611b8ffenrnBsmb9WH3p1B/message "HTTP/1.1 200 OK"
+2026-09-10 15:12:16,347 INFO personal_ai_secretary.agents correlation_id=c1da1d8c-fbc9-4e06-8206-1818f9029057 Agentic loop completed: rounds=1 tool_calls=0 dedup=0 elapsed=6.91s metrics={'provider': 'opencode', 'model': 'big-pickle', 'llm_calls': 1, 'tool_calls': 0, 'deduplicated_calls': 0, 'rounds': 1, 'total_time_s': 6.915, 'avg_llm_time_s': 6.913, 'context_build_time_s': 7.6e-05, 'context_chars_max': 6160, 'estimated_context_tokens': 1540, 'response_chars_total': 633, 'system_prompt_chars': 5889, 'history_chars': 271, 'tool_results_chars': 0, 'attached_file_chars': 0, 'project_context_chars': 0, 'truncation_applied': False, 'history_truncated_turns': 0, 'summary_used': False, 'command_count': 0, 'command_avg_duration_s': 0.0, 'command_timeout_count': 0, 'command_exit_codes': [], 'command_output_chars': 0, 'command_output_truncated_count': 0, 'workflow_stages': ['completed'], 'workflow_stage_times': [], 'project_discovery_time_s': 0.0, 'project_technologies_detected': [], 'project_files_discovered': 0, 'project_entry_points': 0, 'project_test_locations': 0, 'progressive_read_level': 0, 'progressive_read_time_s': 0.0, 'task_inspection_time_s': 0.0, 'correction_attempts': 0, 'correction_tools_used': [], 'final_outcome': 'chat', 'verification_status': 'pending', 'max_corrections_reached': False, 'state_transitions': ['idle>understanding', 'understanding>planning', 'planning>reading', 'reading>completed'], 'final_task_state': 'completed', 'unproductive_loop_detections': 0, 'backend_directives': 0, 'consecutive_tool_failures': 0, 'duration_budget_exceeded': False, 'latency_classification': 'llm_bound'}
+INFO:     127.0.0.1:64134 - "POST /api/v1/sessions/8ba29382-134f-4aa5-86b4-64534c88d697/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64134 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55923 - "DELETE /api/v1/ui/sessions/fabb5e70-3e02-426d-99d6-602ee96fd274 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55923 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55923 - "DELETE /api/v1/ui/sessions/c2f1f326-ea71-47e6-a381-9cc3a1b58ea8 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55923 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55923 - "DELETE /api/v1/ui/sessions/3702d6d7-0964-4fe1-8e55-2339419c4caf HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55923 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55923 - "DELETE /api/v1/ui/sessions/2daa1441-e399-4ec4-a4e9-25a548e3f859 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55923 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55923 - "DELETE /api/v1/ui/sessions/997078ca-1968-48ab-8983-b8415140530b HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55923 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55923 - "DELETE /api/v1/ui/sessions/f8b9ff5e-fa3e-499d-9f58-7341536369b2 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55923 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55923 - "DELETE /api/v1/ui/sessions/4006d42e-06f4-4284-98d9-7189b521f372 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55923 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55923 - "DELETE /api/v1/ui/sessions/3ed6fef5-0374-484e-be5b-02cf7daf08e9 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55923 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55923 - "DELETE /api/v1/ui/sessions/2b125e9a-415e-444f-9e7c-60b1b3e0ae99 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55923 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55923 - "DELETE /api/v1/ui/sessions/0c749856-bc60-4848-a19a-64b0d98781c1 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55923 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55923 - "DELETE /api/v1/ui/sessions/7984a716-5afc-493f-aced-b5f11f11bc1d HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55923 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55923 - "DELETE /api/v1/ui/sessions/c4524803-6592-4944-9e58-aa6f3e96f65b HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55923 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55923 - "DELETE /api/v1/ui/sessions/61118014-5573-445f-89f4-554272b5d6b9 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55923 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55923 - "DELETE /api/v1/ui/sessions/65bea45d-f2ab-4f2d-ab99-db45f3a4cae9 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55923 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55923 - "DELETE /api/v1/ui/sessions/49b37409-0e22-4836-9e23-b95846b06e60 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55923 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55923 - "DELETE /api/v1/ui/sessions/db401893-bfc7-4608-9010-2dc7102cebae HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55923 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/f268a03b-e20b-406a-9584-d1258f1d8395 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/84df3e92-bf40-44b7-a8b6-e6b835488d13 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/479e529c-1c7d-4fea-9566-aeb0b5d3ab29 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/f0f19357-a189-4d46-b878-fe97c9f85ed0 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/40a5e23f-83d2-4719-9665-2bdcb7824288 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/ec5c0865-a3ed-4694-b943-1347db240d00 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/fe46b7cd-bb6d-4713-b87f-638dfb4e55b3 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/017b99cc-9757-4b5f-a72e-586efc02fafd HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/c78d189d-3a08-45a1-b389-b1207d17b74b HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/4942273e-0799-4934-9b5b-fea12dd0a9fc HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/da48100b-6f6f-4ade-b14a-8103ed431005 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/6e05c7d4-a586-479a-8079-6d2e36f29961 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/9b5506fc-a6e4-4bdc-b753-07943ce4e5ef HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/52356fa0-b15f-4abc-a3f5-9f63dbc7cf05 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/8df7c7c9-a6e9-499e-a258-2422627ddf35 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/78a1cc7c-d027-4a68-95d7-9ab56017c394 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:14:06,577 INFO personal_ai_secretary.providers.factory correlation_id=18ef92b4-c8db-4602-8588-1c5e47f73a51 Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:57983 - "GET /api/v1/sessions/50083e99-b353-46ca-9f06-d4ea5bd329a0/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/50083e99-b353-46ca-9f06-d4ea5bd329a0 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/2483616c-70ee-4b19-872a-aae684ce9d2d HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/afc1abfc-9acd-4113-82df-2210862701b0 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/342057da-6267-4c67-aa9d-214ef77ef04d HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:14:19,393 INFO personal_ai_secretary.providers.factory correlation_id=307f419b-473a-4494-939e-761418f70798 Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:57983 - "GET /api/v1/sessions/2cb10b5c-87aa-456d-bfb3-ec5e588e97a2/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57983 - "DELETE /api/v1/ui/sessions/2cb10b5c-87aa-456d-bfb3-ec5e588e97a2 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57983 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:14:30,762 INFO personal_ai_secretary.providers.factory correlation_id=504695f0-b67c-42b3-b53a-42ab7c7d0f90 Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:50661 - "GET /api/v1/sessions/d4122217-a244-4e86-afe2-b3fcfcbff218/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63005 - "DELETE /api/v1/ui/sessions/d6d1dfcd-ae20-4d39-9511-50035a25cd9a HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63005 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63005 - "DELETE /api/v1/ui/sessions/d4122217-a244-4e86-afe2-b3fcfcbff218 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63005 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63005 - "DELETE /api/v1/ui/sessions/9be3ffe4-ace0-4b19-aef2-164ffcdc2487 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63005 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:16:37,955 INFO personal_ai_secretary.providers.factory correlation_id=ea0ebc99-e29c-4f71-9f41-cacf0220f43f Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:58530 - "GET /api/v1/sessions/8ba29382-134f-4aa5-86b4-64534c88d697/messages HTTP/1.1" 200 OK
+2026-09-10 15:16:55,758 INFO personal_ai_secretary.providers.factory correlation_id=68adbb97-cb4a-4b0d-97a3-8a39a301d807 Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:64853 - "GET /api/v1/sessions/e3a355b2-e681-4346-8383-4799918a3f4d/messages HTTP/1.1" 200 OK
+2026-09-10 15:17:48,292 INFO personal_ai_secretary.providers.factory correlation_id=02847952-8175-4da1-898d-1ab22ebe9e16 Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:64749 - "GET /api/v1/sessions/89dc1ea2-54cc-4fcc-a15d-c2e9cbd907ab/messages HTTP/1.1" 200 OK
+2026-09-10 15:18:02,025 INFO personal_ai_secretary.providers.factory correlation_id=f1c4fc12-e01f-4acf-a710-9c622159b055 Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:51175 - "GET /api/v1/sessions/452f325b-4133-4d13-81f2-ec56426cd121/messages HTTP/1.1" 200 OK
+2026-09-10 15:18:13,392 INFO personal_ai_secretary.providers.factory correlation_id=c0351ab2-49de-4f93-92fc-1a63f6798452 Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:58369 - "GET /api/v1/sessions/7b578a8d-585b-4c1d-9d67-1f7362f83d43/messages HTTP/1.1" 200 OK
+2026-09-10 15:19:36,380 INFO personal_ai_secretary.providers.factory correlation_id=882df4ed-1ea5-411d-89c8-41ea3dd89476 Auto mode: returning OllamaProvider for local inference
+2026-09-10 15:19:36,490 INFO personal_ai_secretary.agents correlation_id=882df4ed-1ea5-411d-89c8-41ea3dd89476 Task classified: chat (goal: Conversational response, no file or tool operations needed.)
+2026-09-10 15:19:37,346 INFO httpx correlation_id=882df4ed-1ea5-411d-89c8-41ea3dd89476 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:19:38,322 INFO httpx correlation_id=882df4ed-1ea5-411d-89c8-41ea3dd89476 HTTP Request: POST http://127.0.0.1:63011/session "HTTP/1.1 200 OK"
+2026-09-10 15:19:39,202 INFO httpx correlation_id=882df4ed-1ea5-411d-89c8-41ea3dd89476 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:19:40,081 INFO httpx correlation_id=882df4ed-1ea5-411d-89c8-41ea3dd89476 HTTP Request: GET http://127.0.0.1:63011/config/providers "HTTP/1.1 200 OK"
+2026-09-10 15:20:26,340 INFO httpx correlation_id=882df4ed-1ea5-411d-89c8-41ea3dd89476 HTTP Request: POST http://127.0.0.1:63011/session/ses_f72cf3ccbffeJX3BiivqhH7555/message "HTTP/1.1 200 OK"
+2026-09-10 15:20:26,347 INFO personal_ai_secretary.agents correlation_id=882df4ed-1ea5-411d-89c8-41ea3dd89476 Agentic loop completed: rounds=1 tool_calls=0 dedup=0 elapsed=49.86s metrics={'provider': 'opencode', 'model': 'big-pickle', 'llm_calls': 1, 'tool_calls': 0, 'deduplicated_calls': 0, 'rounds': 1, 'total_time_s': 49.858, 'avg_llm_time_s': 49.856, 'context_build_time_s': 5.2e-05, 'context_chars_max': 6511, 'estimated_context_tokens': 1627, 'response_chars_total': 959, 'system_prompt_chars': 6511, 'history_chars': 0, 'tool_results_chars': 0, 'attached_file_chars': 0, 'project_context_chars': 0, 'truncation_applied': False, 'history_truncated_turns': 0, 'summary_used': False, 'command_count': 0, 'command_avg_duration_s': 0.0, 'command_timeout_count': 0, 'command_exit_codes': [], 'command_output_chars': 0, 'command_output_truncated_count': 0, 'workflow_stages': ['completed'], 'workflow_stage_times': [], 'project_discovery_time_s': 0.0, 'project_technologies_detected': [], 'project_files_discovered': 0, 'project_entry_points': 0, 'project_test_locations': 0, 'progressive_read_level': 0, 'progressive_read_time_s': 0.0, 'task_inspection_time_s': 0.0, 'correction_attempts': 0, 'correction_tools_used': [], 'final_outcome': 'chat', 'verification_status': 'pending', 'max_corrections_reached': False, 'state_transitions': ['idle>understanding', 'understanding>planning', 'planning>reading', 'reading>completed'], 'final_task_state': 'completed', 'unproductive_loop_detections': 0, 'backend_directives': 0, 'consecutive_tool_failures': 0, 'duration_budget_exceeded': False, 'latency_classification': 'llm_bound'}
+INFO:     127.0.0.1:53871 - "POST /api/v1/sessions/cf93bf3a-560f-4362-992b-c5f471fc912c/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53871 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53871 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:21:05,935 INFO personal_ai_secretary.providers.factory correlation_id=84784000-79e4-417c-adcd-326412c65ccb Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:50718 - "GET /api/v1/sessions/e3a355b2-e681-4346-8383-4799918a3f4d/messages HTTP/1.1" 200 OK
+2026-09-10 15:25:25,708 INFO personal_ai_secretary.providers.factory correlation_id=d0cc4b1e-3311-454c-a1fe-41a31af5eb14 Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:49254 - "GET /api/v1/sessions/cf93bf3a-560f-4362-992b-c5f471fc912c/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54912 - "DELETE /api/v1/ui/sessions/4413ef9d-d0eb-4ea8-893f-2202a1b93da5 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:54912 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54912 - "DELETE /api/v1/ui/sessions/cd7a4e0c-ad8a-4671-9c13-37a6568dd78b HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:54912 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54912 - "DELETE /api/v1/ui/sessions/20235b9f-5960-47a3-96ae-8f3077f35548 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:54912 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54912 - "DELETE /api/v1/ui/sessions/cc055229-6b10-45eb-b75f-7835fc3d144f HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:54912 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63007 - "DELETE /api/v1/ui/sessions/b64bf6ab-9463-4232-b5d0-4bec886e1a19 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63007 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63007 - "DELETE /api/v1/ui/sessions/d9742098-08cd-4ff2-85a0-a87a40d69392 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63007 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63007 - "DELETE /api/v1/ui/sessions/1a652907-fda7-4576-ace8-97a8ba6cc9d7 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63007 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63007 - "DELETE /api/v1/ui/sessions/f9e086cd-1ad3-41df-b78d-c98007fa9b8d HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63007 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63007 - "DELETE /api/v1/ui/sessions/11ba145d-2ef6-4d14-82bf-4450cba6ba1d HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63007 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63007 - "DELETE /api/v1/ui/sessions/82983f4a-2bba-4f4a-8c09-287a31e7a20c HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63007 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63007 - "DELETE /api/v1/ui/sessions/e66139bd-4f8f-4a9b-ab57-4ab25e27cb29 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63007 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63007 - "DELETE /api/v1/ui/sessions/187532df-30d5-4608-9ada-5f96ed1c8945 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63007 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:33:03,560 INFO personal_ai_secretary.providers.factory correlation_id=051b1dcc-3be4-493d-8bd6-16920b9ef255 Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:63007 - "GET /api/v1/sessions/3b3ff8d1-ffee-4a36-bc6e-b443fd276bfc/messages HTTP/1.1" 200 OK
+2026-09-10 15:33:37,571 INFO personal_ai_secretary.providers.factory correlation_id=07e468ed-f074-4375-9429-4251b9e0a233 Auto mode: returning OllamaProvider for local inference
+2026-09-10 15:33:37,614 INFO personal_ai_secretary.agents correlation_id=07e468ed-f074-4375-9429-4251b9e0a233 Task classified: chat (goal: Conversational response, no file or tool operations needed.)
+2026-09-10 15:33:38,189 INFO httpx correlation_id=07e468ed-f074-4375-9429-4251b9e0a233 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:33:38,884 INFO httpx correlation_id=07e468ed-f074-4375-9429-4251b9e0a233 HTTP Request: POST http://127.0.0.1:63011/session "HTTP/1.1 200 OK"
+2026-09-10 15:33:39,580 INFO httpx correlation_id=07e468ed-f074-4375-9429-4251b9e0a233 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:33:40,235 INFO httpx correlation_id=07e468ed-f074-4375-9429-4251b9e0a233 HTTP Request: GET http://127.0.0.1:63011/config/providers "HTTP/1.1 200 OK"
+2026-09-10 15:33:43,631 INFO httpx correlation_id=07e468ed-f074-4375-9429-4251b9e0a233 HTTP Request: POST http://127.0.0.1:63011/session/ses_f72c26946ffe73KSAhpzDT5kFb/message "HTTP/1.1 200 OK"
+2026-09-10 15:33:43,637 INFO personal_ai_secretary.agents correlation_id=07e468ed-f074-4375-9429-4251b9e0a233 Agentic loop completed: rounds=1 tool_calls=0 dedup=0 elapsed=6.02s metrics={'provider': 'opencode', 'model': 'big-pickle', 'llm_calls': 1, 'tool_calls': 0, 'deduplicated_calls': 0, 'rounds': 1, 'total_time_s': 6.024, 'avg_llm_time_s': 6.022, 'context_build_time_s': 0.000176, 'context_chars_max': 10082, 'estimated_context_tokens': 2520, 'response_chars_total': 118, 'system_prompt_chars': 7474, 'history_chars': 2608, 'tool_results_chars': 0, 'attached_file_chars': 0, 'project_context_chars': 0, 'truncation_applied': False, 'history_truncated_turns': 0, 'summary_used': False, 'command_count': 0, 'command_avg_duration_s': 0.0, 'command_timeout_count': 0, 'command_exit_codes': [], 'command_output_chars': 0, 'command_output_truncated_count': 0, 'workflow_stages': ['completed'], 'workflow_stage_times': [], 'project_discovery_time_s': 0.0, 'project_technologies_detected': [], 'project_files_discovered': 0, 'project_entry_points': 0, 'project_test_locations': 0, 'progressive_read_level': 0, 'progressive_read_time_s': 0.0, 'task_inspection_time_s': 0.0, 'correction_attempts': 0, 'correction_tools_used': [], 'final_outcome': 'chat', 'verification_status': 'pending', 'max_corrections_reached': False, 'state_transitions': ['idle>understanding', 'understanding>planning', 'planning>reading', 'reading>completed'], 'final_task_state': 'completed', 'unproductive_loop_detections': 0, 'backend_directives': 0, 'consecutive_tool_failures': 0, 'duration_budget_exceeded': False, 'latency_classification': 'llm_bound'}
+INFO:     127.0.0.1:64285 - "POST /api/v1/sessions/3b3ff8d1-ffee-4a36-bc6e-b443fd276bfc/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64285 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64285 - "DELETE /api/v1/ui/sessions/3be3e0f3-0571-4599-b9c9-25b63b5581c8 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:64285 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:35:18,353 INFO personal_ai_secretary.providers.factory correlation_id=8f326871-6e43-4db1-b761-10e086558df8 Auto mode: returning OllamaProvider for local inference
+2026-09-10 15:35:18,423 INFO personal_ai_secretary.agents correlation_id=8f326871-6e43-4db1-b761-10e086558df8 Task classified: document_analysis (goal: Analyze a document and extract key information.)
+2026-09-10 15:35:19,488 INFO httpx correlation_id=8f326871-6e43-4db1-b761-10e086558df8 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:35:20,347 INFO httpx correlation_id=8f326871-6e43-4db1-b761-10e086558df8 HTTP Request: POST http://127.0.0.1:63011/session "HTTP/1.1 200 OK"
+2026-09-10 15:35:21,013 INFO httpx correlation_id=8f326871-6e43-4db1-b761-10e086558df8 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:35:21,692 INFO httpx correlation_id=8f326871-6e43-4db1-b761-10e086558df8 HTTP Request: GET http://127.0.0.1:63011/config/providers "HTTP/1.1 200 OK"
+2026-09-10 15:35:49,084 INFO httpx correlation_id=8f326871-6e43-4db1-b761-10e086558df8 HTTP Request: POST http://127.0.0.1:63011/session/ses_f72c0dcf5ffe4DV5n5F95orasE/message "HTTP/1.1 200 OK"
+2026-09-10 15:35:49,087 INFO personal_ai_secretary.agents correlation_id=8f326871-6e43-4db1-b761-10e086558df8 Agentic loop completed: rounds=1 tool_calls=0 dedup=0 elapsed=30.66s metrics={'provider': 'opencode', 'model': 'big-pickle', 'llm_calls': 1, 'tool_calls': 0, 'deduplicated_calls': 0, 'rounds': 1, 'total_time_s': 30.665, 'avg_llm_time_s': 30.662, 'context_build_time_s': 4.1e-05, 'context_chars_max': 9406, 'estimated_context_tokens': 2351, 'response_chars_total': 272, 'system_prompt_chars': 9406, 'history_chars': 0, 'tool_results_chars': 0, 'attached_file_chars': 0, 'project_context_chars': 0, 'truncation_applied': False, 'history_truncated_turns': 0, 'summary_used': False, 'command_count': 0, 'command_avg_duration_s': 0.0, 'command_timeout_count': 0, 'command_exit_codes': [], 'command_output_chars': 0, 'command_output_truncated_count': 0, 'workflow_stages': ['completed'], 'workflow_stage_times': [], 'project_discovery_time_s': 0.0, 'project_technologies_detected': [], 'project_files_discovered': 0, 'project_entry_points': 0, 'project_test_locations': 0, 'progressive_read_level': 0, 'progressive_read_time_s': 0.0, 'task_inspection_time_s': 0.0, 'correction_attempts': 0, 'correction_tools_used': [], 'final_outcome': 'document_analysis', 'verification_status': 'pending', 'max_corrections_reached': False, 'state_transitions': ['idle>understanding', 'understanding>planning', 'planning>reading', 'reading>completed'], 'final_task_state': 'completed', 'unproductive_loop_detections': 0, 'backend_directives': 0, 'consecutive_tool_failures': 0, 'duration_budget_exceeded': False, 'latency_classification': 'llm_bound'}
+INFO:     127.0.0.1:59571 - "POST /api/v1/sessions/b64e49ac-165c-4f9f-bfce-a54b91331b7a/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59571 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59571 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:38:11,959 INFO personal_ai_secretary.providers.factory correlation_id=049fa408-0ff5-4f29-b32e-6bec88dde0b5 Auto mode: returning OllamaProvider for local inference
+2026-09-10 15:38:11,997 INFO personal_ai_secretary.agents correlation_id=049fa408-0ff5-4f29-b32e-6bec88dde0b5 Task classified: document_analysis (goal: Analyze a document and extract key information.)
+2026-09-10 15:38:12,457 INFO httpx correlation_id=049fa408-0ff5-4f29-b32e-6bec88dde0b5 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:38:13,057 INFO httpx correlation_id=049fa408-0ff5-4f29-b32e-6bec88dde0b5 HTTP Request: POST http://127.0.0.1:63011/session "HTTP/1.1 200 OK"
+2026-09-10 15:38:13,511 INFO httpx correlation_id=049fa408-0ff5-4f29-b32e-6bec88dde0b5 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:38:14,146 INFO httpx correlation_id=049fa408-0ff5-4f29-b32e-6bec88dde0b5 HTTP Request: GET http://127.0.0.1:63011/config/providers "HTTP/1.1 200 OK"
+2026-09-10 15:40:01,667 INFO httpx correlation_id=049fa408-0ff5-4f29-b32e-6bec88dde0b5 HTTP Request: POST http://127.0.0.1:63011/session/ses_f72be3a43ffeP48YWbJOLf6gDN/message "HTTP/1.1 200 OK"
+2026-09-10 15:40:01,669 INFO personal_ai_secretary.agents correlation_id=049fa408-0ff5-4f29-b32e-6bec88dde0b5 Agentic loop completed: rounds=1 tool_calls=0 dedup=0 elapsed=109.67s metrics={'provider': 'opencode', 'model': 'big-pickle', 'llm_calls': 1, 'tool_calls': 0, 'deduplicated_calls': 0, 'rounds': 1, 'total_time_s': 109.673, 'avg_llm_time_s': 109.672, 'context_build_time_s': 7e-05, 'context_chars_max': 9324, 'estimated_context_tokens': 2331, 'response_chars_total': 411, 'system_prompt_chars': 9009, 'history_chars': 315, 'tool_results_chars': 0, 'attached_file_chars': 0, 'project_context_chars': 0, 'truncation_applied': False, 'history_truncated_turns': 0, 'summary_used': False, 'command_count': 0, 'command_avg_duration_s': 0.0, 'command_timeout_count': 0, 'command_exit_codes': [], 'command_output_chars': 0, 'command_output_truncated_count': 0, 'workflow_stages': ['completed'], 'workflow_stage_times': [], 'project_discovery_time_s': 0.0, 'project_technologies_detected': [], 'project_files_discovered': 0, 'project_entry_points': 0, 'project_test_locations': 0, 'progressive_read_level': 0, 'progressive_read_time_s': 0.0, 'task_inspection_time_s': 0.0, 'correction_attempts': 0, 'correction_tools_used': [], 'final_outcome': 'document_analysis', 'verification_status': 'pending', 'max_corrections_reached': False, 'state_transitions': ['idle>understanding', 'understanding>planning', 'planning>reading', 'reading>completed'], 'final_task_state': 'completed', 'unproductive_loop_detections': 0, 'backend_directives': 0, 'consecutive_tool_failures': 0, 'duration_budget_exceeded': False, 'latency_classification': 'llm_bound'}
+INFO:     127.0.0.1:49863 - "POST /api/v1/sessions/b64e49ac-165c-4f9f-bfce-a54b91331b7a/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49863 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49863 - "DELETE /api/v1/ui/sessions/b2836c2d-8844-47f2-8121-58ffc8289cf0 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:49863 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:40:05,838 INFO personal_ai_secretary.providers.factory correlation_id=c08ac1c1-7563-45b6-b399-cc25b3feb95a Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:49863 - "GET /api/v1/sessions/b64e49ac-165c-4f9f-bfce-a54b91331b7a/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/b64e49ac-165c-4f9f-bfce-a54b91331b7a HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:41:20,168 INFO personal_ai_secretary.providers.factory correlation_id=e6dcd042-ee71-4aa7-a1e7-2ba203d22ea0 Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:63003 - "GET /api/v1/sessions/452f325b-4133-4d13-81f2-ec56426cd121/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/7b578a8d-585b-4c1d-9d67-1f7362f83d43 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/ba03f255-9b12-475d-9eeb-266756db60e1 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/4818e16c-f923-4de9-93f1-e30fc2ec8029 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/1886c777-6847-4239-a217-b9bb90f7c81d HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/3d1825d1-5324-4f4a-b68a-d37906b10c49 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/ef19436e-613d-4492-8774-64e77282a5df HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/86f66af0-31d5-4cb9-9ab9-982bf9e99844 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/0fc898ca-8278-4d75-88d3-fbe104d80895 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/0b41cd99-d6d3-448a-a6b6-259b8d31cd96 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/6a3eb79e-5037-4631-9d4d-4138faae2fba HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/5d13d7d1-5fe3-4aee-85a5-af0ba770247f HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/b0d64318-fed5-49dc-b859-f37fce25f8c7 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/c9258ec9-5825-4b20-988a-730d357148d7 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/45d16458-b45e-46f0-bf85-d26e98c81a3c HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/6142a5ab-2c63-4e41-83d5-62edbe3d3c74 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/8dc12934-3c8f-4684-90a5-ec6a9d1b33ec HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/04c32352-bd11-4a21-beb4-7301568b0b04 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/599e8546-cb51-4b99-9b0f-a442085ab60c HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/33c216e0-d76d-499a-9d5d-67d07ffa89cb HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/9010a57b-8035-44e7-a8c9-b1864969955c HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/8d595ac8-23fe-402f-8d5a-f810c05fc51b HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/465f26bb-3b52-43e3-8ecc-7782329ac5d7 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/bf35b0c2-a57a-4106-89bb-3335c3f7723c HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/35dd6afc-2e0c-45eb-9a5f-136f310179c0 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/642853b0-2faa-4a13-90bc-f1e7f90ed05d HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/157dbe31-a093-4965-ad7a-ba9f4e288aac HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/4f448873-3b54-4ea7-93b4-39781c609965 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/32e63d19-e317-4d4a-ad29-30255d6f043b HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/d421d326-28ae-4e45-a0ca-e3aa0f670e2b HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/1663c65e-9212-4d5d-9584-52a86f4cdea7 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:42:52,174 INFO personal_ai_secretary.providers.factory correlation_id=04af4f20-4915-4e40-9337-93446c9ac316 Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:63003 - "GET /api/v1/sessions/8c579663-4871-4a57-8a15-8dc5cb081992/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/8c579663-4871-4a57-8a15-8dc5cb081992 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/1c0a78e9-a5fe-484e-aa3b-e47b0be347e7 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/58c5f576-ba65-45ee-b4d6-8e4093990ea3 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57068 - "DELETE /api/v1/ui/sessions/db7c0472-0902-441a-875b-047588d931b0 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57068 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57068 - "DELETE /api/v1/ui/sessions/f18ed97b-bc1c-4979-8074-2dc0f6d29273 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57068 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53207 - "DELETE /api/v1/ui/sessions/983ef63b-5836-4b04-b111-cce5b8f9607c HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:53207 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53207 - "DELETE /api/v1/ui/sessions/91439155-3c26-4881-b514-8b5bf3e2d745 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:53207 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53207 - "DELETE /api/v1/ui/sessions/97eb2fd8-6c4b-4b02-8636-2b71883ceae1 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:53207 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53207 - "DELETE /api/v1/ui/sessions/b21f4f99-1ead-434e-9df4-a2888bd02d58 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:53207 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53207 - "DELETE /api/v1/ui/sessions/edab65bd-383a-41fe-8a0a-37d6b3a4c717 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:53207 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53207 - "DELETE /api/v1/ui/sessions/84deb6b1-13fb-4daa-8f4d-a25812748dd3 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:53207 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53207 - "DELETE /api/v1/ui/sessions/0f7e2c35-4090-47ad-90bd-f42582f7620d HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:53207 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53207 - "DELETE /api/v1/ui/sessions/2d50390d-d752-4406-b8d2-c1a7b5a780aa HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:53207 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53207 - "DELETE /api/v1/ui/sessions/db28337b-22da-48b4-84a9-f1e0c37df1ea HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:53207 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53207 - "DELETE /api/v1/ui/sessions/c2280a67-0a65-4a0c-b6d9-e2e8c601154b HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:53207 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53207 - "DELETE /api/v1/ui/sessions/94a12deb-32c7-4c9a-85aa-488625daeb13 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:53207 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53207 - "DELETE /api/v1/ui/sessions/b90f270e-4d51-4615-918a-bfd56aeccb65 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:53207 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53207 - "DELETE /api/v1/ui/sessions/7c0e0aa9-cc00-4e21-9a82-a706217cd07d HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:53207 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:43:54,976 INFO personal_ai_secretary.providers.factory correlation_id=a541ebca-4085-421a-83e1-63b09507c89d Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:53207 - "GET /api/v1/sessions/59ce9d17-4701-4162-a41f-61fb6fa6edc6/messages HTTP/1.1" 200 OK
+2026-09-10 15:44:05,528 INFO personal_ai_secretary.providers.factory correlation_id=46e5da93-19c5-4de9-bbb5-412417c82a04 Auto mode: returning OllamaProvider for local inference
+2026-09-10 15:44:05,564 INFO personal_ai_secretary.agents correlation_id=46e5da93-19c5-4de9-bbb5-412417c82a04 Task classified: chat (goal: Conversational response, no file or tool operations needed.)
+2026-09-10 15:44:06,066 INFO httpx correlation_id=46e5da93-19c5-4de9-bbb5-412417c82a04 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:44:06,419 INFO httpx correlation_id=46e5da93-19c5-4de9-bbb5-412417c82a04 HTTP Request: POST http://127.0.0.1:63011/session "HTTP/1.1 200 OK"
+2026-09-10 15:44:07,023 INFO httpx correlation_id=46e5da93-19c5-4de9-bbb5-412417c82a04 HTTP Request: GET http://127.0.0.1:63011/config "HTTP/1.1 401 Unauthorized"
+2026-09-10 15:44:07,700 INFO httpx correlation_id=46e5da93-19c5-4de9-bbb5-412417c82a04 HTTP Request: GET http://127.0.0.1:63011/config/providers "HTTP/1.1 200 OK"
+2026-09-10 15:44:11,169 INFO httpx correlation_id=46e5da93-19c5-4de9-bbb5-412417c82a04 HTTP Request: POST http://127.0.0.1:63011/session/ses_f72b8d5f6ffejVWYA8HG2LoVn3/message "HTTP/1.1 200 OK"
+2026-09-10 15:44:11,172 INFO personal_ai_secretary.agents correlation_id=46e5da93-19c5-4de9-bbb5-412417c82a04 Agentic loop completed: rounds=1 tool_calls=0 dedup=0 elapsed=5.61s metrics={'provider': 'opencode', 'model': 'big-pickle', 'llm_calls': 1, 'tool_calls': 0, 'deduplicated_calls': 0, 'rounds': 1, 'total_time_s': 5.608, 'avg_llm_time_s': 5.607, 'context_build_time_s': 4.3e-05, 'context_chars_max': 7357, 'estimated_context_tokens': 1839, 'response_chars_total': 30, 'system_prompt_chars': 7148, 'history_chars': 209, 'tool_results_chars': 0, 'attached_file_chars': 0, 'project_context_chars': 0, 'truncation_applied': False, 'history_truncated_turns': 0, 'summary_used': False, 'command_count': 0, 'command_avg_duration_s': 0.0, 'command_timeout_count': 0, 'command_exit_codes': [], 'command_output_chars': 0, 'command_output_truncated_count': 0, 'workflow_stages': ['completed'], 'workflow_stage_times': [], 'project_discovery_time_s': 0.0, 'project_technologies_detected': [], 'project_files_discovered': 0, 'project_entry_points': 0, 'project_test_locations': 0, 'progressive_read_level': 0, 'progressive_read_time_s': 0.0, 'task_inspection_time_s': 0.0, 'correction_attempts': 0, 'correction_tools_used': [], 'final_outcome': 'chat', 'verification_status': 'pending', 'max_corrections_reached': False, 'state_transitions': ['idle>understanding', 'understanding>planning', 'planning>reading', 'reading>completed'], 'final_task_state': 'completed', 'unproductive_loop_detections': 0, 'backend_directives': 0, 'consecutive_tool_failures': 0, 'duration_budget_exceeded': False, 'latency_classification': 'llm_bound'}
+INFO:     127.0.0.1:53444 - "POST /api/v1/sessions/59ce9d17-4701-4162-a41f-61fb6fa6edc6/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53444 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64474 - "DELETE /api/v1/ui/sessions/59ce9d17-4701-4162-a41f-61fb6fa6edc6 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:64474 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64474 - "DELETE /api/v1/ui/sessions/1074c288-d9e6-49d1-9f10-9ead042414b2 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:64474 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64474 - "DELETE /api/v1/ui/sessions/8959c7b8-f1e1-4e90-ab89-364219a3e1f9 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:64474 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64474 - "DELETE /api/v1/ui/sessions/c832a056-4864-40d1-a745-8ae95aa824d8 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:64474 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64474 - "DELETE /api/v1/ui/sessions/efc03018-cd39-40a3-990e-c2e261659e54 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:64474 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64474 - "DELETE /api/v1/ui/sessions/ecfc74da-3cb2-4cd0-867c-fba05731aa6d HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:64474 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64474 - "DELETE /api/v1/ui/sessions/ce2af7c7-358c-4774-b3ef-024fb08db3f3 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:64474 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64474 - "DELETE /api/v1/ui/sessions/afb3b9ca-b7e1-4f08-81c7-2525d5f8e596 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:64474 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64474 - "DELETE /api/v1/ui/sessions/8a2795a8-f028-4b0e-b167-f61a682dcebd HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:64474 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64474 - "DELETE /api/v1/ui/sessions/2ff7de85-4fe0-4005-8a38-02003450a932 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:64474 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64474 - "DELETE /api/v1/ui/sessions/0cfd0b01-138f-429b-99bb-8f3c66e61f33 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:64474 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64474 - "DELETE /api/v1/ui/sessions/8eaac22c-fb72-4ac8-a660-17d0382086a0 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:64474 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/16c3196b-289a-4c12-8586-4ef5f0940cca HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/fc24da5f-c240-43c5-84f6-626a345cf16c HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/00000000-0000-0000-0000-0000ab40c0e0 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/00000000-0000-0000-0000-0000ab40c0df HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/00000000-0000-0000-0000-0000ab40c0de HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/8a73f76c-761b-4fa9-a096-cac8a1ae68ee HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/7242b7a0-a98f-43dd-a312-025cd3ee3283 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/92746c4b-1bad-4e42-8a74-cc612db54451 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/d96bf27d-74fb-43e0-9a9b-7b3aa19d8ac7 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/a1ef48e9-363d-4f3c-b1b7-b54e96fe961f HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:45:23,591 INFO personal_ai_secretary.providers.factory correlation_id=c545b992-e2a8-472a-bac0-3caa7d0cbe1c Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:63003 - "GET /api/v1/sessions/b22bd392-734d-4bbe-b3f6-e86078a8e2de/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/b22bd392-734d-4bbe-b3f6-e86078a8e2de HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/1d904c37-4189-4692-95a4-998db0d2b409 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/5a6a4d44-513b-4c92-b73c-f0e392276f7a HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/d6eb75e1-80bb-4430-ac22-274b4e635f52 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/ae7b56ad-990c-40d0-ad26-0bb1679b97e4 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63003 - "DELETE /api/v1/ui/sessions/d6214996-7dce-498a-86ca-2108053a1dfc HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63003 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57598 - "DELETE /api/v1/ui/sessions/28bff2fd-2ee7-4f2c-9282-b3376d9af488 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57598 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57598 - "DELETE /api/v1/ui/sessions/83a28895-e94a-4d6a-8cd4-f551de7777d7 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57598 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57598 - "DELETE /api/v1/ui/sessions/e88b884b-549e-4bff-a5a2-0e24b373d4b5 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57598 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57598 - "DELETE /api/v1/ui/sessions/254fbde7-fe30-4add-8e02-1a85147c4123 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57598 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:45:55,482 INFO personal_ai_secretary.providers.factory correlation_id=4ec0f2eb-c12c-4ca9-821f-5d4d2d0a8da7 Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:57784 - "GET /api/v1/sessions/8582cb91-a905-4edd-9bcd-621ffd08bc7f/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57784 - "DELETE /api/v1/ui/sessions/8582cb91-a905-4edd-9bcd-621ffd08bc7f HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57784 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:45:56,879 INFO personal_ai_secretary.providers.factory correlation_id=0bb4d752-662c-431b-b750-e1b6dc0410c2 Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:57784 - "GET /api/v1/sessions/08a4b84d-4401-4c24-982a-6cee5833878f/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57784 - "DELETE /api/v1/ui/sessions/08a4b84d-4401-4c24-982a-6cee5833878f HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:57784 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55031 - "DELETE /api/v1/ui/sessions/dac5e402-8f7d-4e49-84a4-03a00f54b87d HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55031 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55031 - "DELETE /api/v1/ui/sessions/9f4bd46c-02ea-4ab4-92c7-8157bdddcfab HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55031 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55031 - "DELETE /api/v1/ui/sessions/b611fb16-8b19-4b77-92df-50ad080a111a HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55031 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55031 - "DELETE /api/v1/ui/sessions/96740e82-b6d3-466c-b54c-90c6119279f1 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55031 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55031 - "DELETE /api/v1/ui/sessions/d034ba10-d919-49b6-a43c-e5e41f5fab38 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55031 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55031 - "DELETE /api/v1/ui/sessions/9130fb46-47e1-4ee4-a13a-1da5a0dba430 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55031 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58138 - "DELETE /api/v1/ui/sessions/4db2ce3e-2523-40e5-b61b-a7b45be3639a HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:58138 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58138 - "DELETE /api/v1/ui/sessions/83602fbf-f222-4fd1-a1da-d0dd351cec25 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:58138 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58138 - "DELETE /api/v1/ui/sessions/bdaff8c9-4e6b-43e9-9bf7-2f5d5864d921 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:58138 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58138 - "DELETE /api/v1/ui/sessions/f88224a3-9cc6-4d5e-b1c7-78bfa8f38677 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:58138 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58138 - "DELETE /api/v1/ui/sessions/79fb03dc-0848-420a-8410-1ed98b77e8f1 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:58138 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58138 - "DELETE /api/v1/ui/sessions/503b51c1-0063-4cd2-8065-f9ae36fc28a2 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:58138 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58138 - "DELETE /api/v1/ui/sessions/debd8f19-ab6e-4d26-9c31-5436ac0cecad HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:58138 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58138 - "DELETE /api/v1/ui/sessions/88591ee1-e89b-4d94-ab89-d91fc08b8c30 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:58138 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58138 - "DELETE /api/v1/ui/sessions/fe5309ef-1ae0-41e3-aa22-0f6d2086e03b HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:58138 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56595 - "DELETE /api/v1/ui/sessions/5454e77f-d99a-43f7-8879-d27b3e0431bc HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56595 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56595 - "DELETE /api/v1/ui/sessions/c86f47d4-66e4-481b-b676-15662125590e HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56595 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56595 - "DELETE /api/v1/ui/sessions/db10a75b-ed9a-4c2a-948d-90e3d1b60a74 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56595 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:47:01,375 INFO personal_ai_secretary.providers.factory correlation_id=dd9ef0e3-ce75-4b78-a9ff-fc72b998178e Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:56595 - "GET /api/v1/sessions/b2819039-b73e-4643-a144-9e8c9f2bc3ab/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56595 - "DELETE /api/v1/ui/sessions/b2819039-b73e-4643-a144-9e8c9f2bc3ab HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56595 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56595 - "DELETE /api/v1/ui/sessions/c5cc4d0e-2e87-48d9-99f8-6efc5c108c30 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56595 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56595 - "DELETE /api/v1/ui/sessions/c2d97975-a26d-4b9d-8887-3e6efaa102b1 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56595 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56595 - "DELETE /api/v1/ui/sessions/ce19806c-1dcc-43c6-b892-e57a79233918 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56595 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56595 - "DELETE /api/v1/ui/sessions/7aef1418-4c78-4307-9ca4-2c2fa60fa083 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56595 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56595 - "DELETE /api/v1/ui/sessions/f7c94a91-00dc-450b-bd6c-74bd5298325c HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56595 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56595 - "DELETE /api/v1/ui/sessions/dafc1bac-ebc5-4151-b1c7-a1f2f07e8c5e HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56595 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56595 - "DELETE /api/v1/ui/sessions/0c26eb3c-bec9-451f-a261-111ee91b093c HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56595 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56595 - "DELETE /api/v1/ui/sessions/7aaf43dd-2ed4-450d-ad8c-70ac273786f8 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56595 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56595 - "DELETE /api/v1/ui/sessions/3126f55c-bbf4-401b-9f09-aef2131c354f HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56595 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56595 - "DELETE /api/v1/ui/sessions/af1ad8f8-37cf-4978-b1ca-4ddd00f25e5c HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56595 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:47:29,630 INFO personal_ai_secretary.providers.factory correlation_id=bf67cb07-c582-4006-865f-65b8ccf0398d Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:56595 - "GET /api/v1/sessions/b55823af-d39d-42ad-afba-deff1a4e3291/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/b55823af-d39d-42ad-afba-deff1a4e3291 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/e1ff2e66-954a-4ec2-b966-1ddf8df2e462 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/57f8d9c4-1b5b-4c5c-8295-a61f8bddb877 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/adf6de1a-d943-4d2f-a1a9-c7c70fd1c4f5 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/20851090-51aa-40c8-b5ac-8614315f2f58 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/f5fe39b2-5df4-4a98-b054-e73c622d4769 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/3debf449-3a51-4cba-9c97-7c0e5fc5d02b HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/35762015-8f9e-4ed6-bf09-a1d9f0adc0d7 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/6d67863f-38f4-4cf2-918f-84116cdbec15 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/0c22e6a6-a271-4a22-a1d3-62c69a17dc44 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/dc2e560e-e3eb-483e-8f08-82bc35bad6e1 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/f268c8c9-ffca-45ab-95ec-8980a62ad8a6 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/800aa73e-cdf3-4d49-9f98-4efcc6d9eefc HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/0badf636-07fb-40d2-9f4b-49f45da9d78e HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/4f5db6da-c4f5-4982-b5d9-cd823093f0d9 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/6c108fcc-f7d7-4ca0-808a-6091c3a02896 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/a74c546e-7359-4a2e-af2e-9c34b9189c7f HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/c86f8ae4-161a-4bb6-8d8a-4f9fa12b752f HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/8423cc09-caf0-40f2-8e8c-655f23b8f35a HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/e38dab81-933d-48aa-857e-29794adc6a6e HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/c421688d-d806-435e-bbea-b59826da4730 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/43e4a2ec-4f78-47a4-9864-f20101bbc168 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/cf290a95-09d3-46bd-a358-ff9cb6fa2649 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/1009ab8b-fc5b-4a0f-b0d6-fd5c6aa2fabb HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/e60a77fd-a794-430a-90c0-0519a19d7476 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61878 - "DELETE /api/v1/ui/sessions/07fa2884-67c8-4903-8f80-df277f58ebe3 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:61878 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56042 - "DELETE /api/v1/ui/sessions/89b375ee-f2b9-4575-9c1b-d5b71b223554 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56042 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56042 - "DELETE /api/v1/ui/sessions/584c478a-0826-45f7-af96-6e85ad98edab HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56042 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56042 - "DELETE /api/v1/ui/sessions/ed9a532a-dd88-426e-ac49-c05df42625eb HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56042 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56042 - "DELETE /api/v1/ui/sessions/dc21863f-1b87-4473-a7f2-054d3b316799 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56042 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-10 15:49:05,407 INFO personal_ai_secretary.providers.factory correlation_id=3c4808b3-438b-4cd6-a237-ec16eaa86579 Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:56042 - "GET /api/v1/sessions/90984cd9-72d7-4bd2-b4cb-21c86997aab0/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56042 - "DELETE /api/v1/ui/sessions/90984cd9-72d7-4bd2-b4cb-21c86997aab0 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56042 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56042 - "DELETE /api/v1/ui/sessions/f87b5ea3-06aa-49d0-9c9b-365b8d414335 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:56042 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63192 - "DELETE /api/v1/ui/sessions/10a3c248-eff4-4fc0-bed7-3fb1fc3e3e11 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63192 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     Started server process [12688]
+INFO:     Waiting for application startup.
+2026-09-11 08:03:56,690 INFO personal_ai_secretary.shared.settings_store correlation_id=- Loaded 7 provider settings from database
+2026-09-11 08:03:56,691 INFO personal_ai_secretary.startup correlation_id=- Loaded persisted provider settings from database
+2026-09-11 08:03:56,692 INFO personal_ai_secretary.providers.factory correlation_id=- Auto mode: returning OllamaProvider for local inference
+2026-09-11 08:03:59,233 INFO personal_ai_secretary.providers.model_manager correlation_id=- ModelManager: initializing provider discovery...
+2026-09-11 08:04:03,419 WARNING personal_ai_secretary.providers.ollama correlation_id=- Ollama warmup failed (non-fatal): All connection attempts failed
+2026-09-11 08:04:10,031 INFO personal_ai_secretary.providers.opencode_server correlation_id=- Managed OpenCode server launching on port 65093 (pid 9004)
+2026-09-11 08:04:14,772 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:65093/config "HTTP/1.1 200 OK"
+2026-09-11 08:04:15,475 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:65093/config "HTTP/1.1 200 OK"
+2026-09-11 08:04:16,138 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:65093/config "HTTP/1.1 401 Unauthorized"
+2026-09-11 08:04:18,779 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:65093/config/providers "HTTP/1.1 200 OK"
+2026-09-11 08:04:18,785 INFO personal_ai_secretary.providers.model_manager correlation_id=- ModelManager: discovered 4 providers, 8 models
+2026-09-11 08:04:18,785 INFO personal_ai_secretary.providers.factory correlation_id=- ModelManager initialized: 8 models across providers
+2026-09-11 08:04:18,786 INFO personal_ai_secretary.providers.model_manager correlation_id=- Routing mode set to automatic
+2026-09-11 08:04:18,786 INFO personal_ai_secretary.providers.model_manager correlation_id=- Selected provider=opencode model=big-pickle
+2026-09-11 08:04:18,786 INFO personal_ai_secretary.startup correlation_id=- Restored routing_mode=automatic provider=opencode model=big-pickle
+2026-09-11 08:04:18,786 INFO personal_ai_secretary.providers.factory correlation_id=- Auto mode: returning OllamaProvider for local inference
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+2026-09-11 08:04:19,815 INFO httpx correlation_id=- HTTP Request: GET https://dns.google/resolve?name=google.com "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:57247 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61079 - "GET /static/js/app.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:59424 - "GET /static/css/style.css HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:60774 - "GET /api/v1/providers/models HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56719 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+2026-09-11 08:04:21,213 INFO personal_ai_secretary.shared.settings_store correlation_id=90d5c124-ec21-42db-971f-6280e1af68c5 Loaded 7 provider settings from database
+INFO:     127.0.0.1:59424 - "GET /api/v1/providers/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61079 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-11 08:04:21,234 INFO personal_ai_secretary.shared.settings_store correlation_id=6de3cdc7-a5e2-4dd1-952e-5432232d4286 Loaded 7 provider settings from database
+2026-09-11 08:04:21,235 INFO httpx correlation_id=5769dd56-5b12-4a0e-abd9-94eed33f39c9 HTTP Request: GET http://127.0.0.1:65093/config "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:55022 - "GET /api/v1/providers/transparency HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59424 - "GET /api/v1/providers/config HTTP/1.1" 200 OK
+2026-09-11 08:04:21,312 INFO personal_ai_secretary.shared.settings_store correlation_id=5d5aaa2e-9077-4d08-9e4f-29ffe49e338a Loaded 7 provider settings from database
+2026-09-11 08:04:23,623 INFO httpx correlation_id=5d5aaa2e-9077-4d08-9e4f-29ffe49e338a HTTP Request: GET https://integrate.api.nvidia.com/v1/models "HTTP/1.1 200 OK"
+2026-09-11 08:04:24,632 INFO httpx correlation_id=5d5aaa2e-9077-4d08-9e4f-29ffe49e338a HTTP Request: GET https://integrate.api.nvidia.com/v1/models "HTTP/1.1 200 OK"
+2026-09-11 08:04:28,115 INFO httpx correlation_id=5d5aaa2e-9077-4d08-9e4f-29ffe49e338a HTTP Request: GET http://127.0.0.1:65093/config "HTTP/1.1 200 OK"
+2026-09-11 08:04:28,772 INFO httpx correlation_id=5d5aaa2e-9077-4d08-9e4f-29ffe49e338a HTTP Request: GET http://127.0.0.1:65093/config "HTTP/1.1 200 OK"
+2026-09-11 08:04:28,784 INFO personal_ai_secretary.shared.settings_store correlation_id=5d5aaa2e-9077-4d08-9e4f-29ffe49e338a Loaded 7 provider settings from database
+INFO:     127.0.0.1:59424 - "GET /api/v1/setup/status HTTP/1.1" 200 OK
+2026-09-11 08:05:11,022 INFO personal_ai_secretary.providers.model_manager correlation_id=75e3cf91-e514-41c2-8cc1-7f8e53119291 Routing mode set to manual
+2026-09-11 08:05:11,050 INFO personal_ai_secretary.shared.settings_store correlation_id=75e3cf91-e514-41c2-8cc1-7f8e53119291 Saved 1 provider settings to database
+INFO:     127.0.0.1:59924 - "POST /api/v1/providers/config HTTP/1.1" 200 OK
+2026-09-11 08:05:11,054 INFO httpx correlation_id=6c3ef4ab-3ec7-41c4-9329-887d2cf93a5a HTTP Request: GET http://127.0.0.1:65093/config "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:54916 - "GET /api/v1/providers/transparency HTTP/1.1" 200 OK
+2026-09-11 08:05:11,072 INFO personal_ai_secretary.providers.model_manager correlation_id=9b54e881-2c14-46e7-b61b-554cda69596d Selected provider=opencode model=big-pickle
+2026-09-11 08:05:11,104 INFO personal_ai_secretary.shared.settings_store correlation_id=9b54e881-2c14-46e7-b61b-554cda69596d Saved 2 provider settings to database
+INFO:     127.0.0.1:54916 - "POST /api/v1/providers/select HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62515 - "GET /api/v1/providers/models HTTP/1.1" 200 OK
+2026-09-11 08:05:44,175 INFO personal_ai_secretary.shared.settings_store correlation_id=e4d692c7-f8b1-4c1d-ac9f-5fcaa940b089 Loaded 7 provider settings from database
+INFO:     127.0.0.1:52930 - "GET /api/v1/providers/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55058 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-11 08:05:44,186 INFO httpx correlation_id=3fd72edb-f262-4684-87d0-fe50fefa349d HTTP Request: GET http://127.0.0.1:65093/config "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:52475 - "GET /api/v1/providers/transparency HTTP/1.1" 200 OK
+2026-09-11 08:05:44,201 INFO personal_ai_secretary.shared.settings_store correlation_id=62463fd8-430b-42cd-a721-ad31e2f2e54f Loaded 7 provider settings from database
+INFO:     127.0.0.1:52930 - "GET /api/v1/providers/config HTTP/1.1" 200 OK
+2026-09-11 08:05:44,999 INFO personal_ai_secretary.shared.settings_store correlation_id=d4c73926-a919-4350-b662-c47e765b1aaf Loaded 7 provider settings from database
+2026-09-11 08:05:47,291 INFO httpx correlation_id=16b023ce-6ce6-4eca-a352-447cb8193bea HTTP Request: GET http://127.0.0.1:65093/config "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:52475 - "GET /api/v1/providers/transparency HTTP/1.1" 200 OK
+2026-09-11 08:05:47,323 INFO personal_ai_secretary.providers.model_manager correlation_id=e3414be3-2f7c-4372-b379-26ada3286a5f Selected provider=opencode model=big-pickle
+2026-09-11 08:05:47,398 INFO personal_ai_secretary.shared.settings_store correlation_id=e3414be3-2f7c-4372-b379-26ada3286a5f Saved 2 provider settings to database
+INFO:     127.0.0.1:52475 - "POST /api/v1/providers/select HTTP/1.1" 200 OK
+2026-09-11 08:05:47,563 INFO httpx correlation_id=d4c73926-a919-4350-b662-c47e765b1aaf HTTP Request: GET https://integrate.api.nvidia.com/v1/models "HTTP/1.1 200 OK"
+2026-09-11 08:05:48,495 INFO httpx correlation_id=d4c73926-a919-4350-b662-c47e765b1aaf HTTP Request: GET https://integrate.api.nvidia.com/v1/models "HTTP/1.1 200 OK"
+2026-09-11 08:05:51,630 INFO httpx correlation_id=d4c73926-a919-4350-b662-c47e765b1aaf HTTP Request: GET http://127.0.0.1:65093/config "HTTP/1.1 200 OK"
+2026-09-11 08:05:52,326 INFO httpx correlation_id=d4c73926-a919-4350-b662-c47e765b1aaf HTTP Request: GET http://127.0.0.1:65093/config "HTTP/1.1 200 OK"
+2026-09-11 08:05:52,337 INFO personal_ai_secretary.shared.settings_store correlation_id=d4c73926-a919-4350-b662-c47e765b1aaf Loaded 7 provider settings from database
+INFO:     127.0.0.1:52930 - "GET /api/v1/setup/status HTTP/1.1" 200 OK
+2026-09-11 08:05:58,908 INFO personal_ai_secretary.providers.model_manager correlation_id=b0fd3ec6-92ed-48fe-b530-9196c972701c Selected provider=nvidia model=meta/llama-3.2-11b-vision-instruct
+2026-09-11 08:05:58,988 INFO personal_ai_secretary.shared.settings_store correlation_id=b0fd3ec6-92ed-48fe-b530-9196c972701c Saved 2 provider settings to database
+INFO:     127.0.0.1:65409 - "POST /api/v1/providers/select HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54658 - "DELETE /api/v1/ui/sessions/b725b735-9226-4e14-ad3c-469b00c37028 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:54658 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54658 - "DELETE /api/v1/ui/sessions/a4049123-480c-4837-b41b-3745b249d9e0 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:54658 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54658 - "DELETE /api/v1/ui/sessions/e644b2b6-5c2c-42c6-b85c-0dc1709ed5c9 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:54658 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58371 - "DELETE /api/v1/ui/sessions/21cb4d3d-86c5-4667-97c1-c601fa3cb3fe HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:58371 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58371 - "DELETE /api/v1/ui/sessions/2cf75dd3-624b-43de-a88a-3dd1bbebd249 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:58371 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58371 - "DELETE /api/v1/ui/sessions/8cdec589-2235-4bc9-92bf-1773c2184fde HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:58371 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58371 - "DELETE /api/v1/ui/sessions/0bff13fb-c200-467d-972e-d55d85b4d489 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:58371 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58371 - "DELETE /api/v1/ui/sessions/7797840c-a74d-4d2f-9a72-499c0e598c06 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:58371 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58371 - "DELETE /api/v1/ui/sessions/84f9b082-93f4-4720-a7c6-0a57bc510918 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:58371 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58371 - "DELETE /api/v1/ui/sessions/aeb972e6-f17c-49ec-ae2d-e15ba81f81f8 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:58371 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58371 - "DELETE /api/v1/ui/sessions/b4a55217-7dce-495d-ba59-1ae443700534 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:58371 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-11 08:07:44,377 INFO personal_ai_secretary.providers.model_manager correlation_id=1748be1a-a2d5-49a8-94e1-bde816b5b19a Selected provider=opencode model=nemotron-3-ultra-free
+INFO:     127.0.0.1:51454 - "POST /api/v1/providers/auto-select HTTP/1.1" 200 OK
+2026-09-11 08:07:44,380 INFO personal_ai_secretary.providers.model_manager correlation_id=294388f0-fe47-4366-a881-966cb681d975 Routing mode set to automatic
+2026-09-11 08:07:44,399 INFO personal_ai_secretary.shared.settings_store correlation_id=294388f0-fe47-4366-a881-966cb681d975 Saved 1 provider settings to database
+INFO:     127.0.0.1:64334 - "POST /api/v1/providers/config HTTP/1.1" 200 OK
+INFO:     Started server process [224]
+INFO:     Waiting for application startup.
+2026-09-11 10:16:31,289 INFO personal_ai_secretary.shared.settings_store correlation_id=- Loaded 7 provider settings from database
+2026-09-11 10:16:31,290 INFO personal_ai_secretary.startup correlation_id=- Loaded persisted provider settings from database
+2026-09-11 10:16:31,291 INFO personal_ai_secretary.providers.factory correlation_id=- Auto mode: returning OllamaProvider for local inference
+2026-09-11 10:16:34,129 INFO personal_ai_secretary.providers.model_manager correlation_id=- ModelManager: initializing provider discovery...
+2026-09-11 10:16:37,853 WARNING personal_ai_secretary.providers.ollama correlation_id=- Ollama warmup failed (non-fatal): All connection attempts failed
+2026-09-11 10:16:46,904 WARNING personal_ai_secretary.providers.opencode_server correlation_id=- Reaped orphaned managed OpenCode serve (pid 9004, ppid 12688)
+2026-09-11 10:16:46,942 INFO personal_ai_secretary.providers.opencode_server correlation_id=- Managed OpenCode server launching on port 54814 (pid 20320)
+2026-09-11 10:16:51,394 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:54814/config "HTTP/1.1 200 OK"
+2026-09-11 10:16:51,952 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:54814/config "HTTP/1.1 200 OK"
+2026-09-11 10:16:52,548 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:54814/config "HTTP/1.1 401 Unauthorized"
+2026-09-11 10:16:54,458 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:54814/config/providers "HTTP/1.1 200 OK"
+2026-09-11 10:16:54,466 INFO personal_ai_secretary.providers.model_manager correlation_id=- ModelManager: discovered 4 providers, 8 models
+2026-09-11 10:16:54,466 INFO personal_ai_secretary.providers.factory correlation_id=- ModelManager initialized: 8 models across providers
+2026-09-11 10:16:54,467 INFO personal_ai_secretary.providers.model_manager correlation_id=- Routing mode set to automatic
+2026-09-11 10:16:54,467 INFO personal_ai_secretary.providers.model_manager correlation_id=- Selected provider=nvidia model=meta/llama-3.2-11b-vision-instruct
+2026-09-11 10:16:54,467 INFO personal_ai_secretary.startup correlation_id=- Restored routing_mode=automatic provider=nvidia model=meta/llama-3.2-11b-vision-instruct
+2026-09-11 10:16:54,468 INFO personal_ai_secretary.providers.factory correlation_id=- Auto mode: returning OllamaProvider for local inference
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+2026-09-11 10:16:55,289 INFO httpx correlation_id=- HTTP Request: GET https://dns.google/resolve?name=google.com "HTTP/1.1 200 OK"
+INFO:     Started server process [12532]
+INFO:     Waiting for application startup.
+2026-09-11 10:17:19,474 INFO personal_ai_secretary.shared.settings_store correlation_id=- Loaded 7 provider settings from database
+2026-09-11 10:17:19,475 INFO personal_ai_secretary.startup correlation_id=- Loaded persisted provider settings from database
+2026-09-11 10:17:19,477 INFO personal_ai_secretary.providers.factory correlation_id=- Auto mode: returning OllamaProvider for local inference
+2026-09-11 10:17:22,302 INFO personal_ai_secretary.providers.model_manager correlation_id=- ModelManager: initializing provider discovery...
+2026-09-11 10:17:25,969 WARNING personal_ai_secretary.providers.ollama correlation_id=- Ollama warmup failed (non-fatal): All connection attempts failed
+2026-09-11 10:17:33,040 WARNING personal_ai_secretary.providers.opencode_server correlation_id=- Reaped orphaned managed OpenCode serve (pid 20320, ppid 224)
+2026-09-11 10:17:33,082 INFO personal_ai_secretary.providers.opencode_server correlation_id=- Managed OpenCode server launching on port 57018 (pid 8492)
+2026-09-11 10:17:37,790 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:57018/config "HTTP/1.1 200 OK"
+2026-09-11 10:17:38,312 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:57018/config "HTTP/1.1 200 OK"
+2026-09-11 10:17:38,884 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:57018/config "HTTP/1.1 401 Unauthorized"
+2026-09-11 10:17:40,992 INFO httpx correlation_id=- HTTP Request: GET http://127.0.0.1:57018/config/providers "HTTP/1.1 200 OK"
+2026-09-11 10:17:40,995 INFO personal_ai_secretary.providers.model_manager correlation_id=- ModelManager: discovered 4 providers, 8 models
+2026-09-11 10:17:40,996 INFO personal_ai_secretary.providers.factory correlation_id=- ModelManager initialized: 8 models across providers
+2026-09-11 10:17:40,996 INFO personal_ai_secretary.providers.model_manager correlation_id=- Routing mode set to automatic
+2026-09-11 10:17:40,996 INFO personal_ai_secretary.providers.model_manager correlation_id=- Selected provider=nvidia model=meta/llama-3.2-11b-vision-instruct
+2026-09-11 10:17:40,996 INFO personal_ai_secretary.startup correlation_id=- Restored routing_mode=automatic provider=nvidia model=meta/llama-3.2-11b-vision-instruct
+2026-09-11 10:17:40,996 INFO personal_ai_secretary.providers.factory correlation_id=- Auto mode: returning OllamaProvider for local inference
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+2026-09-11 10:17:41,830 INFO httpx correlation_id=- HTTP Request: GET https://dns.google/resolve?name=google.com "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:57027 - "GET /api/v1/health/live HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51643 - "GET /api/v1/providers/transparency HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58260 - "GET /api/v1/providers/models HTTP/1.1" 200 OK
+2026-09-11 10:17:42,587 INFO personal_ai_secretary.shared.settings_store correlation_id=b1bc2eda-4a37-4806-9c99-446e6b1bacbb Loaded 7 provider settings from database
+INFO:     127.0.0.1:59020 - "GET /api/v1/providers/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55766 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-11 10:17:42,605 INFO personal_ai_secretary.shared.settings_store correlation_id=e955f36f-bdc6-43c6-bd82-2514ad661cbf Loaded 7 provider settings from database
+INFO:     127.0.0.1:59020 - "GET /api/v1/providers/config HTTP/1.1" 200 OK
+2026-09-11 10:17:42,720 INFO personal_ai_secretary.shared.settings_store correlation_id=ec0e7142-72d3-4919-9673-f3876e1b301a Loaded 7 provider settings from database
+2026-09-11 10:17:45,498 INFO httpx correlation_id=ec0e7142-72d3-4919-9673-f3876e1b301a HTTP Request: GET https://integrate.api.nvidia.com/v1/models "HTTP/1.1 200 OK"
+2026-09-11 10:17:46,605 INFO httpx correlation_id=ec0e7142-72d3-4919-9673-f3876e1b301a HTTP Request: GET https://integrate.api.nvidia.com/v1/models "HTTP/1.1 200 OK"
+2026-09-11 10:17:50,179 INFO httpx correlation_id=ec0e7142-72d3-4919-9673-f3876e1b301a HTTP Request: GET http://127.0.0.1:57018/config "HTTP/1.1 200 OK"
+2026-09-11 10:17:51,066 INFO httpx correlation_id=ec0e7142-72d3-4919-9673-f3876e1b301a HTTP Request: GET http://127.0.0.1:57018/config "HTTP/1.1 200 OK"
+2026-09-11 10:17:51,082 INFO personal_ai_secretary.shared.settings_store correlation_id=ec0e7142-72d3-4919-9673-f3876e1b301a Loaded 7 provider settings from database
+INFO:     127.0.0.1:59020 - "GET /api/v1/setup/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53740 - "GET /api/v1/providers/transparency HTTP/1.1" 200 OK
+2026-09-11 10:18:03,675 INFO personal_ai_secretary.providers.model_manager correlation_id=dc8b7433-2340-4efb-807c-d64c9f204f3c Routing mode set to manual
+2026-09-11 10:18:03,710 INFO personal_ai_secretary.providers.model_manager correlation_id=81160c48-4ae8-4839-860b-e054cb73d347 Selected provider=nvidia model=meta/llama-3.2-11b-vision-instruct
+2026-09-11 10:18:03,735 INFO personal_ai_secretary.shared.settings_store correlation_id=dc8b7433-2340-4efb-807c-d64c9f204f3c Saved 1 provider settings to database
+INFO:     127.0.0.1:49671 - "POST /api/v1/providers/config HTTP/1.1" 200 OK
+2026-09-11 10:18:03,766 INFO personal_ai_secretary.shared.settings_store correlation_id=81160c48-4ae8-4839-860b-e054cb73d347 Saved 2 provider settings to database
+INFO:     127.0.0.1:53740 - "POST /api/v1/providers/select HTTP/1.1" 200 OK
+2026-09-11 10:18:08,512 INFO personal_ai_secretary.providers.model_manager correlation_id=6599ef07-6a45-41ef-bea5-c09e0824382d Selected provider=opencode model=nemotron-3-ultra-free
+2026-09-11 10:18:08,556 INFO personal_ai_secretary.shared.settings_store correlation_id=6599ef07-6a45-41ef-bea5-c09e0824382d Saved 2 provider settings to database
+INFO:     127.0.0.1:53740 - "POST /api/v1/providers/select HTTP/1.1" 200 OK
+2026-09-11 10:18:14,413 INFO personal_ai_secretary.providers.model_manager correlation_id=e4e57e3a-a8a8-4e6e-affc-b34f010e1827 Selected provider=opencode model=big-pickle
+2026-09-11 10:18:14,476 INFO personal_ai_secretary.shared.settings_store correlation_id=e4e57e3a-a8a8-4e6e-affc-b34f010e1827 Saved 2 provider settings to database
+INFO:     127.0.0.1:49320 - "POST /api/v1/providers/select HTTP/1.1" 200 OK
+2026-09-11 10:18:54,267 INFO personal_ai_secretary.providers.model_manager correlation_id=4e92d7f9-c48d-438e-a82f-f8a887a08e98 Selected provider=opencode model=nemotron-3-ultra-free
+INFO:     127.0.0.1:63095 - "POST /api/v1/providers/auto-select HTTP/1.1" 200 OK
+2026-09-11 10:18:54,273 INFO personal_ai_secretary.providers.model_manager correlation_id=afd01a77-e91b-46f0-954a-240ffb33b697 Routing mode set to automatic
+2026-09-11 10:18:54,303 INFO personal_ai_secretary.shared.settings_store correlation_id=afd01a77-e91b-46f0-954a-240ffb33b697 Saved 1 provider settings to database
+INFO:     127.0.0.1:65442 - "POST /api/v1/providers/config HTTP/1.1" 200 OK
+2026-09-11 10:19:22,822 INFO personal_ai_secretary.providers.factory correlation_id=4f431e9f-2185-4869-b34e-89df73a5d4d3 Auto mode: returning OllamaProvider for local inference
+2026-09-11 10:19:22,980 INFO personal_ai_secretary.agents correlation_id=4f431e9f-2185-4869-b34e-89df73a5d4d3 Task classified: chat (goal: Conversational response, no file or tool operations needed.)
+2026-09-11 10:19:23,802 INFO httpx correlation_id=4f431e9f-2185-4869-b34e-89df73a5d4d3 HTTP Request: GET http://127.0.0.1:57018/config "HTTP/1.1 401 Unauthorized"
+2026-09-11 10:19:24,713 INFO httpx correlation_id=4f431e9f-2185-4869-b34e-89df73a5d4d3 HTTP Request: POST http://127.0.0.1:57018/session "HTTP/1.1 200 OK"
+2026-09-11 10:19:25,533 INFO httpx correlation_id=4f431e9f-2185-4869-b34e-89df73a5d4d3 HTTP Request: GET http://127.0.0.1:57018/config "HTTP/1.1 401 Unauthorized"
+2026-09-11 10:19:26,359 INFO httpx correlation_id=4f431e9f-2185-4869-b34e-89df73a5d4d3 HTTP Request: GET http://127.0.0.1:57018/config/providers "HTTP/1.1 200 OK"
+2026-09-11 10:20:21,553 INFO httpx correlation_id=4f431e9f-2185-4869-b34e-89df73a5d4d3 HTTP Request: POST http://127.0.0.1:57018/session/ses_f6ebbbe8affeQ6A4q4x6uIZzuM/message "HTTP/1.1 200 OK"
+2026-09-11 10:20:21,561 INFO personal_ai_secretary.agents correlation_id=4f431e9f-2185-4869-b34e-89df73a5d4d3 Agentic loop completed: rounds=1 tool_calls=0 dedup=0 elapsed=58.58s metrics={'provider': 'opencode', 'model': 'nemotron-3-ultra-free', 'llm_calls': 1, 'tool_calls': 0, 'deduplicated_calls': 0, 'rounds': 1, 'total_time_s': 58.582, 'avg_llm_time_s': 58.578, 'context_build_time_s': 6e-05, 'context_chars_max': 4420, 'estimated_context_tokens': 1105, 'response_chars_total': 524, 'system_prompt_chars': 4420, 'history_chars': 0, 'tool_results_chars': 0, 'attached_file_chars': 0, 'project_context_chars': 0, 'truncation_applied': False, 'history_truncated_turns': 0, 'summary_used': False, 'command_count': 0, 'command_avg_duration_s': 0.0, 'command_timeout_count': 0, 'command_exit_codes': [], 'command_output_chars': 0, 'command_output_truncated_count': 0, 'workflow_stages': ['completed'], 'workflow_stage_times': [], 'project_discovery_time_s': 0.0, 'project_technologies_detected': [], 'project_files_discovered': 0, 'project_entry_points': 0, 'project_test_locations': 0, 'progressive_read_level': 0, 'progressive_read_time_s': 0.0, 'task_inspection_time_s': 0.0, 'correction_attempts': 0, 'correction_tools_used': [], 'final_outcome': 'chat', 'verification_status': 'pending', 'max_corrections_reached': False, 'state_transitions': ['idle>understanding', 'understanding>planning', 'planning>reading', 'reading>completed'], 'final_task_state': 'completed', 'unproductive_loop_detections': 0, 'backend_directives': 0, 'consecutive_tool_failures': 0, 'duration_budget_exceeded': False, 'latency_classification': 'llm_bound'}
+INFO:     127.0.0.1:62500 - "POST /api/v1/sessions/bd4caa35-e99c-4bbb-9f27-b2699a712edf/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62500 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62500 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-11 10:20:38,657 INFO personal_ai_secretary.providers.factory correlation_id=0eb552ba-8845-4a1a-ab09-940e48c0929e Auto mode: returning OllamaProvider for local inference
+2026-09-11 10:20:38,731 INFO personal_ai_secretary.agents correlation_id=0eb552ba-8845-4a1a-ab09-940e48c0929e Task classified: chat (goal: Conversational response, no file or tool operations needed.)
+2026-09-11 10:20:39,560 INFO httpx correlation_id=0eb552ba-8845-4a1a-ab09-940e48c0929e HTTP Request: GET http://127.0.0.1:57018/config "HTTP/1.1 401 Unauthorized"
+2026-09-11 10:20:40,440 INFO httpx correlation_id=0eb552ba-8845-4a1a-ab09-940e48c0929e HTTP Request: POST http://127.0.0.1:57018/session "HTTP/1.1 200 OK"
+2026-09-11 10:20:41,320 INFO httpx correlation_id=0eb552ba-8845-4a1a-ab09-940e48c0929e HTTP Request: GET http://127.0.0.1:57018/config "HTTP/1.1 401 Unauthorized"
+2026-09-11 10:20:42,171 INFO httpx correlation_id=0eb552ba-8845-4a1a-ab09-940e48c0929e HTTP Request: GET http://127.0.0.1:57018/config/providers "HTTP/1.1 200 OK"
+2026-09-11 10:21:31,126 INFO httpx correlation_id=0eb552ba-8845-4a1a-ab09-940e48c0929e HTTP Request: POST http://127.0.0.1:57018/session/ses_f6eba96a5ffeMrsCxrummgnlTF/message "HTTP/1.1 200 OK"
+2026-09-11 10:21:31,132 INFO personal_ai_secretary.agents correlation_id=0eb552ba-8845-4a1a-ab09-940e48c0929e Agentic loop completed: rounds=1 tool_calls=0 dedup=0 elapsed=52.40s metrics={'provider': 'opencode', 'model': 'nemotron-3-ultra-free', 'llm_calls': 1, 'tool_calls': 0, 'deduplicated_calls': 0, 'rounds': 1, 'total_time_s': 52.402, 'avg_llm_time_s': 52.399, 'context_build_time_s': 0.000129, 'context_chars_max': 5643, 'estimated_context_tokens': 1410, 'response_chars_total': 328, 'system_prompt_chars': 5047, 'history_chars': 596, 'tool_results_chars': 0, 'attached_file_chars': 0, 'project_context_chars': 0, 'truncation_applied': False, 'history_truncated_turns': 0, 'summary_used': False, 'command_count': 0, 'command_avg_duration_s': 0.0, 'command_timeout_count': 0, 'command_exit_codes': [], 'command_output_chars': 0, 'command_output_truncated_count': 0, 'workflow_stages': ['completed'], 'workflow_stage_times': [], 'project_discovery_time_s': 0.0, 'project_technologies_detected': [], 'project_files_discovered': 0, 'project_entry_points': 0, 'project_test_locations': 0, 'progressive_read_level': 0, 'progressive_read_time_s': 0.0, 'task_inspection_time_s': 0.0, 'correction_attempts': 0, 'correction_tools_used': [], 'final_outcome': 'chat', 'verification_status': 'pending', 'max_corrections_reached': False, 'state_transitions': ['idle>understanding', 'understanding>planning', 'planning>reading', 'reading>completed'], 'final_task_state': 'completed', 'unproductive_loop_detections': 0, 'backend_directives': 0, 'consecutive_tool_failures': 0, 'duration_budget_exceeded': False, 'latency_classification': 'llm_bound'}
+INFO:     127.0.0.1:62175 - "POST /api/v1/sessions/bd4caa35-e99c-4bbb-9f27-b2699a712edf/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62175 - "GET /api/v1/ui/sessions HTTP/1.1" 200 OK
+2026-09-11 10:21:54,270 INFO personal_ai_secretary.providers.factory correlation_id=80cfa91c-85f3-4b8c-8407-cae958d947c6 Auto mode: returning OllamaProvider for local inference
+INFO:     127.0.0.1:54730 - "GET /api/v1/sessions/89dc1ea2-54cc-4fcc-a15d-c2e9cbd907ab/messages HTTP/1.1" 200 OK

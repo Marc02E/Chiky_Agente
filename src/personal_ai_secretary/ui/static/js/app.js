@@ -67,6 +67,14 @@
         fallbackActive: false,
         fallbackFrom: null,
         verifiedCapabilities: {},
+        // FASE X: routing mode state
+        routingMode: 'automatic',
+        // FASE AB.6: latest execution provenance (from fallback_info)
+        lastExecutedProvider: null,
+        lastExecutedModel: null,
+        lastExecutionStatus: null,
+        lastLatencyMs: null,
+        lastFallbackChain: [],
     };
 
     var dom = {
@@ -110,25 +118,73 @@
         modelStatusBar: document.getElementById('model-status-bar'),
         modelStatusText: document.getElementById('model-status-text'),
         modelConnectivity: document.getElementById('model-connectivity'),
+        // FASE AB.6: first-run wizard
+        wizardModal: document.getElementById('wizard-modal'),
+        btnWizardFinish: document.getElementById('btn-wizard-finish'),
+        btnWizardSkip: document.getElementById('btn-wizard-skip'),
+        wizardSaveStatus: document.getElementById('wizard-save-status'),
+        wizardProviderGrid: document.getElementById('wizard-provider-grid'),
+        wizardManualSelection: document.getElementById('wizard-manual-selection'),
+        wizardManualProvider: document.getElementById('wizard-manual-provider'),
+        wizardManualModel: document.getElementById('wizard-manual-model'),
+        // FASE AB.6: settings additions
+        ollamaStatus: document.getElementById('ollama-status'),
+        opencodeStatus: document.getElementById('opencode-status'),
+        btnTestOllama: document.getElementById('btn-test-ollama'),
+        btnTestOpencode: document.getElementById('btn-test-opencode'),
     };
 
     var API = '/api/v1';
 
-    async function apiCall(method, path, body, extraHeaders) {
+    // FASE RELEASE (chat availability): cap chat requests so a dead or silent
+    // backend can never leave the UI in an infinite "Thinking…" state. Operators
+    // /E2E may override per page via window.CHIKY_CHAT_TIMEOUT_MS.
+    var CHAT_REQUEST_TIMEOUT_MS = 180000;
+    function chatRequestTimeoutMs() {
+        var custom = window.CHIKY_CHAT_TIMEOUT_MS;
+        return (typeof custom === 'number' && custom > 0) ? custom : CHAT_REQUEST_TIMEOUT_MS;
+    }
+
+    async function apiCall(method, path, body, extraHeaders, options) {
         var headers = Object.assign({ 'Content-Type': 'application/json' }, extraHeaders || {});
         var opts = { method: method, headers: headers };
         if (body !== undefined) opts.body = JSON.stringify(body);
-        var res = await fetch(API + path, opts);
-        if (res.status === 204) return null;
-        if (!res.ok) {
-            var msg = 'Something went wrong';
-            try {
-                var err = await res.json();
-                msg = err.message || err.detail || msg;
-            } catch (_) {}
-            throw new Error(msg);
+        var timeoutId = null;
+        var controller = null;
+        if (options && options.timeoutMs) {
+            controller = new AbortController();
+            timeoutId = setTimeout(function () { controller.abort(); }, options.timeoutMs);
+            opts.signal = controller.signal;
         }
-        return res.json();
+        var res;
+        try {
+            res = await fetch(API + path, opts);
+            if (res.status === 204) return null;
+            if (!res.ok) {
+                var msg = 'Something went wrong';
+                try {
+                    var err = await res.json();
+                    msg = err.message || err.detail || msg;
+                } catch (_) {}
+                throw new Error(msg);
+            }
+            return res.json();
+        } finally {
+            if (timeoutId) clearTimeout(timeoutId);
+        }
+    }
+
+    function chatFailureMessage(err, sessionId) {
+        if (err && err.name === 'AbortError') {
+            console.error('[chat] request timed out', { sessionId: sessionId, timeoutMs: chatRequestTimeoutMs() });
+            return 'The request did not receive a response before the timeout. Nothing was retried automatically — you can send the message again.';
+        }
+        if (err instanceof TypeError) {
+            console.error('[chat] network error while sending message', { sessionId: sessionId, error: String(err) });
+            return 'Could not reach the backend. Check that the server is running, then try again.';
+        }
+        console.error('[chat] send error', { sessionId: sessionId, error: err && err.message });
+        return 'Request failed: ' + (err.message || 'The backend returned an error.');
     }
 
     function formatTime(isoString) {
@@ -333,7 +389,7 @@
         scrollToBottom();
     }
 
-    function appendMessage(role, content, timestamp) {
+    function appendMessage(role, content, timestamp, provenance) {
         var el = document.createElement('div');
         el.className = 'message ' + role;
 
@@ -351,6 +407,27 @@
 
         el.appendChild(label);
         el.appendChild(bubble);
+
+        // FASE AB.6: per-message provenance ("Ejecutado por: provider · model")
+        if (role === 'assistant' && provenance && provenance.executed_provider) {
+            var prov = document.createElement('div');
+            prov.className = 'message-provenance';
+            var execLabel = 'Ejecutado por: ' + provenance.executed_provider + ' · ' + (provenance.executed_model || '');
+            if (provenance.status === 'ok') {
+                execLabel += ' · OK';
+            } else if (provenance.status) {
+                execLabel += ' · ' + provenance.status;
+            }
+            if (typeof provenance.latency_ms === 'number') {
+                execLabel += ' · ' + provenance.latency_ms + 'ms';
+            }
+            if (provenance.fallback_active) {
+                var chain = (provenance.fallback_chain || []).join(' → ');
+                execLabel += ' · fallback' + (chain ? ' (' + chain + ')' : '');
+            }
+            prov.textContent = execLabel;
+            el.appendChild(prov);
+        }
 
         if (timestamp) {
             var time = document.createElement('div');
@@ -449,14 +526,15 @@
             var payload = { input: text };
             if (filesToSend.length > 0) payload.attached_files = filesToSend;
             // Normal messages do NOT carry approval — approval must be explicit per-operation.
-            var data = await apiCall('POST', '/sessions/' + sessionId + '/messages', payload);
+            var data = await apiCall('POST', '/sessions/' + sessionId + '/messages', payload, undefined, { timeoutMs: chatRequestTimeoutMs() });
             hideLoading();
             if (!state.currentSessionId) {
                 state.currentSessionId = sessionId;
                 await loadSessions();
             }
             if (data && data.assistant_message) {
-                appendMessage(data.assistant_message.role, data.assistant_message.content, data.assistant_message.created_at);
+                appendMessage(data.assistant_message.role, data.assistant_message.content, data.assistant_message.created_at, data.fallback_info);
+                updateLastExecutionProvenance(data.fallback_info);
             } else if (data && data.status === 'blocked') {
                 appendMessage('assistant', 'This request requires approval and has been blocked.', new Date().toISOString());
             } else if (data && data.status === 'failed') {
@@ -476,8 +554,9 @@
             await loadSessions();
         } catch (err) {
             hideLoading();
-            appendMessage('assistant', 'Sorry, something went wrong. Please try again.', new Date().toISOString());
-            showError(err.message || 'Failed to send message');
+            var userMessage = chatFailureMessage(err, sessionId);
+            appendMessage('assistant', userMessage, new Date().toISOString());
+            showError(userMessage);
         } finally {
             state.sending = false;
             updateSendButton();
@@ -512,23 +591,45 @@
 
     function handleFileSelect(file) {
         if (!file) return;
+        var isImage = file.type && file.type.indexOf('image/') === 0;
         var MAX_SIZE = 5000;
+        var MAX_IMAGE_CHARS = 1500000;
         var reader = new FileReader();
         reader.onload = function (e) {
-            var content = e.target.result;
-            if (content.length > MAX_SIZE) {
-                content = content.substring(0, MAX_SIZE);
+            var raw = e.target.result;
+            var content;
+            var isBase64 = false;
+            if (isImage) {
+                // FASE AB.6: images travel as base64 so the model receives
+                // the real bytes (vision), never text-mangled.
+                var dataUrl = String(raw);
+                var comma = dataUrl.indexOf(',');
+                content = comma >= 0 ? dataUrl.substring(comma + 1) : dataUrl;
+                isBase64 = true;
+                if (content.length > MAX_IMAGE_CHARS) {
+                    content = content.substring(0, MAX_IMAGE_CHARS);
+                }
+            } else {
+                content = String(raw);
+                if (content.length > MAX_SIZE) {
+                    content = content.substring(0, MAX_SIZE);
+                }
             }
             state.attachedFiles.push({
                 name: file.name,
                 content: content,
                 size: file.size,
-                mime_type: file.type || 'text/plain',
+                mime_type: file.type || (isBase64 ? 'image/png' : 'text/plain'),
+                is_base64: isBase64,
             });
             renderFileChips();
         };
         reader.onerror = function () { showError('Could not read file: ' + file.name); };
-        reader.readAsText(file);
+        if (isImage) {
+            reader.readAsDataURL(file);
+        } else {
+            reader.readAsText(file);
+        }
         dom.fileInput.value = '';
     }
 
@@ -885,6 +986,8 @@
             var geminiStatus = document.getElementById('gemini-status');
             var nvidiaStatus = document.getElementById('nvidia-status');
             var aiMode = document.getElementById('ai-provider-mode');
+            var ollamaBaseUrl = document.getElementById('ollama-base-url');
+            var ocUser = document.getElementById('opencode-username');
             if (geminiStatus) {
                 geminiStatus.textContent = data.gemini_configured ? 'Configured' : 'Not configured';
                 geminiStatus.className = 'provider-config-status ' + (data.gemini_configured ? 'success' : '');
@@ -892,6 +995,13 @@
             if (nvidiaStatus) {
                 nvidiaStatus.textContent = data.nvidia_configured ? 'Configured' : 'Not configured';
                 nvidiaStatus.className = 'provider-config-status ' + (data.nvidia_configured ? 'success' : '');
+            }
+            if (ollamaBaseUrl && data.ollama_base_url) {
+                ollamaBaseUrl.value = data.ollama_base_url;
+            }
+            if (ocUser && data.opencode_username_configured) {
+                ocUser.value = '';
+                ocUser.placeholder = 'Configured';
             }
             if (aiMode && data.ai_provider) {
                 aiMode.value = data.ai_provider;
@@ -904,12 +1014,20 @@
         var geminiKey = document.getElementById('gemini-api-key');
         var nvidiaKey = document.getElementById('nvidia-api-key');
         var aiMode = document.getElementById('ai-provider-mode');
+        var ocUser = document.getElementById('opencode-username');
+        var ocPass = document.getElementById('opencode-password');
         var statusEl = document.getElementById('config-save-status');
         if (geminiKey && geminiKey.value.trim().length > 0) {
             payload.gemini_api_key = geminiKey.value.trim();
         }
         if (nvidiaKey && nvidiaKey.value.trim().length > 0) {
             payload.nvidia_api_key = nvidiaKey.value.trim();
+        }
+        if (ocUser && ocUser.value.trim().length > 0) {
+            payload.opencode_server_username = ocUser.value.trim();
+        }
+        if (ocPass && ocPass.value.trim().length > 0) {
+            payload.opencode_server_password = ocPass.value.trim();
         }
         if (aiMode) {
             payload.ai_provider = aiMode.value;
@@ -930,6 +1048,7 @@
             // Clear password fields
             if (geminiKey) geminiKey.value = '';
             if (nvidiaKey) nvidiaKey.value = '';
+            if (ocPass) ocPass.value = '';
             // Reload config to show updated status
             await loadProviderConfig();
             // Reload providers to reflect changes
@@ -951,6 +1070,9 @@
         var btnTestNvidia = document.getElementById('btn-test-nvidia');
         if (btnTestGemini) btnTestGemini.addEventListener('click', function() { testProviderConnection('gemini'); });
         if (btnTestNvidia) btnTestNvidia.addEventListener('click', function() { testProviderConnection('nvidia'); });
+        // FASE AB.6: Ollama + OpenCode test buttons
+        if (dom.btnTestOllama) dom.btnTestOllama.addEventListener('click', function() { testProviderConnection('ollama'); });
+        if (dom.btnTestOpencode) dom.btnTestOpencode.addEventListener('click', function() { testProviderConnection('opencode'); });
         loadProviderConfig();
     }
 
@@ -1027,23 +1149,50 @@
         btn.classList.add('testing');
         btn.textContent = 'Testing...';
         statusEl.textContent = '';
+        statusEl.className = 'provider-config-status';
         try {
-            // Save current key first if any
-            var keyInput = document.getElementById(providerName + '-api-key');
-            if (keyInput && keyInput.value.trim().length > 0) {
-                await apiCall('POST', '/providers/config', {});
+            // Save any pending credentials first (keys are only read from config)
+            var keyPayload = {};
+            if (providerName === 'gemini') {
+                var gemKey = document.getElementById('gemini-api-key');
+                if (gemKey && gemKey.value.trim().length > 0) keyPayload.gemini_api_key = gemKey.value.trim();
+            } else if (providerName === 'nvidia') {
+                var nvKey = document.getElementById('nvidia-api-key');
+                if (nvKey && nvKey.value.trim().length > 0) keyPayload.nvidia_api_key = nvKey.value.trim();
+            } else if (providerName === 'opencode') {
+                var ocUser = document.getElementById('opencode-username');
+                var ocPass = document.getElementById('opencode-password');
+                if (ocUser && ocUser.value.trim().length > 0) keyPayload.opencode_server_username = ocUser.value.trim();
+                if (ocPass && ocPass.value.trim().length > 0) keyPayload.opencode_server_password = ocPass.value.trim();
             }
-            // Verify the provider
-            var result = await apiCall('POST', '/providers/verify', {
-                provider: providerName,
-                model: '',
-            });
-            if (result && result.overall_passed) {
-                statusEl.textContent = '\u2713 Connected';
+            if (Object.keys(keyPayload).length > 0) {
+                await apiCall('POST', '/providers/config', keyPayload);
+            }
+            // FASE AB.6: real end-to-end Test Connection (actual inference)
+            var ctrl = new AbortController();
+            var timer = setTimeout(function () { ctrl.abort(); }, 120000);
+            var result;
+            try {
+                result = await fetch(API + '/providers/test-connection', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ provider: providerName }),
+                    signal: ctrl.signal,
+                });
+                clearTimeout(timer);
+            } catch (err) {
+                clearTimeout(timer);
+                throw err;
+            }
+            var payload = await result.json();
+            if (result.ok && payload.status === 'AVAILABLE') {
+                statusEl.textContent = '\u2713 ' + payload.provider + ' \u00B7 ' + payload.model + ' \u00B7 ' + (payload.latency_ms || '?') + 'ms';
                 statusEl.className = 'provider-config-status success';
+                statusEl.title = payload.detail || 'Connection verified';
             } else {
-                statusEl.textContent = '\u2717 Failed';
+                statusEl.textContent = '\u2717 ' + (payload.detail || payload.status || 'Failed');
                 statusEl.className = 'provider-config-status error';
+                statusEl.title = 'Model: ' + (payload.model || '—') + ' | Status: ' + (payload.status || '—');
             }
         } catch (err) {
             statusEl.textContent = '\u2717 ' + (err.message || 'Failed');
@@ -1068,10 +1217,508 @@
                 state.selectedProvider = data.provider;
                 state.selectedModel = data.model;
                 updateProviderBadge();
+                // TEST 6 (AB.8): keep the "Provider selected by Chiky" display in
+                // sync with the router decision (it was stale after an auto-select
+                // where the router changed the model).
+                updateAutoProviderDisplay();
             }
             return data;
         } catch (_) {
             return { selected: false };
+        }
+    }
+
+    // FASE X: Routing mode (Manual/Automatic)
+    function initRoutingMode() {
+        var selector = document.getElementById('routing-mode-selector');
+        var manualSection = document.getElementById('manual-provider-section');
+        var autoSection = document.getElementById('auto-provider-display');
+        if (!selector) return;
+
+        // Load saved routing mode from config
+        loadRoutingMode();
+
+        selector.addEventListener('change', function(e) {
+            if (e.target.name === 'routing-mode') {
+                state.routingMode = e.target.value;
+                if (e.target.value === 'manual') {
+                    manualSection.classList.remove('hidden');
+                    autoSection.classList.add('hidden');
+                    loadManualProviderList();
+                } else {
+                    manualSection.classList.add('hidden');
+                    autoSection.classList.remove('hidden');
+                    autoSelectModel('general task');
+                }
+                // Persist to backend
+                apiCall('POST', '/providers/config', { routing_mode: state.routingMode }).catch(function() {});
+            }
+        });
+    }
+
+    async function loadRoutingMode() {
+        try {
+            var data = await apiCall('GET', '/providers/config');
+            if (data.routing_mode) {
+                state.routingMode = data.routing_mode;
+                var radio = document.querySelector('input[name="routing-mode"][value="' + data.routing_mode + '"]');
+                if (radio) radio.checked = true;
+                var manualSection = document.getElementById('manual-provider-section');
+                var autoSection = document.getElementById('auto-provider-display');
+                if (data.routing_mode === 'manual') {
+                    if (manualSection) manualSection.classList.remove('hidden');
+                    if (autoSection) autoSection.classList.add('hidden');
+                    loadManualProviderList();
+                }
+            }
+        } catch (_) {}
+    }
+
+    async function loadManualProviderList() {
+        var provSelect = document.getElementById('manual-provider-select');
+        var modelSelect = document.getElementById('manual-model-select');
+        if (!provSelect || !modelSelect) return;
+
+        provSelect.innerHTML = '<option value="">-- Select provider --</option>';
+        modelSelect.innerHTML = '<option value="">-- Select model --</option>';
+
+        try {
+            var data = await apiCall('GET', '/providers/transparency');
+            var providers = data.all_providers || [];
+            if (providers.length === 0) {
+                var modelsData = await apiCall('GET', '/providers/models');
+                providers = modelsData.providers || [];
+            }
+            var grouped = {};
+            var noModelProviders = {};
+            providers.forEach(function(p) {
+                var provName = p.provider;
+                var modelName = p.model || p.model_id;
+                if (!provName) return;
+                if (modelName) {
+                    if (!grouped[provName]) grouped[provName] = [];
+                    grouped[provName].push({
+                        provider: provName,
+                        model: modelName,
+                        status: p.status || 'unknown'
+                    });
+                } else {
+                    noModelProviders[provName] = {
+                        provider: provName,
+                        status: p.status || 'unavailable',
+                        detail: p.detail || ''
+                    };
+                }
+            });
+            Object.keys(grouped).forEach(function(name) {
+                var opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name.charAt(0).toUpperCase() + name.slice(1) + ' (' + grouped[name].length + ' models)';
+                provSelect.appendChild(opt);
+            });
+            Object.keys(noModelProviders).forEach(function(name) {
+                if (grouped[name]) return;
+                var opt = document.createElement('option');
+                opt.value = name;
+                var detail = noModelProviders[name].detail ? ' - ' + noModelProviders[name].detail : ' (unavailable)';
+                opt.textContent = name.charAt(0).toUpperCase() + name.slice(1) + ' (0 models)' + detail;
+                provSelect.appendChild(opt);
+            });
+            if (state.currentProviders && !Object.keys(grouped).length && !Object.keys(noModelProviders).length) {
+                var prev = (state.currentProviders || []).forEach(function(name) { grouped[name] = []; });
+            }
+
+            // Pre-select current selected provider if any
+            if (state.selectedProvider && grouped[state.selectedProvider]) {
+                provSelect.value = state.selectedProvider;
+                populateModelsForProvider(state.selectedProvider, grouped, modelSelect);
+                if (state.selectedModel) {
+                    modelSelect.value = state.selectedModel;
+                    // TEST 6 (AB.8): lock + persist the pre-selected model so the
+                    // Manual status text, dropdowns and backend never disagree
+                    // (previously the "Locked: ..." status and DB could keep a
+                    // stale entry while the dropdown showed a different model).
+                    selectManualProvider(state.selectedProvider, state.selectedModel);
+                }
+            }
+
+            // Remove previous event listener by cloning or direct assignment
+            provSelect.onchange = function() {
+                var prov = provSelect.value;
+                modelSelect.innerHTML = '<option value="">-- Select model --</option>';
+                if (grouped[prov]) {
+                    grouped[prov].forEach(function(m) {
+                        var opt = document.createElement('option');
+                        opt.value = m.model;
+                        opt.textContent = m.model + ' [' + m.status + ']';
+                        modelSelect.appendChild(opt);
+                    });
+                    if (grouped[prov].length > 0) {
+                        modelSelect.value = grouped[prov][0].model;
+                        selectManualProvider(prov, modelSelect.value);
+                    }
+                } else if (noModelProviders[prov]) {
+                    var statusBadge = document.getElementById('manual-status-badge');
+                    var statusText = document.getElementById('manual-status-text');
+                    var statusContainer = document.getElementById('manual-provider-status');
+                    if (statusContainer) statusContainer.classList.remove('hidden');
+                    if (statusBadge) statusBadge.className = 'status-badge unavailable';
+                    if (statusText) statusText.textContent = 'Unavailable: ' + prov + ' (no discoverable models)';
+                }
+            };
+
+            modelSelect.onchange = function() {
+                var prov = provSelect.value;
+                var model = modelSelect.value;
+                if (prov && model) {
+                    selectManualProvider(prov, model);
+                }
+            };
+        } catch (_) {}
+    }
+
+    function populateModelsForProvider(prov, grouped, modelSelect) {
+        modelSelect.innerHTML = '<option value="">-- Select model --</option>';
+        if (grouped[prov]) {
+            grouped[prov].forEach(function(m) {
+                var opt = document.createElement('option');
+                opt.value = m.model;
+                opt.textContent = m.model + ' [' + m.status + ']';
+                modelSelect.appendChild(opt);
+            });
+        }
+    }
+
+    async function selectManualProvider(provider, model) {
+        var statusBadge = document.getElementById('manual-status-badge');
+        var statusText = document.getElementById('manual-status-text');
+        var statusContainer = document.getElementById('manual-provider-status');
+        if (statusContainer) statusContainer.classList.remove('hidden');
+        if (statusBadge) statusBadge.className = 'status-badge checking';
+        if (statusText) statusText.textContent = 'Verifying ' + provider + '/' + model + '...';
+
+        try {
+            var result = await apiCall('POST', '/providers/select', {
+                provider: provider,
+                model: model,
+            });
+            if (statusBadge) statusBadge.className = 'status-badge verified';
+            if (statusText) statusText.textContent = 'Locked: ' + provider + ' / ' + model;
+            state.selectedProvider = provider;
+            state.selectedModel = model;
+            updateProviderBadge();
+        } catch (err) {
+            if (statusBadge) statusBadge.className = 'status-badge unavailable';
+            if (statusText) statusText.textContent = 'Failed: ' + (err.message || 'Provider unavailable');
+        }
+    }
+
+    // FASE X: Provenance display
+    function updateProvenanceDisplay() {
+        var mode = document.getElementById('prov-mode');
+        var requested = document.getElementById('prov-requested');
+        var actual = document.getElementById('prov-actual');
+        var status = document.getElementById('prov-status');
+        var fallback = document.getElementById('prov-fallback');
+
+        if (mode) mode.textContent = state.routingMode === 'manual' ? 'Manual' : 'Automatic';
+        if (requested && state.selectedProvider) {
+            requested.textContent = state.selectedProvider + (state.selectedModel ? ' / ' + state.selectedModel : '');
+        }
+        if (actual) {
+            if (state.lastExecutedProvider) {
+                var lat = state.lastLatencyMs !== null ? ' · ' + state.lastLatencyMs + 'ms' : '';
+                actual.textContent = state.lastExecutedProvider + (state.lastExecutedModel ? ' / ' + state.lastExecutedModel : '') + lat;
+            } else {
+                actual.textContent = state.selectedProvider ? (state.selectedProvider + (state.selectedModel ? ' / ' + state.selectedModel : '')) : '--';
+            }
+        }
+        if (status) status.textContent = state.lastExecutionStatus || state.modelStatus || 'unknown';
+        if (fallback) {
+            if (state.lastFallbackChain && state.lastFallbackChain.length > 0) {
+                fallback.textContent = state.lastFallbackChain.join(' → ');
+            } else {
+                fallback.textContent = state.fallbackActive ? (state.fallbackFrom || 'Yes') : 'None';
+            }
+        }
+    }
+
+    // FASE AB.6: reflect the actual executor of the last completed message
+    function updateLastExecutionProvenance(provenance) {
+        if (!provenance) return;
+        if (provenance.executed_provider) {
+            state.lastExecutedProvider = provenance.executed_provider;
+            state.lastExecutedModel = provenance.executed_model || '';
+        }
+        state.lastExecutionStatus = provenance.status || 'ok';
+        state.lastLatencyMs = typeof provenance.latency_ms === 'number' ? provenance.latency_ms : null;
+        state.lastFallbackChain = provenance.fallback_chain || (provenance.fallback_active ? ['fallback'] : []);
+        state.fallbackActive = !!provenance.fallback_active;
+        state.fallbackFrom = provenance.fallback_from_provider || (state.lastFallbackChain.length ? state.lastFallbackChain[0] : null);
+        updateProvenanceDisplay();
+    }
+
+    // FASE X: Auto provider display
+    function updateAutoProviderDisplay() {
+        var name = document.getElementById('auto-provider-name');
+        var model = document.getElementById('auto-provider-model');
+        var reason = document.getElementById('auto-provider-reason');
+        if (name) name.textContent = state.selectedProvider || '--';
+        if (model) model.textContent = state.selectedModel || '';
+        if (reason) reason.textContent = state.modelMode !== 'advanced' ? 'Mode: ' + state.modelMode : '';
+    }
+
+    // ── FASE AB.6: First-Run Setup Wizard ─────────────────────────────
+
+    var WIZARD_PROVIDER_ORDER = ['ollama', 'gemini', 'nvidia', 'opencode'];
+    var WIZARD_PROVIDER_LABELS = {
+        ollama: '\uD83D\uDDA5\uFE0F Ollama (local)',
+        gemini: '\uD83D\uDC19 Gemini',
+        nvidia: '\uD83D\uDE80 NVIDIA',
+        opencode: '\uD83D\uDD10 OpenCode',
+    };
+
+    function wizardStatusClass(status) {
+        var map = {
+            'AVAILABLE': 'verified',
+            'NOT_CONFIGURED': 'unavailable',
+            'UNAVAILABLE': 'unavailable',
+            'AUTH_ERROR': 'error',
+            'ERROR': 'error',
+        };
+        return 'status-badge ' + (map[status] || 'unknown');
+    }
+
+    function wizardStatusLabel(status) {
+        var map = {
+            'AVAILABLE': 'Available',
+            'NOT_CONFIGURED': 'Not configured',
+            'UNAVAILABLE': 'Unavailable',
+            'AUTH_ERROR': 'Authentication error',
+            'ERROR': 'Error',
+        };
+        return map[status] || status || 'Unknown';
+    }
+
+    function wizardCredentialFields(provider) {
+        if (provider === 'gemini') {
+            return '<input id="wiz-gemini-key" type="password" class="text-input" placeholder="Gemini API key (optional)" autocomplete="off" />';
+        }
+        if (provider === 'nvidia') {
+            return '<input id="wiz-nvidia-key" type="password" class="text-input" placeholder="NVIDIA API key (optional)" autocomplete="off" />';
+        }
+        if (provider === 'opencode') {
+            return '<input id="wiz-opencode-user" type="text" class="text-input" placeholder="OpenCode username" autocomplete="off" style="margin-bottom:6px" />' +
+                '<input id="wiz-opencode-pass" type="password" class="text-input" placeholder="OpenCode password" autocomplete="off" />';
+        }
+        if (provider === 'ollama') {
+            return '<span class="setting-hint">Local server: http://localhost:11434</span>';
+        }
+        return '';
+    }
+
+    function wizardProviderCard(p) {
+        var label = WIZARD_PROVIDER_LABELS[p.provider] || p.provider;
+        var models = (p.models && p.models.length) ? p.models.join(', ') : (p.model || '');
+        var html = '<div class="wizard-provider-card">';
+        html += '<div class="wizard-provider-head">';
+        html += '<span class="wizard-provider-name">' + label + '</span>';
+        html += '<span class="' + wizardStatusClass(p.status) + '">' + wizardStatusLabel(p.status) + '</span>';
+        html += '</div>';
+        html += '<div class="wizard-provider-detail" title="' + escapeHtml(p.detail || '') + '">' + escapeHtml(p.detail || '') +
+            (models ? '<div class="wizard-provider-models">Models: ' + escapeHtml(models) + '</div>' : '') + '</div>';
+        html += '<div class="wizard-provider-actions">';
+        html += wizardCredentialFields(p.provider);
+        html += '<button class="btn btn-ghost btn-sm wizard-test-btn" data-provider="' + p.provider + '">Test Connection</button>';
+        html += '<span class="provider-config-status" id="wiz-status-' + p.provider + '"></span>';
+        html += '</div></div>';
+        return html;
+    }
+
+    async function loadWizardProviders() {
+        try {
+            var statuses = await apiCall('GET', '/providers/status');
+            var html = '';
+            WIZARD_PROVIDER_ORDER.forEach(function (name) {
+                var p = null;
+                statuses.forEach(function (s) { if (s.provider === name) p = s; });
+                if (!p) p = { provider: name, status: 'UNAVAILABLE', detail: 'Not discovered', models: [] };
+                html += wizardProviderCard(p);
+            });
+            dom.wizardProviderGrid.innerHTML = '<div id="wizard-grid-inner">' + html + '</div>';
+            document.querySelectorAll('.wizard-test-btn').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    wizardTestConnection(btn.getAttribute('data-provider'));
+                });
+            });
+            await buildWizardManualProviders(statuses);
+        } catch (_) {
+            dom.wizardProviderGrid.innerHTML = '<div class="provider-info-loading">Could not contact backend.</div>';
+        }
+    }
+
+    async function wizardTestConnection(provider) {
+        var btn = document.querySelector('.wizard-test-btn[data-provider="' + provider + '"]');
+        var statusEl = document.getElementById('wiz-status-' + provider);
+        if (!btn || !statusEl) return;
+        btn.classList.add('testing');
+        btn.textContent = 'Testing...';
+        statusEl.textContent = '';
+        statusEl.className = 'provider-config-status';
+        var payload = {};
+        if (provider === 'gemini') {
+            var gk = document.getElementById('wiz-gemini-key');
+            if (gk && gk.value.trim()) payload.gemini_api_key = gk.value.trim();
+        } else if (provider === 'nvidia') {
+            var nk = document.getElementById('wiz-nvidia-key');
+            if (nk && nk.value.trim()) payload.nvidia_api_key = nk.value.trim();
+        } else if (provider === 'opencode') {
+            var ou = document.getElementById('wiz-opencode-user');
+            var op = document.getElementById('wiz-opencode-pass');
+            if (ou && ou.value.trim()) payload.opencode_server_username = ou.value.trim();
+            if (op && op.value.trim()) payload.opencode_server_password = op.value.trim();
+        }
+        if (Object.keys(payload).length > 0) {
+            await apiCall('POST', '/providers/config', payload).catch(function () {});
+        }
+        try {
+            var result = await apiCall('POST', '/providers/test-connection', { provider: provider });
+            if (result.status === 'AVAILABLE') {
+                statusEl.textContent = '\u2713 ' + result.provider + ' \u00B7 ' + result.model + ' \u00B7 ' + result.latency_ms + 'ms';
+                statusEl.className = 'provider-config-status success';
+            } else {
+                statusEl.textContent = '\u2717 ' + (result.detail || result.status || 'Failed');
+                statusEl.className = 'provider-config-status error';
+            }
+        } catch (err) {
+            statusEl.textContent = '\u2717 ' + (err.message || 'Failed');
+            statusEl.className = 'provider-config-status error';
+        } finally {
+            btn.classList.remove('testing');
+            btn.textContent = 'Test Connection';
+        }
+    }
+
+    async function buildWizardManualProviders(statuses) {
+        var provSel = dom.wizardManualProvider;
+        var modelSel = dom.wizardManualModel;
+        if (!provSel || !modelSel) return;
+        provSel.innerHTML = '<option value="">-- Select provider --</option>';
+        modelSel.innerHTML = '<option value="">-- Select model --</option>';
+        var grouped = {};
+        statuses.forEach(function (s) {
+            if (s.status === 'AVAILABLE') {
+                if ((s.models || []).length > 0 || s.model) {
+                    grouped[s.provider] = (s.models && s.models.length) ? s.models : [s.model];
+                }
+            }
+        });
+        Object.keys(grouped).forEach(function (name) {
+            var opt = document.createElement('option');
+            opt.value = name;
+            opt.textContent = (WIZARD_PROVIDER_LABELS[name] || name) + ' (' + grouped[name].length + ' models)';
+            provSel.appendChild(opt);
+        });
+        provSel.onchange = async function () {
+            var prov = provSel.value;
+            modelSel.innerHTML = '<option value="">-- Select model --</option>';
+            if (!prov) return;
+            try {
+                var data = await apiCall('GET', '/providers/' + prov + '/models');
+                (data.models || []).forEach(function (m) {
+                    var opt = document.createElement('option');
+                    opt.value = m;
+                    opt.textContent = m;
+                    modelSel.appendChild(opt);
+                });
+                if (modelSel.options.length > 1) modelSel.selectedIndex = 1;
+            } catch (_) {
+                (grouped[prov] || []).forEach(function (m) {
+                    var opt = document.createElement('option');
+                    opt.value = m;
+                    opt.textContent = m;
+                    modelSel.appendChild(opt);
+                });
+            }
+        };
+    }
+
+    async function initWizard() {
+        var statusData = await checkSetupStatus();
+        if (!statusData) return;
+        if (statusData.routing_configured && !statusData.setup_required) {
+            return;
+        }
+        dom.wizardModal.classList.remove('hidden');
+        await loadWizardProviders();
+
+        document.querySelectorAll('input[name="wizard-routing-mode"]').forEach(function (r) {
+            r.addEventListener('change', function () {
+                if (r.value === 'manual') {
+                    if (dom.wizardManualSelection) dom.wizardManualSelection.classList.remove('hidden');
+                } else {
+                    if (dom.wizardManualSelection) dom.wizardManualSelection.classList.add('hidden');
+                }
+            });
+        });
+
+        if (dom.btnWizardSkip) dom.btnWizardSkip.addEventListener('click', function () {
+            dom.wizardModal.classList.add('hidden');
+            apiCall('POST', '/providers/config', { routing_mode: 'automatic' }).catch(function () {});
+        });
+
+        if (dom.btnWizardFinish) dom.btnWizardFinish.addEventListener('click', async function () {
+            var payload = {};
+            var gk = document.getElementById('wiz-gemini-key');
+            var nk = document.getElementById('wiz-nvidia-key');
+            var ou = document.getElementById('wiz-opencode-user');
+            var op = document.getElementById('wiz-opencode-pass');
+            if (gk && gk.value.trim()) payload.gemini_api_key = gk.value.trim();
+            if (nk && nk.value.trim()) payload.nvidia_api_key = nk.value.trim();
+            if (ou && ou.value.trim()) payload.opencode_server_username = ou.value.trim();
+            if (op && op.value.trim()) payload.opencode_server_password = op.value.trim();
+            var mode = document.querySelector('input[name="wizard-routing-mode"]:checked');
+            payload.routing_mode = mode ? mode.value : 'automatic';
+            var manualProv = '';
+            var manualModel = '';
+            if (payload.routing_mode === 'manual') {
+                manualProv = dom.wizardManualProvider ? dom.wizardManualProvider.value : '';
+                manualModel = dom.wizardManualModel ? dom.wizardManualModel.value : '';
+            }
+            if (dom.wizardSaveStatus) {
+                dom.wizardSaveStatus.textContent = 'Saving...';
+                dom.wizardSaveStatus.className = 'provider-config-status';
+            }
+            try {
+                await apiCall('POST', '/providers/config', payload);
+                if (payload.routing_mode === 'manual' && manualProv) {
+                    await apiCall('POST', '/providers/select', {
+                        provider: manualProv,
+                        model: manualModel,
+                    }).catch(function () {});
+                } else if (payload.routing_mode === 'automatic') {
+                    await autoSelectModel('general task').catch(function () {});
+                }
+                dom.wizardModal.classList.add('hidden');
+                await loadAllProviders();
+                await loadProvider();
+                await loadSessions();
+                if (state.currentSessionId === null) newChat();
+                await sendMessage('\u00BFQu\u00E9 puedes hacer?');
+            } catch (err) {
+                if (dom.wizardSaveStatus) {
+                    dom.wizardSaveStatus.textContent = 'Failed: ' + (err.message || 'error');
+                    dom.wizardSaveStatus.className = 'provider-config-status error';
+                }
+            }
+        });
+    }
+
+    async function checkSetupStatus() {
+        try {
+            return await apiCall('GET', '/setup/status');
+        } catch (_) {
+            return null;
         }
     }
 
@@ -1099,7 +1746,7 @@
             }
             // This is the only place where X-Approval-Granted: true is sent —
             // it is scoped to exactly one request execution after user explicitly clicked Approve.
-            var data = await apiCall('POST', '/sessions/' + sessionId + '/messages', payload, { 'X-Approval-Granted': 'true' });
+            var data = await apiCall('POST', '/sessions/' + sessionId + '/messages', payload, { 'X-Approval-Granted': 'true' }, { timeoutMs: chatRequestTimeoutMs() });
             hideLoading();
             if (!state.currentSessionId) {
                 state.currentSessionId = sessionId;
@@ -1124,8 +1771,9 @@
             await loadSessions();
         } catch (err) {
             hideLoading();
-            appendMessage('assistant', 'Sorry, something went wrong. Please try again.', new Date().toISOString());
-            showError(err.message || 'Failed to execute approved operation');
+            var approvedMessage = chatFailureMessage(err, sessionId);
+            appendMessage('assistant', approvedMessage, new Date().toISOString());
+            showError(approvedMessage);
         } finally {
             state.sending = false;
             updateSendButton();
@@ -1137,7 +1785,11 @@
         loadTheme();
         showEmpty();
         initModelManagement();
+        initRoutingMode();
         await Promise.all([loadSessions(), loadProvider(), loadAllProviders()]);
+        initWizard();
+        updateProvenanceDisplay();
+        updateAutoProviderDisplay();
     }
 
     // Wire up approval modal buttons

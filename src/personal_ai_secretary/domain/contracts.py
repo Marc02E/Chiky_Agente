@@ -17,9 +17,11 @@ class AttachedFile(BaseModel):
     """A file attached to a message by the user."""
 
     name: str = Field(min_length=1, max_length=255)
-    content: str = Field(max_length=5_000)
+    content: str = Field(max_length=2_000_000)
     size: int = Field(ge=0)
     mime_type: str = Field(default="text/plain", max_length=100)
+    # FASE AB.6: image attachments carry base64 bytes (never embedded as text).
+    is_base64: bool = False
 
 
 class RequestCreate(BaseModel):
@@ -60,6 +62,7 @@ class ProviderResponse(BaseModel):
     text: str
     provider: str
     model: str | None = None
+    raw: dict[str, Any] | None = None
 
 
 class ErrorEnvelope(BaseModel):
@@ -133,6 +136,11 @@ class RequestEnvelope(BaseModel):
     correlation_id: str = Field(min_length=1, max_length=128)
     messages: list[ConversationTurn] = Field(default_factory=list)
     context_summary: str | None = None
+    # FASE Y: native tool schemas so tool-capable models (qwen, llama3.1)
+    # emit real function calls instead of fabricating results.
+    tool_schemas: list[dict[str, Any]] = Field(default_factory=list)
+    # FASE AB.6: base64-encoded image attachments delivered to vision models.
+    images: list[str] = Field(default_factory=list)
 
 
 class EvidenceSourceCreate(BaseModel):
